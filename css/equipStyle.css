@@ -1,0 +1,47 @@
+.intro {
+    width: 100%;
+    height: 1100px;
+    padding: 0;
+    background: url(/pattern.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+}
+  
+header .intro-text {
+    font-family: 'Kanit';
+    padding-top: 200px;
+    margin-left: 5px;
+}
+
+.intro h1 {
+	color: #333;
+}
+
+#menu.navbar-default {
+	background-color:  #262626;
+    border-color: rgba(231, 231, 231, 0);
+}
+
+#portfolio .section-title {
+    margin-top: 50px;
+}
+
+input[type=checkbox] {
+    transform: scale(1.1);
+}
+
+.a-button {
+    padding: 10px 15px;
+    background-color: #007CB7 !important;
+    color: #fff;
+    border-radius: 10px;
+  }
+  .a-button:hover {
+    background-color: #286090;
+    color: #fff;
+    cursor: pointer;
+  }

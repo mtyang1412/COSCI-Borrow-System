@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>COSCI - ระบบยืมคืนครุภัณฑ์</title>
+  <meta name="description" content="">
+
+  <!-- =============== Bootstrap =============== -->
+  <link rel="stylesheet" type="text/css"  href="/bootstrap.css">
+
+  <!-- =============== Stylesheet =============== -->
+  <link rel="stylesheet" type="text/css"  href="/style.css">
+  <link rel="stylesheet" type="text/css"  href="/loginStyle.css">
+  <link rel="stylesheet" type="text/css"  href="/fontface.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Kanit:200,300,400,500,600,700&amp;subset=thai" rel="stylesheet">
+
+</head>
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<!-- =============== Navigation =============== -->
+<nav id="menu" class="navbar navbar-default navbar-fixed-top">
+  <div class="container"> 
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> 
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span><span class="icon-bar"></span> 
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand page-scroll" href="#page-top"><img class="logo-header" src="/cosciLogo.png"></a>
+    </div>
+    
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-left">
+        <li><a href="/#about" class="page-scroll">Home&nbsp;&nbsp;&nbsp;•</a></li>
+        <li><a href="/#portfolio" class="page-scroll">Equipment&nbsp;&nbsp;&nbsp;•</a></li>
+        <li><a href="/#team" class="page-scroll">Contact&nbsp;&nbsp;&nbsp;•</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Header -->
+<header id="header">
+  <div class="intro">
+      <div class="container">
+         <div class="col-xs-12 col-md-6">
+            <div class="intro-text">
+               <h1>College of Social<br>
+                   Communication Innovation</h1><hr>
+               <p>เข้าสู่ระบบการยืมคืนครุภัณฑ์</p>
+               <div class="toggle-bar">
+                  <div class="toggle-login active">
+                    <span>เข้าสู่ระบบ</span>
+                  </div>
+                  <div class="toggle-register">
+                    <span>สมัครสมาชิก</span>
+                  </div>
+               </div>
+               
+               <div class="login-body" id="body-login">
+                <form class="login-form" action="login" method="POST">
+                  <span> <%= datas %> </span>
+                  <div class="input-section">
+                    <input class="user-input" type="text" name="username" placeholder="ชื่อผู้ใช้ (username) / รหัสนิสิต" required>
+                  </div>
+                  <div class="input-section">
+                    <input class="user-input" type="password" name="password" placeholder="รหัสผ่าน" required>
+                  </div>
+                  <a href="/forgotPass">ลืมรหัสผ่าน?</a> <br>
+                  <input class="btn" type="submit" value="เข้าสู่ระบบ">
+                </form>
+               </div>
+
+               <div class="register-body" id="body-register">
+                <form class="register-form" action="/check_id" method="POST">
+                  <span> <%= datas2 %> </span>
+                  <div class="input-section">
+                    <input class="user-input" type="text" name="stuid" placeholder="รหัสนิสิต" required>
+                  </div>
+                  <input class="a-btn" type="submit"> <br>
+                  <div class="a-toggle">
+                    <p>สมัครสมาชิกแล้ว?</p>
+                  </div>
+                </form>
+               </div>
+
+               <div class="register-body2" id="register-body2" style="display: none;">
+                <form class="register-form" action="/register" method="POST">
+                  <div class="input-section">
+                    <input class="user-input" type="text" name="stuid" value="<%= member.stu_id%>" readonly>
+                  </div>
+                  <div class="input-section">
+                    <input class="user-input" type="text" value="<%= member.stu_name %>" readonly>
+                  </div>
+                  <div class="input-section">
+                    <input class="user-input" type="text" value="วิชาเอก <%= member.maj_th_name %>" readonly>
+                  </div>
+                  <div class="input-section">
+                    <input class="user-input" type="text" id="username" name="username" placeholder="ชื่อผู้ใช้ (username)" onkeypress="return checkLetter(event)" required> <br>
+                    <span id="show-username">ใช้อักษรภาษาอังกฤษ 2 ตัวขึ้นไป อาจผสมกับตัวเลข จุด หรือสัญลักษณ์ _ </span>
+                  </div>
+                  <div class="input-section">
+                    <input class="user-input" id="pass1" type="password" name="password" placeholder="รหัสผ่าน" required>
+                  </div>
+                  <div class="input-section">
+                    <input class="user-input" id="pass2" type="password" placeholder="ยืนยัน รหัสผ่าน" required> <br>
+                    <span id="show-pass" style="display: none;">รหัสผ่านไม่ตรงกัน!!</span>
+                  </div>
+                  <div class="input-section">
+                    <input class="user-input" type="email" name="email" placeholder="อีเมล" required>
+                  </div>
+                  <div class="input-section">
+                    <input class="user-input" type="text" name="phone" placeholder="เบอร์โทรศัพท์" required>
+                  </div>
+                  <input type="submit" id="submit-regist" class="btn btn-action" value="สมัครสมาชิก">
+                </form>
+               </div>
+            </div>
+         </div>
+      </div>
+  </div>
+</header>
+
+<div id="footer">
+  <div class="container-fluid text-center copyrights">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="social">
+        <ul>
+          <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+          <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+          <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+        </ul>
+      </div>
+      <p>&copy; COLLEGE OF SOCIAL COMMUNICATION INNOVATION.ALL RIGHTS RESERVED<br><br>
+        TEL. 02-649-5000 EXT 11275 , 02-259-2343 EMAIL. PRCOSCISWU@GMAIL.COM
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="/jquery.1.11.1.js"></script> 
+<script type="text/javascript" src="/bootstrap.js"></script> 
+<script type="text/javascript" src="/SmoothScroll.js"></script> 
+<script type="text/javascript" src="/jquery.isotope.js"></script> 
+<script type="text/javascript" src="/main.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<script>
+  var bodyLogin = document.getElementById("body-login");
+  var bodyRegister = document.getElementById("body-register");
+  bodyLogin.style.display = <%-JSON.stringify(showL)%>;
+  bodyRegister.style.display = <%-JSON.stringify(showR)%>;
+  const isRegist = <%-JSON.stringify(regist)%>;
+  $("#submit-regist").attr("disabled", true);
+
+  $('.toggle-register').click(function(){
+    $(".register-body2").slideUp("fast");
+    $(this).addClass('active');
+    $('.toggle-login').removeClass('active');
+    $('.login-body').slideUp("slow");
+    $('.register-body').delay(625).slideDown("slow");
+  });
+
+  $('.toggle-login').click(function(){
+    $(".register-body2").slideUp("fast");
+    $(this).addClass('active');
+    $('.toggle-register').removeClass('active');
+    $('.register-body').slideUp("slow");
+    $('.login-body').delay(625).slideDown("slow");
+  });
+
+  $('.a-toggle').click(function(){
+    $(".register-body2").slideUp("fast");
+    $('.toggle-login').addClass('active');
+    $('.toggle-register').removeClass('active');
+    $('.register-body').slideUp("slow");
+    $('.login-body').delay(625).slideDown("slow");
+  });
+
+  /* ----- Show Register Form ----- */
+  if (isRegist == true) {
+    $(document).ready(function(){
+      $('.register-body').slideUp("fast");
+      $(".register-body2").slideDown("slow");
+    });
+  }
+
+  /* ---- Check Register ---- */
+  // Check Username
+  function checkLetter(event) {
+    var x = event.charCode;
+    return  ((x == 46) || (x == 95) || 
+            (x >= 48 && x <= 57) || 
+            (x >= 65 && x <= 90) || 
+            (x >= 97 && x <= 122));
+  }
+
+  const allUsername = <%-JSON.stringify(usernames)%>;
+  $("#username").keyup(function(){
+    var usn = $(this).val();
+    if (allUsername.indexOf(usn) != -1) {
+      $("#submit-regist").attr("disabled", true);
+      $("#show-username").show();
+      $("#show-username").text("ชื่อผู้ใช้นี้ถูกใช้แล้ว ลองใช้ชื่ออื่น");
+    }
+    else if (usn.length < 2) {
+      $("#submit-regist").attr("disabled", true);
+      $("#show-username").show();
+      $("#show-username").text("ใช้อักษรภาษาอังกฤษ 2 ตัวขึ้นไป อาจผสมกับตัวเลข จุด หรือสัญลักษณ์ _");
+    }
+    else {
+      $("#submit-regist").attr("disabled", false);
+      $("#show-username").hide();
+    }
+  })
+
+  $("#pass2").keyup(function(){
+    if ($("#pass1").val() == $("#pass2").val()) {
+      $("#show-pass").hide();
+      $("#submit-regist").attr("disabled", false);
+    }
+    else {
+      $("#show-pass").show();
+      $("#submit-regist").attr("disabled", true);
+    }
+  })
+  $("#pass1").keyup(function(){
+    if ($("#pass1").val() === $("#pass2").val()) {
+      $("#show-pass").hide();
+      $("#submit-regist").attr("disabled", false);
+    }
+    else {
+      $("#show-pass").show();
+      $("#submit-regist").attr("disabled", true);
+    }
+  })
+
+</script>
+</body>
+</html>

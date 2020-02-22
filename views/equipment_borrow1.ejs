@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COSCI - ระบบยืมคืนครุภัณฑ์</title>
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!-- =============== Bootstrap =============== -->
+<link rel="stylesheet" type="text/css"  href="/bootstrap.css">
+
+<!-- =============== Stylesheet =============== -->
+<link rel="stylesheet" type="text/css"  href="/style.css">
+<link rel="stylesheet" type="text/css"  href="/equipStyle.css">
+<link rel="stylesheet" type="text/css"  href="/userStyle.css">
+<link rel="stylesheet" type="text/css"  href="/fontface.css">
+<link rel="stylesheet" type="text/css" href="/datepickerStyle.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Kanit:200,300,400,500,600,700&amp;subset=thai" rel="stylesheet">
+
+</head>
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<!-- =============== Navigation =============== -->
+<nav id="menu" class="navbar navbar-default navbar-fixed-top">
+  <div class="container"> 
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> 
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span><span class="icon-bar"></span> <span class="icon-bar"></span> 
+      </button>
+      <a class="navbar-brand page-scroll" href="#page-top"><img class="logo-header" src="/cosciLogo.png"></a></div>
+    
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/user_student/<%=datas.mem_id%>" class="page-scroll">Equipment&nbsp;&nbsp;&nbsp;•</a></li>
+            <li><a href="/user_student/<%= datas.mem_username %>/logout" class="page-scroll">LOGOUT&nbsp;&nbsp;&nbsp;
+                <i class="fa fa-sign-out"></i>&nbsp;
+            </a></li>
+            <li class="user-tag">
+              <a href="/user_student/<%= datas.mem_username %>/profile" id="user-tag-a">
+                <i class="fa fa-user"></i>&nbsp;&nbsp;ID : <%= datas.mem_id %>&nbsp;&nbsp;
+                <br>
+                <i class="fa fa-clock-o"></i>&nbsp;&nbsp;DATE : <%= todays %>
+                <div class="img-user"><img src="/user/<%= datas.mem_pic %>"></div>
+              </a>
+            </li>
+          </ul>
+        </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Portfolio Section -->
+<div id="portfolio">
+  <div class="container">
+    <div class="row" style="margin-top: 150px;">
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="portfolio-item">
+              <img src="/portfolio/<%= types[0].set_pic%>" class="img-responsive" alt="<%= types[0].set_name%>">
+            </div>
+            <h3>ระบุวันที่ที่ต้องการยืม</h3><hr>
+            <input type="date" style="width: 100%;" id="datepicker" class="form-control" readonly />
+          </div>
+
+          <div class="col-sm-6 col-md-6 col-lg-6">
+              <h3>เลือกอุปกรณ์ที่ต้องการยืม</h3><hr>
+                <input style="display:none" type="text" name="allchecks" id="allCheck" value="" readonly>
+                <% if (types.length > 0) {%>
+                  <% var borrow0 = types[0].set_can_borrow; %>
+                  <% if (borrow0 == 1) {%>
+                    <table class="table" style="margin-bottom: 0;">
+                      <th style="width: 8%;">
+                        <input type="checkbox" class="check1" value="<%=types[0].set_id%>">
+                      </th style="width: 8%;">
+                      <th style="width: 92%;"><%= types[0].set_name%></th style="width: 92%;">
+                    </table>
+                  <% } %>
+                <%}%>
+                <table class="table bor">
+                  <thead>
+                    <% if (types.length > 0) {%>
+                      <% types.forEach((value, index) => { %>
+                        <% var borrow1 = value.type_can_borrow; %>
+                        <% var y = value.type_id; %>
+    
+                        <tr>
+                          <th style="width: 8%;">
+                            <% if (borrow1 == 1) {%>
+                              <input type="checkbox" class="check2" value="<%=y%>">
+                            <% } %>
+                          </th>
+                          <th style="width: 77%;" colspan="2"><%= value.type_name%></th>
+                          <th style="width: 15%;">จำนวน</th>
+                        </tr>
+                  </thead>
+                    <tbody>
+                      <% if (setEquip.length > 0 ) {%>
+                        <% setEquip.forEach((equips, index) => { %>
+                          <% var borrow2 = equips.equip_can_borrow; %>
+                          <% var x = equips.type_id; %>
+                          <% if ( x === y ) {%>
+                            <tr>
+                              <td style="width: 8%;" scope="col"></td>
+                              <td style="width: 8%;">
+                                  <% if (borrow2 == 1) {%>
+                                      <input type="checkbox" class="check3" value="<%=equips.equip_id%>">
+                                  <% } %>
+                              </td>
+                              <td style="width: 69%;"><%= equips.equip_name %></td>
+                              <td style="width: 15%;"><%= equips.equip_amount %></td>
+                            </tr>
+                          <% } %>
+                        <% }) %>
+                      <% } %>
+                    </tbody>
+                      <% }) %>
+                      <% } %>
+                </table>
+                <br>
+                <input type="submit" id="submit-btn" class="a-button" value="ดำเนินการต่อ">
+              </form>
+            </div>
+
+        </div>
+  </div>
+</div>
+
+<div id="footer">
+  <div class="container-fluid text-center copyrights">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="social">
+        <ul>
+          <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+          <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+          <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+        </ul>
+      </div>
+      <p>&copy; COLLEGE OF SOCIAL COMMUNICATION INNOVATION.ALL RIGHTS RESERVED<br><br>
+        TEL. 02-649-5000 EXT 11275 , 02-259-2343 EMAIL. PRCOSCISWU@GMAIL.COM
+      </p>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/th.js"></script>
+
+<script>
+jQuery(document).ready(function($) {
+  if( $("#datepicker").length ){
+        $("#datepicker").flatpickr({
+            enableTime:!1,
+            defaultDate: '',
+            mode: "range",
+            inline: true,
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            minTime: "09:00",
+            maxTime: "18:00",
+            minDate: "2020",
+            minDate: "today",
+            maxDate: new Date().fp_incr(60),
+        });
+    }
+});
+
+flatpickr.localize(flatpickr.l10ns.th);
+    
+/* ===== Checkbox ===== */
+      var allValue = document.getElementById("allCheck");
+      var submit = document.getElementById("submit-btn");
+      submit.style.display = "none";
+      var value = "";
+      $('.check1').on('change', function() {
+        $(this).each(function() {
+            if (this.checked) {
+                //alert($('.check1').index(this));
+                value = value + $(this).val() + ",";
+                allValue.value = value;
+            } else {
+                //unchecked
+                value = value.split($(this).val() + ',').join('')
+                allValue.value = value;
+            }
+        });
+        showSubmit(allValue.value);
+      });
+    
+      $('.check2').on('change', function() {
+        $(this).each(function() {
+            if (this.checked) {
+                value = value + $(this).val() + ",";
+                allValue.value = value;
+            } else {
+                value = value.split($(this).val() + ',').join('')
+                allValue.value = value;
+            }
+        });
+        showSubmit(allValue.value);
+      });
+    
+      $('.check3').on('change', function() {
+        $(this).each(function() {
+            if (this.checked) {
+                value = value + $(this).val() + ",";
+                allValue.value = value;
+            } else {
+                value = value.split($(this).val() + ',').join('')
+                allValue.value = value;
+            }
+        });
+        showSubmit(allValue.value);
+      });
+    
+      function showSubmit(v) {
+        if (v == null || v == "") {
+          submit.style.display = "none";
+        }
+        else {
+          submit.style.display = "block";
+        }
+      }
+    
+</script>
+
+<script type="text/javascript" src="/jquery.1.11.1.js"></script> 
+<script type="text/javascript" src="/bootstrap.js"></script> 
+<script type="text/javascript" src="/SmoothScroll.js"></script> 
+<script type="text/javascript" src="/jquery.isotope.js"></script> 
+<script type="text/javascript" src="/main.js"></script>
+
+</body>
+</html>

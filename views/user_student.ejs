@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COSCI - ระบบยืมคืนครุภัณฑ์</title>
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!-- =============== Bootstrap =============== -->
+<link rel="stylesheet" type="text/css"  href="/bootstrap.css">
+
+<!-- =============== Stylesheet =============== -->
+<link rel="stylesheet" type="text/css"  href="/style.css">
+<link rel="stylesheet" type="text/css"  href="/userStyle.css">
+<link rel="stylesheet" type="text/css"  href="/fontface.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Kanit:200,300,400,500,600,700&amp;subset=thai" rel="stylesheet">
+
+</head>
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<!-- =============== Navigation =============== -->
+<nav id="menu" class="navbar navbar-default navbar-fixed-top">
+  <div class="container"> 
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span><span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+      <a class="navbar-brand page-scroll" href="#"><img class="logo-header" src="/cosciLogo.png"></a></div>
+    
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+          <li><a href="/user_student/<%= datas.mem_username %>" class="page-scroll">Equipment&nbsp;&nbsp;&nbsp;•</a></li>
+          <li><a href="/user_student/<%= datas.mem_username %>/logout" class="page-scroll">LOGOUT&nbsp;&nbsp;&nbsp;<i class="fa fa-sign-out"></i>&nbsp;</a></li>
+          <li class="user-tag"><a href="/user_student/<%= datas.mem_username %>/profile" id="user-tag-a">
+              <i class="fa fa-user"></i>&nbsp;&nbsp;ID : <%= datas.mem_id %>&nbsp;&nbsp;
+              <br>
+              <i class="fa fa-clock-o"></i>&nbsp;&nbsp;DATE : <%= todays %><div class="img-user"><img src="/user/<%= datas.mem_pic %>"></div>
+          </a></li>
+     </ul>
+    </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Portfolio Section -->
+<div id="portfolio">
+  <div class="section-title text-center center">
+    <div class="overlay">
+      <div class="container">
+        <div class="row">
+          <br><br><br><br>
+          <div class="user-text">
+            <h2>สวัสดี, <%= datas.stu_name %></h2>
+            <hr>
+            <p>ยินดีต้อนรับเข้าสู่ระบบยืม-คืนครุภัณฑ์<br>
+              " เลือกครุภัณฑ์ที่ต้องการยืมด้านล่าง "<br>
+              <i class="fa fa-sort-down icon-down"></i>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="categories">
+        <ul class="cat">
+          <li>
+            <ol class="type">
+              <li><a href="#" data-filter="*" class="active">All</a></li>
+              <li><a href="#" data-filter=".camera">CAMERA</a></li>
+              <li><a href="#" data-filter=".assessory">ACCESSORY</a></li>
+              <li><a href="#" data-filter=".device">DEVICE</a></li>
+            </ol>
+          </li>
+        </ul>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="portfolio-items">
+        <% if (sets.length > 0) {%>
+          <% sets.forEach((value, index) => { %>
+            <div class="col-xs-6 col-md-3 col-lg-3 <%= value.set_category %>">
+              <div class="portfolio-item">
+                <div class="hover-bg">
+                  <a href="/equip_borrow/<%=datas.mem_id%>&<%=value.set_id%>" title="<%= value.set_name %>">
+                    <div class="hover-text">
+                      <h4>borrow</h4>
+                    </div>
+                    <img src="/portfolio/<%= value.set_pic %>" class="img-responsive" alt="<%= value.set_name %>">
+                  </a>
+                </div>
+              </div>
+            </div>
+            <% }) %>
+          <% } %>
+      </div>
+    </div>
+  </div>
+        
+</div>
+      
+<div id="footer">
+        <div class="container-fluid text-center copyrights">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="social">
+              <ul>
+                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+              </ul>
+            </div>
+            <p>&copy; COLLEGE OF SOCIAL COMMUNICATION INNOVATION.ALL RIGHTS RESERVED<br><br>
+              TEL. 02-649-5000 EXT 11275 , 02-259-2343 EMAIL. PRCOSCISWU@GMAIL.COM
+            </p>
+          </div>
+        </div>
+</div>
+    
+<!-- Menu Toggle Script -->
+
+<script type="text/javascript" src="/jquery.1.11.1.js"></script> 
+<script type="text/javascript" src="/bootstrap.js"></script> 
+<script type="text/javascript" src="/SmoothScroll.js"></script> 
+<script type="text/javascript" src="/jquery.isotope.js"></script> 
+<script type="text/javascript" src="/main.js"></script>
+
+</body>
+</html>

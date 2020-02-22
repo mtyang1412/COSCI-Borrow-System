@@ -1,0 +1,78 @@
+#portfolio .section-title {
+    background: url(/bg-user.png) !important;
+    background-position: center !important;
+	background-repeat: no-repeat !important;
+    background-size: cover !important;
+    
+    -webkit-background-size: cover;
+	-moz-background-size: cover;
+    -o-background-size: cover;
+    
+    margin-top: 0 !important;
+    padding: 0 !important;
+    margin-bottom: 50px !important;
+    width: 100%;
+}
+
+#menu.navbar-default {
+	padding: 13px 0 !important;
+}
+
+.section-title .overlay {
+    background: none !important;
+}
+
+h2 {
+    font-size: 50px;
+}
+
+.user-tag {
+    margin-left: 10px;
+    background-color: #007CB7;
+    width: 160px;
+    border-radius: 5px;
+    padding: 1px;
+    right: 0;
+    padding-top: 5.5px;
+    margin-top: -5.5px;
+}
+
+#user-tag-a {
+    margin-top: -8px ! important ;
+    font-size: 8px ! important ;
+}
+
+.img-user {
+    margin-top: -38px;
+    margin-left: 95px;
+    width: 40px;
+}
+
+.img-user img {
+    border-radius: 100%;
+    width: 38px;
+    height: 38px;
+}
+
+.section-title hr {
+    border: 1.5px solid #ddd;
+    margin-left: 0px;
+	background: #ddd;
+	width: 252px;
+	margin-bottom: 20px;
+}
+
+.section-title .user-text {
+    text-align: left;
+    margin-left: 33px;
+}
+
+.icon-down {
+    margin-top: 10px;
+    padding-top: 10px;
+    padding-left: 18px;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    background-color: #007CB7;
+}
