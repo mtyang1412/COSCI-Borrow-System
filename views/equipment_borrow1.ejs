@@ -17,12 +17,22 @@
 <link rel="stylesheet" type="text/css"  href="/userStyle.css">
 <link rel="stylesheet" type="text/css"  href="/fontface.css">
 <link rel="stylesheet" type="text/css" href="/datepickerStyle.css">
+<link rel="stylesheet" href="/daterangepicker.min.css"/>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Kanit:200,300,400,500,600,700&amp;subset=thai" rel="stylesheet">
 
 </head>
+
+<style>
+  .hideWeekend {
+    color: rgb(218, 65, 65) !important;
+    cursor: default;
+    pointer-events: none;
+  }
+</style>
+
 <body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
 <!-- =============== Navigation =============== -->
 <nav id="menu" class="navbar navbar-default navbar-fixed-top">
@@ -65,7 +75,82 @@
               <img src="/portfolio/<%= types[0].set_pic%>" class="img-responsive" alt="<%= types[0].set_name%>">
             </div>
             <h3>ระบุวันที่ที่ต้องการยืม</h3><hr>
-            <input type="date" style="width: 100%;" id="datepicker" class="form-control" readonly />
+              <div class="demo">
+                  <span id="two-inputs">
+                  <input id="date-range200" size="20" value="" style="display: none;">
+                  <input id="date-range201" size="20" value="" style="display: none;">
+                  </span>
+                  <div id="date-range12-container" style="width:100%;"></div>
+              </div>
+
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js" type="text/javascript"></script>
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.16.0/moment.min.js" type="text/javascript"></script>
+              <script src="/jquery.daterangepicker.js"></script>
+
+              <script>
+                  $.dateRangePickerLanguages['custom'] = {
+                  "selected": "วันที่เลือก:",
+                  "days": "วัน",
+                  "default-less": "วันที่ต้องการยืม %d วัน",
+                  "time": "เวลา",
+                  "hour": "ชั่วโมง",
+                  "minute": "นาที",
+                  'week-1' : 'จ',
+                  'week-2' : 'อ',
+                  'week-3' : 'พ',
+                  'week-4' : 'พฤ',
+                  'week-5' : 'ศ',
+                  'week-6' : 'ส',
+                  'week-7' : 'อา',
+                  'month-name': ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลมคม','พฤศจิกายน','ธันวาคม'],
+                  };
+              
+                  var noEquip = [["2020-03-11", "2020-03-13"],["2020-03-24","2020-03-25"]];
+              
+                  $('.minute').hide();
+                  
+                  $('#two-inputs').dateRangePicker( {
+                      container: '#date-range12-container',
+                      separator: ' ถึง ',
+                      language: 'custom',
+                      singleMonth: true,
+                      inline: true,
+                      alwaysOpen: true,
+                      maxDays: 5,
+                      selectForward: true,
+                      format: 'DD/MM/YYYY',
+                      startDate: moment().subtract(-3, 'days'),
+                      endDate: moment().subtract(-3, 'month'),
+              
+                      beforeShowDay: function(date) {
+                      date.setHours(12, 00, 00);
+                      var string = date.toISOString().substr(0,10);
+                      var weekEnd = (date.getDay() === 0 || date.getDay() === 6) ? 'hideWeekend' : '';
+                        for (var i = 0; i < noEquip.length; i++) {
+                            if (Array.isArray(noEquip[i])) {
+                              var from = new Date(noEquip[i][0]);
+                              var to = new Date(noEquip[i][1]);
+                              var current = new Date(string);
+                            if (current >= from && current <= to)
+                              return false;
+                            }
+                          }
+                          return [true, weekEnd];
+                      },
+                
+                      getValue: function() {
+                        if ($('#date-range200').val() && $('#date-range201').val() )
+                          return $('#date-range200').val() + ' to ' + $('#date-range201').val();
+                        else
+                          return '';
+                      },
+                      setValue: function(s,s1,s2) {
+                        $('#date-range200').val(s1);
+                        $('#date-range201').val(s2);
+                      }
+                });
+                
+              </script>
           </div>
 
           <div class="col-sm-6 col-md-6 col-lg-6">
@@ -149,30 +234,8 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-<script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
-<script src="https://npmcdn.com/flatpickr/dist/l10n/th.js"></script>
 
 <script>
-jQuery(document).ready(function($) {
-  if( $("#datepicker").length ){
-        $("#datepicker").flatpickr({
-            enableTime:!1,
-            defaultDate: '',
-            mode: "range",
-            inline: true,
-            enableTime: true,
-            dateFormat: "Y-m-d H:i",
-            minTime: "09:00",
-            maxTime: "18:00",
-            minDate: "2020",
-            minDate: "today",
-            maxDate: new Date().fp_incr(60),
-        });
-    }
-});
-
-flatpickr.localize(flatpickr.l10ns.th);
-    
 /* ===== Checkbox ===== */
       var allValue = document.getElementById("allCheck");
       var submit = document.getElementById("submit-btn");
