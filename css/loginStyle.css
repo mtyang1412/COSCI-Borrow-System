@@ -111,7 +111,7 @@ header .intro-text {
   }
   @media (min-width: 1200px) {
     input, .btn{
-      width: 350px;
+      width: 70%;
     }
   }
   
