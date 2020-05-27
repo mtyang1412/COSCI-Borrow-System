@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COSCI - ระบบยืมคืนอุปกรณ์ครุภัณฑ์</title>
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!-- =============== Bootstrap =============== -->
+<link rel="stylesheet" type="text/css"  href="/bootstrap.css">
+
+<!-- =============== Stylesheet =============== -->
+<link rel="stylesheet" type="text/css"  href="/style.css">
+<link rel="stylesheet" type="text/css"  href="/equipStyle.css">
+<link rel="stylesheet" type="text/css"  href="/userStyle.css">
+<link rel="stylesheet" type="text/css"  href="/borrowStyle.css">
+<link rel="stylesheet" type="text/css"  href="/adminStyle.css">
+<link rel="stylesheet" type="text/css"  href="/dataStyle.css">
+<link rel="stylesheet" type="text/css"  href="/fontface.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Kanit:200,300,400,500,600,700&amp;subset=thai" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+<style>
+/* -- ทำ switch เปิด/ปิด -- */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 25px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: goldenrod;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* -- ปุ่ม submit ในตาราง -- */
+.subSubmitBTN {
+  background-color: #FF0040;
+  color: white;
+  border-radius: 20px;
+  border: transparent;
+  padding: 5px 6px;
+  cursor: pointer;
+}
+.subSubmitBTN:hover:enabled {
+  background-color: #CF0040;
+}
+.subSubmitBTN:disabled, .subSubmitBTN[disabled] {
+  background-color: lightgray;
+}
+</style>
+
+</head>
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<!-- =============== Navigation =============== -->
+<nav id="menu" class="navbar navbar-default navbar-fixed-top">
+  <div class="container"> 
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> 
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span><span class="icon-bar"></span> 
+        <span class="icon-bar"></span> 
+      </button>
+      <a class="navbar-brand page-scroll" href="#">
+        <img class="logo-header" src="/cosciLogo.png">
+      </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/admin/<%=usn%>" class="page-scroll">Home&nbsp;&nbsp;&nbsp;•</a></li>
+        <li><a href="/admin/<%=usn%>/manage/equipment" class="page-scroll">Equipment&nbsp;&nbsp;&nbsp;•</a></li>
+        <li><a href="/admin/<%=usn%>/history/all" class="page-scroll">History&nbsp;&nbsp;&nbsp;•&nbsp;</a></li>
+        <li><a href="/user/logout" class="page-scroll">Logout&nbsp;&nbsp;<i class="fa fa-sign-out"></i>&nbsp;</a></li>
+        <li class="user-tag">
+          <a href="/admin/<%=usn%>/profile" id="user-tag-a">
+            <i class="fa fa-user"></i>&nbsp;&nbsp;ID : <%=datas.mem_id%> &nbsp;&nbsp;
+            <br>
+            <i class="fa fa-clock-o"></i>&nbsp;&nbsp;DATE : <%= todays %> 
+            <div class="img-user"><img src="/user/<%=datas.mem_pic%>"></div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Portfolio Section -->
+<div id="portfolio">
+  <div class="container" style="padding-bottom: 90px;">
+    <div class="row" style="margin-top: 160px;">
+      <div class="table-wrapper">
+        <div class="table-title">
+          <div class="row">
+            <div class="col-sm-8">
+              <h4 style="margin-top: -70px;">
+                ตั้งค่าอุปกรณ์
+              </h4>
+            </div>
+            
+            <div class="col-sm-4">
+              <div class="edit" style="margin-right: -20px; margin-top: -70px; text-align: right;">
+                <div class="dropdown">
+                  <button class="btn-top dropdown-toggle" type="button" data-toggle="dropdown">
+                    <i class="fa fa-reorder"></i>
+                  </button>
+                  <ul class="dropdown-menu pull-right">
+                    <li><a href="/admin/<%=usn%>/manage/equipment">เช็คสถานะอุปกรณ์</a></li>
+                    <li><a href="/admin/<%=usn%>/add/equipment">เพิ่ม-แก้ไขอุปกรณ์</a></li>
+                    <li><a href="#">ตั้งค่าอุปกรณ์</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+                
+          <div class="row">
+            <div class="col-sm-8"></div>
+            <div class="col-sm-4">
+                <div style="text-align: right;">
+                    <form method="GET" class="search-form">
+                      <input id="search1" value="<%=inputval%>" style="padding: 0px 10px; margin: 2px 0; border: 1px solid #ccc; border-radius: 4px;" placeholder="ชื่อเซต / หมวดหมู่" required>&nbsp;&nbsp;
+                      <button type="submit" class="searchBTN">
+                        <i class="fa fa-search"></i> ค้นหา
+                      </button>
+                    </form>
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="sumselect" class="col-sm-12" style="margin: 15px 0;">
+          <form action="/admin/<%=usn%>/setting/many" method="POST">
+            <input name="essumsid" id="selectset" hidden>
+            <table>
+              <tr>
+                <th style="width: 35%;">
+                  <input type="checkbox" class="maincheckbox">
+                  &nbsp;&nbsp;เลือกทั้งหมด
+                </th>
+                <th style="width: 25%; text-align: right; padding-right: 30px;">
+                  เลือก <span id="countselect"></span> อุปกรณ์
+                </th>
+                <th style="width: 15%; text-align: center;">
+                  ผู้ยืม<br>
+                  <select name="esallborrow">
+                    <option value="all">ทั้งหมด</option>
+                    <option value="student">นิสิต</option>
+                    <option value="staff">อาจารย์/บุคลากร</option>
+                  </select>
+                </th>
+                <th style="width: 15%; padding-left: 30px;">
+                  ปิด/เปิด <br>
+                  <label class="switch">
+                    <input name="esallonoff" value="on" type="checkbox" checked>
+                    <span class="slider round"></span>
+                  </label>
+                </th>
+                <th style="width: 9%;">
+                  <a href="/admin/<%=usn%>/equip/setting/all">
+                    <button type="button" class="cancelSubmitBTN">
+                      ยกเลิก
+                    </button>
+                  </a>
+                </th>
+                <th style="width: 9%; text-align: right;">
+                  <button type="submit" class="submitSearch" style="height: 27px; line-height: 27px; padding: 0 18px;">
+                    บันทึก
+                  </button>
+                </th>
+              </tr>
+            </table>
+          </form>
+        </div>
+  
+        <table class="table table-bordered" id="settable" style="width: 100%;">
+          <thead style="background-color: darkgray; color: black;">
+            <tr>
+              <th style="width: 5%;">
+                <input type="checkbox" class="maincheckbox">
+              </th>
+              <th>
+                  ชื่อเซต
+              </th>
+              <th style="width: 13%;">
+                  หมวดหมู่
+              </th>
+              <th style="width: 10%;">
+                  ให้ยืมทั้งเซต
+              </th>
+              <th style="width: 16%;">
+                ผู้ที่สามารถยืมได้
+              </th>
+              <th style="width: 12%;">
+                เปิด/ปิดบริการ
+              </th>
+              <th style="width: 8%;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (setData.length > 0) { %>
+              <% for (i=0; i<(setData.length) ;i++) { %>
+                <tr>
+                  <form action="/admin/<%=usn%>/setting/one" method="POST">
+                    <td>
+                      <input name="esid" value="<%=setData[i].set_id%>" type="checkbox" class="childcheckbox">
+                    </td>
+                    <td> <%= setData[i].set_name %> </td>
+                    <td> <%= setData[i].set_category %> </td>
+                    <td> 
+                        <% if (setData[i].set_can_borrow  == 'o') { %>
+                            ใช่
+                        <% } else { %>
+                            ไม่ใช่
+                        <% } %>
+                    </td>
+                    <td>
+                      <select name="esborrower" class="selectborrower">
+                        <% if (setData[i].set_borrower == 'all') { %>
+                          <option value="all" selected>ทั้งหมด</option>
+                          <option value="student">นิสิต</option>
+                          <option value="staff">อาจารย์/บุคลากร</option>
+                        <% } else if (setData[i].set_borrower == 'student') { %>
+                          <option value="all">ทั้งหมด</option>
+                          <option value="student" selected>นิสิต</option>
+                          <option value="staff">อาจารย์/บุคลากร</option>
+                        <% } else { %>
+                          <option value="all">ทั้งหมด</option>
+                          <option value="student">นิสิต</option>
+                          <option value="staff" selected>อาจารย์/บุคลากร</option>
+                        <% } %>
+                      </select>
+                    </td>
+                    <td>
+                      <% if (setData[i].set_status == 'on') { %>
+                        <label class="switch">
+                          <input name="esonoff" type="checkbox" checked>
+                          <span class="slider round"></span>
+                        </label>
+                      <% } else { %>
+                        <label class="switch">
+                          <input name="esonoff" type="checkbox">
+                          <span class="slider round"></span>
+                        </label>
+                      <% } %>
+                    </td>
+                    <td>
+                      <button type="submit" class="subSubmitBTN">
+                        <i class="fa fa-check"></i>
+                      </button>
+                    </td>
+                  </form>
+                </tr>
+              <% } %>
+            <% } else { %>
+                <tr>
+                  <td colspan="6">
+                      ไม่พบข้อมูล
+                  </td>
+                </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>  
+    </div>
+  </div>
+</div>
+
+
+
+<div>
+  <!-- ดึงค่า footer มาแสดงจากไฟล์ footer.ejs -->
+  <%- include('footer') -%>
+</div>
+
+<script type="text/javascript" src="/jquery.1.11.1.js"></script> 
+<script type="text/javascript" src="/bootstrap.js"></script> 
+<script type="text/javascript" src="/jquery.isotope.js"></script> 
+<script type="text/javascript" src="/main.js"></script>
+
+<script type="text/javascript">
+
+const usernames = <%-JSON.stringify(usn)%>;
+
+/* ===== Search ===== */
+$('#search1').keyup(function() {
+    let actionURL = '/admin/' + usernames + '/equip/setting/' + $(this).val();
+    $('.search-form').attr('action', actionURL);
+});
+
+
+var sumValue = new Object();
+/* == ถ้าเลือกทั้งหมด == */
+$('#sumselect').hide();
+$('.subSubmitBTN').attr('disabled', true);
+function showAllSelect() {
+  $('#sumselect').show();
+  const sumChecks = $('.childcheckbox').length;
+  $('#countselect').text(sumChecks);
+
+  $('.childcheckbox').each(function() {
+    let value = $(this).val()
+    let key = $(this).closest('tr').index();
+    sumValue[key] = value;
+    $('#selectset').val(JSON.stringify(sumValue))
+  });
+
+  $(".maincheckbox").prop("indeterminate", false);
+  $('.maincheckbox').prop('checked', true);
+}
+
+/* == เลือกบาง checkbox == */
+function showSomeSelect() {
+  $('#sumselect').show();
+  let sumChecks = $('.childcheckbox:checked').length;
+  $('#countselect').text(sumChecks);
+
+  $('.childcheckbox').each(function() {
+    if (this.checked) {
+      let value = $(this).val()
+      let key = $(this).closest('tr').index();
+      sumValue[key] = value;
+      $('#selectset').val(JSON.stringify(sumValue))
+    }
+    else {
+      let key = $(this).closest('tr').index();
+      delete sumValue[key]
+      $('#selectset').val(JSON.stringify(sumValue))
+    }
+  });
+
+  $(".maincheckbox").prop("indeterminate", true);
+  $('.maincheckbox').prop('checked', false);
+}
+
+function showOneSelect() {
+  $('#sumselect').hide();
+  $(".maincheckbox").prop("indeterminate", true);
+  $('.maincheckbox').prop('checked', false);
+}
+
+/* == ไม่เลือกเลย == */
+function showNoSelect() {
+  $('.childcheckbox').each(function() {
+    let key = $(this).closest('tr').index();
+    delete sumValue[key]
+    $('#selectset').val(JSON.stringify(sumValue))
+  });
+
+  $('#sumselect').hide();
+  $(".maincheckbox").prop("indeterminate", false);
+  $('.maincheckbox').prop('checked', false);
+}
+
+
+$('.maincheckbox').click(function() {
+  if ($($(this)).is(':checked')) {
+    $('.childcheckbox').prop('checked', true);
+    showAllSelect();
+  }
+  else {
+    $('.childcheckbox').prop('checked', false);
+    showNoSelect();
+  }
+});
+
+$('.childcheckbox').click(function() {
+  let countCheck = $('.childcheckbox:checked').length;
+  const allChecks = $('.childcheckbox').length;
+
+  if ($(this).is(':checked')) {
+    if (countCheck == allChecks) {
+      showAllSelect();
+    }
+    else if (countCheck > 1) {
+      showSomeSelect();
+    }
+    else {
+      showOneSelect();
+    }
+  }
+  else {
+    if (countCheck == allChecks) {
+      showAllSelect();
+    }
+    else if (countCheck > 1) {
+      showSomeSelect();
+    }
+    else if (countCheck == 1) {
+      showOneSelect();
+    }
+    else {
+      showNoSelect();
+    }
+  }
+});
+
+/* -- เปลี่ยนผู้ยืม -- */
+$('.selectborrower').change(function() {
+  let rowIndex = $(this).closest('tr').index();
+  $('.childcheckbox').eq(rowIndex).prop('checked', true);
+  showOneSelect();
+  $('.subSubmitBTN').eq(rowIndex).attr('disabled', false);
+});
+
+/* == switch เปิด/ปิดบริการ == */
+$("input[name='esonoff']").change(function() {
+  let rowIndex = $(this).closest('tr').index();
+  $('.childcheckbox').eq(rowIndex).prop('checked', true);
+  showOneSelect();
+  $('.subSubmitBTN').eq(rowIndex).attr('disabled', false);
+});
+
+</script>
+
+</body>
+</html>

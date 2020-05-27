@@ -44,6 +44,7 @@ header .intro-text {
   .toggle-login span, .toggle-register span {
     color: #fff;
     font-weight: 500;
+    font-size: 18px;
     text-transform: uppercase;
   }
   .toggle-login:hover, .toggle-register:hover {
@@ -111,7 +112,7 @@ header .intro-text {
   }
   @media (min-width: 1200px) {
     input, .btn{
-      width: 70%;
+      width: 350px;
     }
   }
   
@@ -124,6 +125,7 @@ header .intro-text {
     color: #fff;
     border-radius: 30px;
     transition: background-color 0.2s;
+    font-size: 17px;
   }
   .a-btn:hover {
     background-color: #333;
@@ -149,6 +151,7 @@ header .intro-text {
     color: #fff;
     border-radius: 30px;
     margin-bottom: 30px;
+    font-size: 17px;
     margin-top: 20px;
     transition: background-color 0.2s;
   }
@@ -197,8 +200,8 @@ header .intro-text {
     flex-direction: column;
     background-color: rgba(255, 255, 255, 0.925);
     border-radius: 40px;
-    margin-bottom: -250px;
     padding-top: 20px;
+    padding-bottom: 10px;
   }
 
   .forgot-body a {

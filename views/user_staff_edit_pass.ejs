@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COSCI - ระบบยืมคืนอุปกรณ์ครุภัณฑ์</title>
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!-- =============== Bootstrap =============== -->
+<link rel="stylesheet" type="text/css"  href="/bootstrap.css">
+
+<!-- =============== Stylesheet =============== -->
+<link rel="stylesheet" type="text/css"  href="/style.css">
+<link rel="stylesheet" type="text/css"  href="/profileStyle.css">
+<link rel="stylesheet" type="text/css"  href="/userStyle.css">
+<link rel="stylesheet" type="text/css"  href="/borrowStyle.css">
+<link rel="stylesheet" type="text/css"  href="/fontface.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Kanit:200,300,400,500,600,700&amp;subset=thai" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.css">
+
+</head>
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<!-- =============== Navigation =============== -->
+<nav id="menu" class="navbar navbar-default navbar-fixed-top">
+  <div class="container"> 
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span><span class="icon-bar"></span> <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand page-scroll" href="#">
+          <img class="logo-header" src="/cosciLogo.png">
+      </a>
+    </div>
+          
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/user_staff/<%=usn%>" class="page-scroll">Equipment&nbsp;&nbsp;&nbsp;•</a></li>
+        <li><a href="/user/logout" class="page-scroll">LOGOUT&nbsp;&nbsp;&nbsp;<i class="fa fa-sign-out"></i>&nbsp;</a></li>
+        <li class="user-tag">
+          <a href="/user_staff/<%=usn%>/profile" id="user-tag-a">
+            <i class="fa fa-user"></i>&nbsp;&nbsp;ID : <%= datas.mem_username %>&nbsp;&nbsp;
+            <br>
+            <i class="fa fa-clock-o"></i>&nbsp;&nbsp;DATE : <%= todays %>
+            <div class="img-user"><img src="/user/<%= datas.mem_pic %>"></div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div id="portfolio">
+  <div class="section-profile-title">
+    <div class="overlay">
+      <div class="container">
+        <div class="row">
+          <br><br><br><br>
+          <div class="user-text">
+            <h2>สวัสดี, <%= datas.staff_name %></h2>
+            <hr>
+          </div>
+  
+          <div class="container">
+            <div class="row" id="user-profile">
+              <div class="col-lg-3 col-md-4 col-sm-4">
+                <div class="main-box clearfix">
+                  <img src="/user/<%= datas.mem_pic %>" alt="" class="profile-img img-responsive center-block">
+                  <div class="profile-details">
+                    <ul class="fa-ul">
+                        <li><i class="fa-li fa fa-user"></i>ชื่อผู้ใช้ : <span><%= datas.mem_username%></span></li>
+                    </ul>
+                   </div>
+                </div>
+              </div>
+              
+              <div class="col-lg-9 col-md-8 col-sm-8">
+                <div class="main-box clearfix">
+                  <div class="profile-header">
+                    <h3><span>ข้อมูลส่วนตัว</span></h3>
+                    <div class="edit">
+                      <div class="dropdown edit-profile">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-gear"></i></button>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href="/user_staff/<%=usn%>/profile/edit-info">แก้ไขข้อมูลส่วนตัว</a></li>
+                            <li><a href="#">เปลี่ยนรหัสผ่าน</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <form method="post" action="/user_staff/<%=usn%>/profile/edit-pass">
+                    <div class="row profile-user-info">
+                      <div class="col-sm-12 col-lg-5 col-md-12">
+                        <div class="profile-user-details clearfix">
+                          <div class="profile-user-details-label">
+                            รหัสประจำตัว
+                          </div>             
+                          <div class="profile-user-details-value">
+                            : <%= datas.mem_id%>
+                          </div>
+                        </div>
+                                        
+                        <div class="profile-user-details clearfix">
+                          <div class="profile-user-details-label">
+                            ชื่อ-นามสกุล
+                          </div>
+                          <div class="profile-user-details-value">
+                            : <%= datas.staff_name%>
+                          </div>
+                        </div>
+                                        
+                        <div class="profile-user-details clearfix">
+                          <div class="profile-user-details-label">
+                            รหัสผ่านเดิม
+                          </div>
+                          <div class="profile-user-details-value">
+                            <input class="form-field" id="password1" name="password" type="password" required>
+                            <span id="show-pass-old" style="display: none; color: crimson;">รหัสผ่านไม่ถูกต้อง</span>
+                          </div>
+                          <div class="profile-user-details-value" style="display: none;">
+                            <input class="form-field" type="password" id="password2" value="<%= datas.mem_password%>">
+                          </div>
+                        </div>
+                                        
+                        <div class="profile-user-details clearfix">
+                          <div class="profile-user-details-label">
+                            รหัสผ่านใหม่
+                          </div>
+                          <div class="profile-user-details-value">
+                            <input class="form-field" id="pass1" name="newpass" type="password" required>
+                          </div>
+                        </div>
+                                        
+                        <div class="profile-user-details clearfix">
+                          <div class="profile-user-details-label">
+                            กรอกรหัสผ่านใหม่อีกครั้ง
+                          </div>
+                          <div class="profile-user-details-value">
+                            <input class="form-field" id="pass2" type="password" required>
+                            <span id="show-pass" style="display: none; color: crimson;">รหัสผ่านไม่ตรงกัน</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12 col-lg-12 col-md-12" style="margin-top: 30px;">
+                      <div style="text-align: center;">
+                          <a href="/user_student/<%=usn%>/profile" class="btn btn-primary">ยกเลิก</a>&nbsp;&nbsp;
+                          <button type="submit" id="submit-reset" class="confirm btn btn-danger" disabled="true">ยืนยัน</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>            
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+<div id="footer">
+        <div class="container-fluid text-center copyrights">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="social">
+              <ul>
+                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+              </ul>
+            </div>
+            <p>&copy; COLLEGE OF SOCIAL COMMUNICATION INNOVATION.ALL RIGHTS RESERVED<br><br>
+              TEL. 02-649-5000 EXT 11275 , 02-259-2343 EMAIL. PRCOSCISWU@GMAIL.COM
+            </p>
+          </div>
+        </div>
+</div>
+    
+<!-- Menu Toggle Script -->
+
+<script type="text/javascript" src="/jquery.1.11.1.js"></script> 
+<script type="text/javascript" src="/bootstrap.js"></script> 
+<script type="text/javascript" src="/jquery.isotope.js"></script> 
+<script type="text/javascript" src="/main.js"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.css"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.js"></script>
+
+<script>
+$('.confirm').click(function(){  
+    swal({
+			title: 'เปลี่ยนรหัสผ่านสำเร็จ',
+        text: 'เปลี่ยนรหัสผ่านเรียบร้อยแล้ว',
+			type: 'success',
+      confirmButtonText: '<a href="/user_staff/<%=usn%>/profile" style="color: #fff; padding: 20px;">กลับไปหน้าโปรไฟล์</a>',
+		});
+});
+
+$("#pass1").keyup(function(){
+    let empty = false;
+    $("#pass1").each(function() {
+      empty = $(this).val().length == 0;
+    });
+
+    if (empty == true) {
+      $("#show-pass").show();
+      $("#show-pass").text('คุณยังไม่ได้สร้างรหัสผ่านใหม่');
+      $("#submit-reset").attr("disabled", true);
+    }
+    else {
+      if ($("#pass1").val() == $("#pass2").val()) {
+        $("#show-pass").hide();
+        $("#submit-reset").attr("disabled", false);
+      }
+      else {
+        $("#show-pass").show();
+        $("#show-pass").text('รหัสผ่านไม่ตรงกัน');
+        $("#submit-reset").attr("disabled", true);
+      }
+    }
+})
+
+$("#pass2").keyup(function(){
+  let empty = false;
+  $("#pass1").each(function() {
+    empty = $(this).val().length == 0;
+  });
+  
+  if (empty == true) {
+    $("#show-pass").show();
+    $("#show-pass").text('คุณยังไม่ได้สร้างรหัสผ่านใหม่');
+    $("#submit-reset").attr("disabled", true);
+  }
+  else {
+    if ($("#pass1").val() === $("#pass2").val()) {
+      $("#show-pass").hide();
+      $("#submit-reset").attr("disabled", false);
+    }
+    else {
+      $("#show-pass").show();
+      $("#submit-reset").attr("disabled", true);
+    }
+  }
+})
+
+$("#password1").keyup(function(){
+    if ($("#password1").val() === $("#password2").val()) {
+      $("#show-pass-old").hide();
+    }
+    else {
+      $("#show-pass-old").show();
+      $("#submit-reset").attr("disabled", true);
+    }
+})
+
+</script>
+</body>
+</html>

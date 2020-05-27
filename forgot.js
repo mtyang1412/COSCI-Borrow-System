@@ -27,6 +27,8 @@ ex.forgot_password = app.get('/forgotPass', function(req, res) {
 });
 
 ex.request = app.post('/requestPass', function(req, res) {
+    console.log('----- Request Password -----');
+
     let username = req.body.id;
     connection.query(
         "SELECT * FROM member WHERE mem_id = ? OR mem_username = ?",
@@ -62,7 +64,7 @@ ex.request = app.post('/requestPass', function(req, res) {
                             console.log('Data Inserted!!!');
                             /* Create random password */
                             let random5 = Math.random().toString(36).substring(2, 7);
-                            console.log(random5);
+                            console.log('Random Password: ', random5);
 
                             connection.query(
                                 "UPDATE member SET mem_password = ? WHERE mem_id = ? OR mem_username = ?",
@@ -73,7 +75,8 @@ ex.request = app.post('/requestPass', function(req, res) {
                                         console.log('Change Password!!!');
 
                                         res.render('forgot_pass.ejs', {
-                                            datas:      'We will send you the password via email "' + result[0].mem_email + '" within 3 business days.',
+                                            // We will send you the password via email "' + result[0].mem_email + '" within 3 business days.
+                                            datas:      'เราจะส่งรหัสผ่านไปให้คุณทางอีเมล "' + result[0].mem_email + '" ภายใน 2 วันทำการ',
                                             requests:   'none',
                                             sents:      'block'
                                         });
@@ -89,7 +92,8 @@ ex.request = app.post('/requestPass', function(req, res) {
             else {
                 // Not Member
                 res.render('forgot_pass.ejs', {
-                    datas:      'Username not found; You are not a member!',
+                    // Username not found; You are not a member!
+                    datas:      'ไม่พบชื่อผู้ใช้นี้! คุณอาจไม่ใช่สมาชิก',
                     requests:   'block',
                     sents:      'none'
                 });

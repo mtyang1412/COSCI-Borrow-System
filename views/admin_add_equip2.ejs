@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>COSCI - ระบบยืมคืนอุปกรณ์ครุภัณฑ์</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+  
+  <!-- =============== Bootstrap =============== -->
+  <link rel="stylesheet" type="text/css"  href="/bootstrap.css">
+  
+  <!-- =============== Stylesheet =============== -->
+  <link rel="stylesheet" type="text/css"  href="/style.css">
+  <link rel="stylesheet" type="text/css"  href="/equipStyle.css">
+  <link rel="stylesheet" type="text/css"  href="/userStyle.css">
+  <link rel="stylesheet" type="text/css"  href="/borrowStyle.css">
+  <link rel="stylesheet" type="text/css"  href="/dataStyle.css">
+  <link rel="stylesheet" type="text/css"  href="/fontface.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Kanit:200,300,400,500,600,700&amp;subset=thai" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.css">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+  <style>
+    .addTABLE {
+      width: 100%;
+      margin: 0 15px;
+      line-height: 35px;
+    }
+    .addTABLE tr th, td {
+      text-align: left;
+      vertical-align: middle;
+    }
+    .addTABLE td input[type="text"] {
+      height: 24px;
+      line-height: 24px;
+      padding-left: 10px;
+      width: 90%;
+      display: block;
+    }
+    .addTABLE td input[type="number"] {
+      height: 24px;
+      line-height: 24px;
+      padding-left: 10px;
+      width: 90%;
+    }
+    .addTABLE td select {
+      height: 22px;
+    }
+
+    .imgDIV {
+      width: 150px; 
+      height: 130px; 
+      background-color: black; 
+      border: solid white; 
+      margin: 8px 0 8px 15px; 
+      text-align: right; 
+      position: relative; 
+    }
+    .imgDIV .selectimg {
+      color: white;
+      font-size: 22px;
+      padding: 8px;
+      background-color: gray;
+      border-radius: 5px;
+      top: 5px; right: 5px;
+      cursor: pointer;
+      position: absolute;
+    }
+    .imgDIV .selectimg:hover {
+      background-color: #555555;
+    }
+    .imgDIV .setimg {
+      padding: 3px;
+      display: block;
+      max-width: 100%;
+      height: 100%;
+      margin: auto;
+    }
+
+    .addtypeBTN {
+      background-color: black;
+      color: white;
+      border: 2px solid darkgray;
+      padding: 5px 20px;
+      border-radius: 10px;
+    }
+    .addtypeBTN:hover:enabled {
+      background-color: whitesmoke;
+      color: #454545;
+      font-weight: bold;
+      border: 2px solid #454545;
+    }
+    .addtypeBTN:disabled, .addtypeBTN[disabled] {
+      background-color: darkgray;
+    }
+
+    .cancelBTN {
+      background-color: gray;
+      color: white;
+      border-radius: 10px;
+      border: transparent;
+      padding: 5px 25px;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .cancelBTN:hover { background-color: black; }
+    .addtBTN {
+      background-color: red;
+      color: white;
+      border-radius: 10px;
+      border: transparent;
+      padding: 5px 25px;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .addtBTN:hover { background-color: darkred; }
+    .addtBTN:disabled, .addtBTN[disabled] {
+      background-color: pink;
+    }
+
+    .typeTABLE {
+      margin-top: 5px;
+      width: 100%;
+      line-height: 25px;
+    }
+    .typeTABLE th {
+      border-bottom: 1px solid gray;
+    }
+    .typeTABLE tr th {
+      padding-left: 10px;
+    }
+
+    .scrollDIV {
+      width: 100%;
+      height: 500px;
+      overflow: auto;
+    }
+
+    /* ---tooltip--- */
+    .tooltip1 {
+      margin-left: 12px;
+      position: relative;
+      cursor: pointer;
+    }
+    .tooltip1 .tooltiptext {
+      visibility: hidden;
+      background-color: #555;
+      color: #fff;
+      font-size: 10px;
+      text-align: center;
+      border-radius: 5px;
+      padding: 3px 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 80%;
+      left: 50%;
+      margin-left: -15px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .tooltip1 .tooltiptext::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+    }
+    .tooltip1:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+    
+</head>
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<!-- =============== Navigation =============== -->
+<nav id="menu" class="navbar navbar-default navbar-fixed-top">
+  <div class="container"> 
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> 
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span><span class="icon-bar"></span> 
+        <span class="icon-bar"></span> 
+      </button>
+      <a class="navbar-brand page-scroll" href="#">
+        <img class="logo-header" src="/cosciLogo.png">
+      </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/admin/<%=usn%>" class="page-scroll">Home&nbsp;&nbsp;&nbsp;•</a></li>
+        <li><a href="/admin/<%=usn%>/manage/equipment" class="page-scroll">Equipment&nbsp;&nbsp;&nbsp;•</a></li>
+        <li><a href="/admin/<%=usn%>/history/all" class="page-scroll">History&nbsp;&nbsp;&nbsp;•&nbsp;</a></li>
+        <li><a href="/user/logout" class="page-scroll">Logout&nbsp;&nbsp;<i class="fa fa-sign-out"></i>&nbsp;</a></li>
+        <li class="user-tag">
+          <a href="/admin/<%=usn%>/profile" id="user-tag-a">
+            <i class="fa fa-user"></i>&nbsp;&nbsp;ID : <%=datas.mem_id%> &nbsp;&nbsp;
+            <br>
+            <i class="fa fa-clock-o"></i>&nbsp;&nbsp;DATE : <%= todays %> 
+            <div class="img-user"><img src="/user/<%=datas.mem_pic%>"></div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Portfolio Section -->
+<div id="portfolio">
+  <div class="container" style="padding-bottom: 90px;">
+    <div class="row" style="margin-top: 90px;">
+      <div class="col-sm-12 col-md-12 col-lg-12" style="margin-bottom: -10px;">
+        <h3>เพิ่มอุปกรณ์</h3>
+        <hr style="border: 1px solid gray; border-radius: 5px; background-color: gray; width: 140px; margin-top: -5px;">
+      </div>
+
+      <form action="/admin/add/equipment2/<%=usn%>" method="POST" enctype="multipart/form-data">
+        <input name="etall" id="alladdtype" hidden>
+        <input name="eeall" id="alladdequip" hidden>
+        <div class="col-sm-6 col-md-6 col-lg-6">
+          <h5 style="color: #333;">
+            เพิ่มเซตอุปกรณ์
+          </h5>
+  
+          <!-- เพิ่มอุปกรณ์ Form -->
+          <table class="addTABLE">
+            <tr>
+              <th style="width: 20%;">
+                SET ID
+              </th>
+              <td style="width: 80%;">
+                <%= ides %>
+                <input name="esid" value="<%=ides%>" hidden>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                ชื่อเซต
+              </th>
+              <td>
+                <input name="esname" id="es1" type="text" required>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                หมวดหมู่
+              </th>
+              <td>
+                <select name="escategory" id="es2" style="width: 90%;">
+                  <option disabled selected>-- เลือกหมวดหมู่ --</option>
+                  <option value="camera">กล้อง (camera)</option>
+                  <option value="assessory">อุปกรณ์ภาพยนตร์อื่นๆ (assessory)</option>
+                  <option value="device">อุปกรณ์คอมพิวเตอร์ (device)</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                ให้ยืมทั้งเซต
+              </th>
+              <td style="padding-left: 30px;">
+                <input name="escanb" type="radio" value="o" id="esradioy" required> &nbsp;&nbsp;ใช่
+                <input name="escanb" type="radio" value="x" id="esradion" style="margin-left: 35px;" required> &nbsp;&nbsp;ไม่ใช่
+              </td>
+            </tr>
+            <tr>
+              <th>
+                มี stock อยู่
+              </th>
+              <td>
+                <input name="esstock" type="number" id="asn" value="1" min="1" onkeypress="return numLetter(event)" required>
+                  &nbsp;&nbsp;เซต
+              </td>
+            </tr>
+            <tr>
+              <th>
+                รูปภาพเซต
+              </th>
+              <td>
+                <div class="imgDIV">
+                  <img src="" class="setimg">
+                  <i class="fa fa-camera selectimg"></i>
+                  <input name="esimage" id="uploadimg" type="file" accept="image/*" style="display: none;"/>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                ชื่อผู้ดูแลเซตนี้
+              </th>
+              <td>
+                <select name="esadmin" id="es6" style="width: 90%;">
+                  <option disabled selected>-- เลือกบุคลากรผู้ดูแลอุปกรณ์ --</option>
+                  <% admindata.forEach((v) => { %>
+                    <option value="<%=v.staff_id%>"><%=v.staff_name%></option>
+                  <% }) %>
+                </select>
+              </td>
+            </tr>
+          </table>
+
+          <br>
+          <hr style="background-color: darkgray; border: 1px dotted gray; height: 0.5px; width: 100%;">
+
+          <div style="text-align: center; margin-bottom: 15px;">
+            <button type="button" class="addtypeBTN" id="openaddt" data-toggle="modal" 
+            data-target="#addtype" hidden>
+              เพิ่มประเภท/ชุดอุปกรณ์
+            </button>
+          </div>
+        </div>
+  
+        <div class="col-sm-6 col-md-6 col-lg-6">
+          <h5 style="color: #333;">
+            ประเภทและอุปกรณ์ในเซต
+          </h5>
+          <div id="no_et" style="margin-top: 50px; text-align: center;">
+            กรุณาเพิ่มประเภทและอุปกรณ์ในเซตนี้
+            <br><br>
+            <button type="button" class="addtypeBTN" data-toggle="modal" data-target="#addtype" disabled>
+              เพิ่มประเภท/ชุดอุปกรณ์
+            </button>
+          </div>
+
+          <div class="scrollDIV">
+            <div style="margin-top: 13px; margin-bottom: 8px; width: 100%; text-align: right; font-size: 10px;">
+              <u>หมายเหตุ</u>
+              <span style="margin-left: 12px;">
+                o = ให้ยืมทั้งชุด/ประเภท
+              </span>
+              <span style="margin-left: 15px;">
+                x = ไม่ให้ยืมทั้งชุด/ประเภท
+              </span>
+            </div>
+            <div id="t_and_e"></div>
+          </div>
+        </div>
+  
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top: 40px; text-align: center;">
+          <a href="/admin/<%=usn%>/add/equipment" class="btn btn-primary">
+            ย้อนกลับ
+          </a>&nbsp;&nbsp;
+          <button type="submit" id="submitadd" class="btn btn-danger">
+            เพิ่มเซตอุปกรณ์
+          </button>
+        </div>
+
+        <!-- ======== Modal ======== -->
+        <div id="addtype" class="modal fade">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="padding: 20px;">
+              <h5 style="font-size: 22px; color: black;">
+                เพิ่มประเภท/ชุดอุปกรณ์
+              </h5>
+              <table style="width: 100%; margin-top: 25px; padding: 5px 15px; line-height: 35px;">
+                <tr>
+                  <td style="width: 25%;">
+                    ชื่อประเภท/ชุด
+                  </td>
+                  <td style="width: 75%;">
+                    <input type="text" list="tname" id="etn" style="height: 24px; line-height: 24px; width: 100%;">
+                    <datalist id="tname">
+                      <% nameet.forEach((vv) => { %>
+                        <option value="<%=vv%>">
+                      <% }) %>
+                    </datalist>
+                  </td>
+                </tr>
+                <tr>
+                  <td>ให้ยืมทั้งชุด</td>
+                  <td>
+                    <input type="radio" name="radiot" value="o" id="tyes"> &nbsp;&nbsp;ใช่
+                    <input type="radio" name="radiot" value="x" id="tno" style="margin-left: 35px;"> &nbsp;&nbsp;ไม่ใช่
+                  </td>
+                </tr>
+                <tr>
+                  <td>มี stock อยู่</td>
+                  <td>
+                    <input type="number" id="etstock" value="1" min="1" onkeypress="return numLetter(event)"
+                    style="height: 24px; line-height: 24px; padding-left: 10px; width: 100px;">
+                    &nbsp;&nbsp;ชุด (ต่อ 1 เซต)
+                  </td>
+                </tr>
+              </table>
+
+              <div style="margin-top: 40px; margin-bottom: 10px; text-align: center;">
+                <button type="button" class="cancelBTN" data-toggle="modal" data-target="#addtype">
+                  ยกเลิก
+                </button>
+                <button type="button" id="clickaddtype" class="addtBTN" disabled>
+                  เพิ่มประเภทอุปกรณ์
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="edittype" class="modal fade">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="padding: 20px;">
+              <h5 style="font-size: 22px; color: black;">
+                แก้ไขประเภท/ชุดอุปกรณ์
+              </h5>
+              <input id="editt0" hidden>
+              <table style="width: 100%; margin-top: 25px; padding: 5px 15px; line-height: 35px;">
+                <tr>
+                  <td style="width: 25%;">
+                    ชื่อประเภท/ชุด
+                  </td>
+                  <td style="width: 75%;">
+                    <input type="text" id="editt1" style="height: 24px; line-height: 24px; width: 100%;">
+                  </td>
+                </tr>
+                <tr>
+                  <td>ให้ยืมทั้งชุด</td>
+                  <td>
+                    <input type="radio" name="editrt" value="o" id="editt2"> &nbsp;&nbsp;ใช่
+                    <input type="radio" name="editrt" value="x" id="editt3" style="margin-left: 35px;"> &nbsp;&nbsp;ไม่ใช่
+                  </td>
+                </tr>
+                <tr>
+                  <td>มี stock อยู่</td>
+                  <td>
+                    <input type="number" id="editt4" min="1" onkeypress="return numLetter(event)"
+                    style="height: 24px; line-height: 24px; padding-left: 10px; width: 100px;">
+                    &nbsp;&nbsp;ชุด (ต่อ 1 เซต)
+                  </td>
+                </tr>
+              </table>
+
+              <div style="margin-top: 40px; margin-bottom: 10px; text-align: center;">
+                <button type="button" class="cancelBTN" data-toggle="modal" data-target="#edittype">
+                  ยกเลิก
+                </button>
+                <button type="button" id="clickedittype" class="addtBTN">
+                  ยืนยันการแก้ไข
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="addequip" class="modal fade">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="padding: 20px;">
+              <h5 style="font-size: 22px; color: black;">
+                เพิ่มอุปกรณ์
+                <span id="addename" style="font-size: 15px;"></span>
+              </h5>
+              <input id="tableenum" hidden>
+              <div style="width: 100%; margin-top: 25px; padding: 5px 15px; line-height: 35px;">
+                Serial Number
+                <input type="text" id="e1" style="width: 65%; height: 24px; line-height: 24px; margin-left: 20px;">
+                <br>
+                ชื่ออุปกรณ์
+                <input type="text" id="e2" style="width: 80%; height: 24px; line-height: 24px; margin-left: 20px;">
+                <br>
+                แบรนด์
+                <input type="text" id="e3" style="width: 47%; height: 24px; line-height: 24px; margin: 0 20px;">
+                รุ่น
+                <input type="text" id="e4" style="width: 19%; height: 24px; line-height: 24px; margin-left: 20px;">
+                <br>
+                จำนวนคงคลัง (Stock)
+                <input type="number" id="e5" min="1" value="1" onkeypress="return numLetter(event)" 
+                style="width: 35%; height: 24px; line-height: 24px; margin: 0 20px;"> (ต่อ 1 เซต)
+                <br>
+                จำนวนที่ให้ยืม
+                <input type="number" id="e6" min="1" value="1" onkeypress="return numLetter(event)" 
+                style="width: 35%; height: 24px; line-height: 24px; margin: 0 20px;"> (ต่อ 1 เซต)
+                <br>
+              </div>
+        
+              <div style="margin-top: 40px; margin-bottom: 10px; text-align: center;">
+                <button type="button" class="cancelBTN" data-toggle="modal" data-target="#addequip">
+                  ยกเลิก
+                </button>
+                <button type="button" id="clickaddequip" class="addtBTN" disabled>
+                  เพิ่มอุปกรณ์
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="editequip" class="modal fade">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="padding: 20px;">
+              <h5 style="font-size: 22px; color: black;">
+                แก้ไขอุปกรณ์
+                <span id="editename" style="font-size: 15px;"></span>
+              </h5>
+              <input id="rowenum" hidden>
+              <div style="width: 100%; margin-top: 25px; padding: 5px 15px; line-height: 35px;">
+                Serial Number
+                <input type="text" id="ee1" style="width: 65%; height: 24px; line-height: 24px; margin-left: 20px;">
+                <br>
+                ชื่ออุปกรณ์
+                <input type="text" id="ee2" style="width: 80%; height: 24px; line-height: 24px; margin-left: 20px;">
+                <br>
+                แบรนด์
+                <input type="text" id="ee3" style="width: 47%; height: 24px; line-height: 24px; margin: 0 20px;">
+                รุ่น
+                <input type="text" id="ee4" style="width: 19%; height: 24px; line-height: 24px; margin-left: 20px;">
+                <br>
+                จำนวนคงคลัง (Stock)
+                <input type="number" id="ee5" min="1" value="1" onkeypress="return numLetter(event)" 
+                style="width: 35%; height: 24px; line-height: 24px; margin: 0 20px;"> (ต่อ 1 เซต)
+                <br>
+                จำนวนที่ให้ยืม
+                <input type="number" id="ee6" min="1" value="1" onkeypress="return numLetter(event)" 
+                style="width: 35%; height: 24px; line-height: 24px; margin: 0 20px;"> (ต่อ 1 เซต)
+                <br>
+              </div>
+        
+              <div style="margin-top: 40px; margin-bottom: 10px; text-align: center;">
+                <button type="button" class="cancelBTN" data-toggle="modal" data-target="#editequip">
+                  ยกเลิก
+                </button>
+                <button type="button" id="clickeditequip" class="addtBTN">
+                  ยืนยันการแก้ไข
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- ======== ยืนยันการลบ ======== -->
+<div id="deletetype" class="modal fade">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="padding: 20px;">
+      <h5 style="font-size: 22px; color: black;">
+        ลบประเภทอุปกรณ์
+      </h5>
+      <input id="deletenum" hidden>
+      <div style="width: 100%; margin-top: 25px; padding: 5px 15px; line-height: 25px;">
+        <b>คุณแน่ใจหรือว่าต้องการลบประเภท/ชุดอุปกรณ์ "<span id="deletetname"></span>"</b> <br> 
+        ประเภทอุปกรณ์รวมถึงรายการอุปกรณ์ในประเภทนี้ทั้งหมดจะถูกลบทิ้งอย่างถาวร และคุณไม่สามารถแก้ไขหรือเรียกคืนได้อีก
+      </div>
+
+      <div style="margin-top: 40px; margin-bottom: 10px; text-align: center;">
+        <button type="button" class="cancelBTN" data-toggle="modal" data-target="#deletetype">
+          ยกเลิก
+        </button>
+        <button type="button" id="clickdeletetype" class="addtBTN">
+          ลบประเภทอุปกรณ์
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="deleteequip" class="modal fade">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="padding: 20px;">
+      <h5 style="font-size: 22px; color: black;">
+        ลบอุปกรณ์
+      </h5>
+      <input id="deleteenum" hidden>
+      <div style="width: 100%; margin-top: 25px; padding: 5px 15px; line-height: 25px;">
+        <b>คุณแน่ใจหรือว่าต้องการลบอุปกรณ์ "<span id="deleteename"></span>"</b> <br> 
+        อุปกรณ์นี้จะถูกลบทิ้งอย่างถาวร และคุณไม่สามารถแก้ไขหรือเรียกคืนได้อีก
+      </div>
+
+      <div style="margin-top: 40px; margin-bottom: 10px; text-align: center;">
+        <button type="button" class="cancelBTN" data-toggle="modal" data-target="#deleteequip">
+          ยกเลิก
+        </button>
+        <button type="button" id="clickdeleteequip" class="addtBTN">
+          ลบอุปกรณ์
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div>
+  <!-- ดึงค่า footer มาแสดงจากไฟล์ footer.ejs -->
+  <%- include('footer') -%>
+</div>
+
+<script type="text/javascript" src="/jquery.1.11.1.js"></script> 
+<script type="text/javascript" src="/bootstrap.js"></script> 
+<script type="text/javascript" src="/jquery.isotope.js"></script> 
+<script type="text/javascript" src="/main.js"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.css"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.js"></script>
+
+<script>
+    
+    var typeDic = new Object();
+    var equipDic = new Object();
+    $('#submitadd').hide();
+
+    function numLetter(event) {
+      var x = event.charCode;
+      return  (x >= 48 && x <= 57);
+    }
+
+    /* == เซต name, category, set admin == */
+    $('#es1').keyup(function() {
+      setInputAll()
+    });
+    $('#es2').change(function() {
+      setInputAll()
+    });
+    $('#es6').change(function() {
+      setInputAll()
+    });
+
+    /* == เซต Stock == */
+    $('#asn').keyup(function() {
+      let number = $(this).val()
+      if (number < 1) {  $(this).val(1) }
+      setInputAll()
+    })
+
+    /* == เซต radio ให้ยืมทั้งเซต == */
+    $('#esradioy').click(function() {
+      $('#tno').attr('disabled', true)
+      $('#tyes').attr('disabled', true)
+      $('#editt2').attr('disabled', true)
+      $('#editt3').attr('disabled', true)
+      tcanbor = 'x'
+      canborrowset = '1'
+      setInputAll()
+    });
+    $('#esradion').click(function() {
+      $('#tno').attr('disabled', false)
+      $('#tyes').attr('disabled', false)
+      $('#editt2').attr('disabled', false)
+      $('#editt3').attr('disabled', false)
+      tcanbor = 'o'
+      canborrowset = '0'
+      setInputAll()
+    });
+
+    function readURL(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          $('.setimg').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+    $('#uploadimg').change(function() {
+      readURL(this)
+      setInputAll()
+    })
+    $('.selectimg').click(function() {
+      $("#uploadimg").click();
+    });
+
+    /* == เซต ตรวจว่าใส่ข้อมูลครบทุกช่อง == */
+    let canborrowset = ''
+    function setInputAll() {
+      let name = $('#es1').val();
+      let category = $('#es2').val();
+      let stock = $('#asn').val();
+      let setimage = $('#uploadimg').val();
+      let admin = $('#es6').val();
+
+      if (name && category && (canborrowset != '') && stock && setimage && admin) {
+        $('#openaddt').show();
+        $('.addtypeBTN').prop('disabled', false);
+      } else {
+        $('#openaddt').hide();
+        $('.addtypeBTN').prop('disabled', true);
+      }
+    }
+
+
+    /* == เพิ่ม Type == */
+    $('#clickaddtype').prop('disabled', true);
+    $('#etn').keyup(function() {
+      let tstock = $('#etstock').val().length
+      if (($('#tno').is(':checked') || $('#tyes').is(':checked')) && $(this).val() && (tstock != 0)) {
+        $('#clickaddtype').prop('disabled', false);
+      }
+      else {
+        $('#clickaddtype').prop('disabled', true);
+      }
+    });
+    $('#etn').change(function() {
+      let tstock = $('#etstock').val().length
+      if (($('#tno').is(':checked') || $('#tyes').is(':checked')) && (tstock != 0)) {
+        $('#clickaddtype').prop('disabled', false);
+      }
+      else {
+        $('#clickaddtype').prop('disabled', true);
+      }
+    });
+    
+    $('#tno').click(function() {
+      let tstock = $('#etstock').val().length
+      tcanbor = $(this).val()
+      if ($('#etn').val() && (tstock != 0)) {
+        $('#clickaddtype').prop('disabled', false);
+      } else {
+        $('#clickaddtype').prop('disabled', true);
+      }
+    });
+    $('#tyes').click(function() {
+      let tstock = $('#etstock').val().length
+      tcanbor = $(this).val()
+      if ($('#etn').val() && (tstock != 0)) {
+        $('#clickaddtype').prop('disabled', false);
+      } else {
+        $('#clickaddtype').prop('disabled', true);
+      }
+    });
+
+    $('#etstock').keyup(function() {
+      let tstock = $(this).val().length
+      if (($('#tno').is(':checked') || $('#tyes').is(':checked')) && $('#etn').val() && (tstock != 0)) {
+        $('#clickaddtype').prop('disabled', false);
+      }
+      else {
+        $('#clickaddtype').prop('disabled', true);
+      }
+    });
+    $('#etstock').change(function() {
+      let tstock = $(this).val().length
+      if (($('#tno').is(':checked') || $('#tyes').is(':checked')) && $('#etn').val() && (tstock != 0)) {
+        $('#clickaddtype').prop('disabled', false);
+      }
+      else {
+        $('#clickaddtype').prop('disabled', true);
+      }
+    });
+
+    $('.addtypeBTN').click(function() {
+      $('#etn').val(null);
+      $('#etstock').val(1);
+      if ($('#esradioy').is(':checked')) {
+        $('#tno').prop('checked', true);
+        $('#tyes').prop('checked', false);
+        $('#clickaddtype').prop('disabled', true);
+      }
+      else {
+        $('#tno').prop('checked', false);
+        $('#tyes').prop('checked', false);
+        $('#clickaddtype').prop('disabled', true);
+      }
+    })
+
+    $('.scrollDIV').hide();
+    var number = 0;
+    var tcanbor = '';
+    $('#clickaddtype').click(function() {
+      $('#no_et').hide()
+      $('.scrollDIV').show();
+      $(this).attr('data-toggle', "modal");
+      $(this).attr('data-target', "#addtype")
+
+      number = number + 1
+      let name = $('#etn').val();
+      let stock = $('#etstock').val();
+      typeDic[number] = [name, tcanbor, stock]
+
+      let editbtn = '<a class="fa fa-pencil tooltip1" style="color: darkorange;" data-toggle="modal" data-target="#edittype" onClick="editt(' + number + ');">' +
+                    '<span class="tooltiptext">แก้ไข</span>' +
+                    '</a>'
+      let binbtn = '<a class="fa fa-trash tooltip1" style="color: crimson;" data-toggle="modal" data-target="#deletetype" onClick="deletet(' + number + ');">' +
+                   '<span class="tooltiptext">ลบ</span>' +
+                   '</a>'
+      let addbtn = '<a class="fa fa-plus tooltip1" style="color: darkgreen;" data-toggle="modal" data-target="#addequip" onClick="adde(' + number + ');">' +
+                   '<span class="tooltiptext" style="width: 60px;">เพิ่มอุปกรณ์</span>' +
+                   '</a>'
+
+      let typetable = '<table id="t-' + number + '" class="typeTABLE">' +
+                      '<tr>' + 
+                      '<th style="width: 5%; color: teal;">' + tcanbor + '</th>' + 
+                      '<th style="width: 65%;">' + name + '</th>' + 
+                      '<th style="width: 10%;">จำนวน</th>' + 
+                      '<th style="width: 20%; padding-left: 20px;">' + 
+                      addbtn + editbtn + binbtn
+                      '</th>' + 
+                      '</tr>' +
+                      '</table>'
+      
+      $('#submitadd').hide();
+      $('#t_and_e').append(typetable)
+      //$('#alladdtype').val(Object.keys(typeDic).length)
+      //alert(typeDic[number])  // แสดงค่าของคีย์ number
+      //$('#alladdtype').val(typeDic) // ผลลัพธ์ => [object Object]
+      $('#alladdtype').val(JSON.stringify(typeDic))
+    })
+
+    function deletet(value) {
+      $('#deletenum').val(value)
+      let nametype = typeDic[value][0];
+      $('#deletetname').text(nametype)
+    }
+    $('#clickdeletetype').click(function() {
+      let num = $('#deletenum').val()
+      $(this).attr('data-toggle', "modal");
+      $(this).attr('data-target', "#deletetype")
+      
+      $('#t-' + num).remove()   //ลบตารางทิ้ง
+      delete typeDic[num]
+      $('#alladdtype').val(JSON.stringify(typeDic))
+    });
+
+    /* == แก้ไข type == */
+    $('#editt1').keyup(function() {
+      let tstock = $('#editt4').val().length
+      if ($(this).val() && (tstock != 0)) {
+        $('#clickedittype').prop('disabled', false);
+      }
+      else {
+        $('#clickedittype').prop('disabled', true);
+      }
+    });
+    
+    $('#editt4').keyup(function() {
+      let tstock = $(this).val().length
+      if ($('#editt1').val() && (tstock != 0)) {
+        $('#clickedittype').prop('disabled', false);
+      }
+      else {
+        $('#clickedittype').prop('disabled', true);
+      }
+    });
+
+    function editt(value) {
+      $('#editt0').val(value)
+      /* 
+        --- กำหนดค่าจาก table --- 
+        // let tableid = '#t-' + value + ' tr th'
+        // let borrowtype = $(tableid).eq(0).text();
+        // let nametype = $(tableid).eq(1).text();
+      */
+      let nametype = typeDic[value][0];
+      let borrowtype = typeDic[value][1];
+      let stocktype = typeDic[value][2];
+
+      $('#editt1').val(nametype)
+      $('#editt4').val(stocktype)
+      if (borrowtype == "o") {
+        $('#editt2').prop('checked', true);
+      } else {
+        $('#editt3').prop('checked', true);
+      }
+    }
+
+    $('#clickedittype').click(function() {
+      $(this).attr('data-toggle', "modal");
+      $(this).attr('data-target', "#edittype");
+
+      let number = $('#editt0').val();
+      let newname = $('#editt1').val();
+      let newstock = $('#editt4').val();
+      let newcheck = '';
+      if ($('#editt2').is(':checked')) {
+        newcheck = $('#editt2').val();
+      } else {
+        newcheck = $('#editt3').val();
+      }
+
+      typeDic[number] = [newname, newcheck, newstock];
+      let tableid = '#t-' + number + ' tr th'
+      $(tableid).eq(0).text(newcheck)
+      $(tableid).eq(1).text(newname)
+
+      $('#alladdtype').val(JSON.stringify(typeDic))
+    })
+
+
+    /* == เพิ่ม Equipment == */
+    function adde(value) {
+      $('#tableenum').val(value);
+      let nametype = '(ประเภท/ชุด: ' + typeDic[value][0] + ')';
+      $('#addename').text(nametype);
+      $('#e1').val(null);
+      $('#e2').val(null);
+      $('#e3').val(null);
+      $('#e4').val(null);
+      $('#e5').val(1);
+      $('#e6').val(1);
+      $('#clickaddequip').prop('disabled', true);
+    }
+
+    $('#e2').keyup(function() {
+      let serial = $('#e1').val()
+      if (serial.length < 1) { $('#e1').val('-') }
+      
+      if ($(this).val().length < 1) {
+        $('#clickaddequip').prop('disabled', true);
+      } else {
+        $('#clickaddequip').prop('disabled', false);
+      }
+    })
+    $('#e5').keyup(function() {
+      let number = $(this).val()
+      if (number < 1) { $(this).val(1) }
+      let eamount = parseInt($('#e6').val());
+      if (eamount > parseInt(number)) { $('#e6').val(number) }
+
+      let brand = $('#e3').val().length
+      let model = $('#e4').val().length
+      if (brand < 1) { $('#e3').val('-') }
+      if (model < 1) { $('#e4').val('-') }
+    })
+    $('#e5').change(function() {
+      let number = $(this).val()
+      if (number < 1) { $(this).val(1) }
+      let eamount = parseInt($('#e6').val());
+      if (eamount > parseInt(number)) { $('#e6').val(number) }
+
+      let brand = $('#e3').val().length
+      let model = $('#e4').val().length
+      if (brand < 1) { $('#e3').val('-') }
+      if (model < 1) { $('#e4').val('-') }
+    });
+    $('#e6').keyup(function() {
+      let number = parseInt($(this).val())
+      let stock = parseInt($('#e5').val())
+      if (number < 1) { $(this).val(1) }
+      if (number > stock) { $(this).val(stock) }
+
+      if ($(this).val().length < 1) {
+        $('#clickaddequip').prop('disabled', true);
+      } else {
+        $('#clickaddequip').prop('disabled', false);
+      }
+    })
+    $('#e6').change(function() {
+      let number = parseInt($(this).val())
+      let stock = parseInt($('#e5').val())
+      if (number > stock) { $(this).val(stock) }
+      
+      let name = $('#e2').val().length
+      if (name < 1 || $(this).val().length < 1) {
+        $('#clickaddequip').prop('disabled', true);
+      } else {
+        $('#clickaddequip').prop('disabled', false);
+      }
+      let brand = $('#e3').val().length
+      let model = $('#e4').val().length
+      if (brand < 1) { $('#e3').val('-') }
+      if (model < 1) { $('#e4').val('-') }
+    });
+
+    var numbere = 0;
+    $('#clickaddequip').click(function() {
+      let num = $('#tableenum').val()
+      $(this).attr('data-toggle', "modal");
+      $(this).attr('data-target', "#addequip")
+      
+      numbere = numbere + 1
+      let name = $('#e2').val();
+      let amount = $('#e6').val();
+      equipDic[numbere] = [ num, $('#e1').val(), name, $('#e3').val(), $('#e4').val(), $('#e5').val(), amount ]
+
+      let editbtn = '<a class="fa fa-pencil tooltip1" style="color: gray;" data-toggle="modal" data-target="#editequip" onClick="edite(' + numbere + ');">' +
+                    '<span class="tooltiptext">แก้ไข</span>' +
+                    '</a>'
+      let binbtn = '<a class="fa fa-trash tooltip1" style="color: gray;" data-toggle="modal" data-target="#deleteequip" onClick="deletee(' + numbere + ');">' +
+                   '<span class="tooltiptext">ลบ</span>' +
+                   '</a>'
+      let equiptable = '<tr id="ee-' + numbere + '">' +
+                       '<td>' + '</td>' +
+                       '<td>' + name + '</td>' +
+                       '<td style="margin-left: 10px;">' + amount + '</td>' +
+                       '<td style="text-align: center;">' + editbtn + binbtn + '</td>'
+                       '</tr>'
+
+      $('#t-' + num).append(equiptable)
+      $('#submitadd').show();
+
+      $('#alladdequip').val(JSON.stringify(equipDic))
+    });
+
+    /* == ลบ equip == */
+    function deletee(value) {
+      $('#deleteenum').val(value)
+      let nameequip = equipDic[value][2];
+      $('#deleteename').text(nameequip)
+    }
+    $('#clickdeleteequip').click(function() {
+      let num = $('#deleteenum').val()
+      $(this).attr('data-toggle', "modal");
+      $(this).attr('data-target', "#deleteequip")
+
+      let tabletype = '#t-' + equipDic[num][0]
+      $('#ee-' + num).remove()
+      delete equipDic[num]
+      $('#alladdequip').val(JSON.stringify(equipDic))
+    });
+
+    /* == แก้ไข equip == */
+    function edite(value) {
+      $('#rowenum').val(value)
+      let numtype = equipDic[value][0];
+      let nametype = '(ประเภท/ชุด: ' + typeDic[numtype][0] + ')';
+      $('#editename').text(nametype);
+      let serialequip = equipDic[value][1];
+      let nameequip = equipDic[value][2];
+      let brandequip = equipDic[value][3];
+      let modelequip = equipDic[value][4];
+      let stockequip = equipDic[value][5];
+      let amountequip = equipDic[value][6];
+
+      $('#ee1').val(serialequip);
+      $('#ee2').val(nameequip);
+      $('#ee3').val(brandequip);
+      $('#ee4').val(modelequip);
+      $('#ee5').val(stockequip);
+      $('#ee6').val(amountequip);
+    }
+
+    $('#ee2').keyup(function() {
+      let serial = $('#ee1').val()
+      if (serial.length < 1) { $('#ee1').val('-') }
+      
+      if ($(this).val().length < 1) {
+        $('#clickeditequip').prop('disabled', true);
+      } else {
+        $('#clickeditequip').prop('disabled', false);
+      }
+    })
+    $('#ee5').keyup(function() {
+      let number = $(this).val()
+      if (number < 1) { $(this).val(1) }
+      let eamount = parseInt($('#ee6').val());
+      if (eamount > parseInt(number)) { $('#ee6').val(number) }
+
+      let brand = $('#ee3').val().length
+      let model = $('#ee4').val().length
+      if (brand < 1) { $('#ee3').val('-') }
+      if (model < 1) { $('#ee4').val('-') }
+    })
+    $('#ee5').change(function() {
+      let number = $(this).val()
+      let eamount = parseInt($('#ee6').val());
+      if (eamount > parseInt(number)) { $('#ee6').val(number) }
+
+      let brand = $('#ee3').val().length
+      let model = $('#ee4').val().length
+      if (brand < 1) { $('#ee3').val('-') }
+      if (model < 1) { $('#ee4').val('-') }
+    });
+    $('#ee6').keyup(function() {
+      let number = parseInt($(this).val())
+      let stock = parseInt($('#ee5').val())
+      if (number < 1) { $(this).val(1) }
+      if (number > stock) { $(this).val(stock) }
+
+      if ($(this).val().length < 1) {
+        $('#clickeditequip').prop('disabled', true);
+      } else {
+        $('#clickeditequip').prop('disabled', false);
+      }
+    })
+    $('#ee6').change(function() {
+      let number = parseInt($(this).val())
+      let stock = parseInt($('#ee5').val())
+      if (number > stock) { $(this).val(stock) }
+      
+      if ($('#ee2').val().length < 1) {
+        $('#clickeditequip').prop('disabled', true);
+      } else {
+        $('#clickeditequip').prop('disabled', false);
+      }
+    });
+
+    $('#clickeditequip').click(function() {
+      $(this).attr('data-toggle', "modal");
+      $(this).attr('data-target', "#editequip");
+
+      let number = $('#rowenum').val();
+      let tableNum = equipDic[number][0];
+      let newname = $('#ee2').val();
+      let newamount = $('#ee6').val();
+
+      equipDic[number] = [ tableNum, $('#ee1').val(), newname, $('#ee3').val(), $('#ee4').val(), $('#ee5').val(), newamount ]
+      let rowid = '#ee-' + number + ' td';
+      $(rowid).eq(1).text(newname);
+      $(rowid).eq(2).text(newamount);
+
+      $('#alladdequip').val(JSON.stringify(equipDic))
+    })
+    
+    
+</script>
+
+</body>
+</html>

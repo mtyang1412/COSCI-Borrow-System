@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COSCI - ระบบยืมคืนอุปกรณ์ครุภัณฑ์</title>
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!-- =============== Bootstrap =============== -->
+<link rel="stylesheet" type="text/css"  href="/bootstrap.css">
+
+<!-- =============== Stylesheet =============== -->
+<link rel="stylesheet" type="text/css"  href="/style.css">
+<link rel="stylesheet" type="text/css"  href="/equipStyle.css">
+<link rel="stylesheet" type="text/css"  href="/userStyle.css">
+<link rel="stylesheet" type="text/css"  href="/borrowStyle.css">
+<link rel="stylesheet" type="text/css"  href="/fontface.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Kanit:200,300,400,500,600,700&amp;subset=thai" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+</head>
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<!-- =============== Navigation =============== -->
+<nav id="menu" class="navbar navbar-default navbar-fixed-top">
+  <div class="container"> 
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span><span class="icon-bar"></span>
+      <span class="icon-bar"></span> </button>
+      <a class="navbar-brand page-scroll" href="#">
+          <img class="logo-header" src="/cosciLogo.png">
+      </a>
+    </div>
+    
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/student/<%=usn%>" class="page-scroll">HOME&nbsp;&nbsp;&nbsp;•</a></li>
+          <li><a href="/user_student/<%=usn%>/select/equipment" class="page-scroll">Equipment&nbsp;&nbsp;&nbsp;•</a></li>
+          <li>
+              <a href="/user/logout" class="page-scroll">
+                  LOGOUT&nbsp;&nbsp;&nbsp;<i class="fa fa-sign-out"></i>&nbsp;
+              </a>
+          </li>
+            <li class="user-tag">
+                <a href="/user_student/<%=usn%>/profile" id="user-tag-a">
+                    <i class="fa fa-user"></i>&nbsp;&nbsp;ID : <%= datas.mem_id %>&nbsp;&nbsp;
+                    <br>
+                    <i class="fa fa-clock-o"></i>&nbsp;&nbsp;DATE : <%= todays %>
+                    <div class="img-user"><img src="/user/<%= datas.mem_pic %>"></div>
+                </a>
+            </li>
+        </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Portfolio Section -->
+<div id="portfolio">
+  <div class="container">
+    <div class="row" style="margin-top: 150px; margin-bottom: 90px;">
+         <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="portfolio-item">
+              <img src="/portfolio/<%=allSet[0][0].set_pic%>" class="img-responsive" alt="Project Title">
+              
+            </div>
+            <h5 style="color: #333;">วันและเวลาในการยืม</h5>  
+            <hr style="margin-top: -5px;">
+            <div class="col-xs-6 col-md-6 col-lg-6">
+                <div style="margin-top: -25px; line-height: 30px;">
+                <b>วันที่ทำรายการ : </b> <%= borToday %><br>
+                <b>วันที่รับของ : </b> <%= borrowD %><br>
+                <b>วันที่คืนของ : </b> <%= returnD %><br>
+                </div>
+            </div>
+            <div class="col-xs-6 col-md-6 col-lg-6" style="margin-bottom: 20px;">
+                <div style="margin-top: -25px; line-height: 30px;">
+                <b>เวลา : </b> <%= borTime %> <br>
+                <b>เวลา : </b> <%= borrowT %><br>
+                <b>เวลา : </b> <%= returnT %><br>
+                </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <h5 style="color: #333;">รายการอุปกรณ์</h5>  
+            <hr style="margin-top: -5px;">
+            <div class="col-xs-12 col-md-12 col-lg-12">
+              <div style="margin-top: -25px; line-height: 30px;">
+                <% var borrow0 = allSet[0][0].set_can_borrow; %>
+                <% if (borrow0 == 'o') {%>
+                  <b>
+                    <input type="checkbox" value="<%=allSet[0][0].set_id%>" checked readonly>
+                    &nbsp;<%= allSet[0][0].set_name%>
+                  </b><br>
+                <% }%>
+                
+                <% allSet.forEach((value, index) => { %>
+                  <% var borrow1 = value[0].type_can_borrow; %>
+                  <% var borrow2 = value[0].equip_can_borrow; %>
+                  <% if (borrow1 == 'o') {%>
+                    <b>
+                      <input type="checkbox" value="<%=value[0].type_id%>" checked readonly>
+                      &nbsp;<%= value[0].type_name %>
+                    </b><br>
+                  <% }%>
+                  <% if (borrow2 == 'o') { %>
+                    <b>
+                      <input type="checkbox" value="<%=value[0].equip_id%>" checked readonly>
+                      &nbsp;<%= value[0].equip_name %>
+                    </b><br>
+                  <% }%>
+                <% })%>
+              </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-12">
+              <br>
+              <h5 style="color: #333; margin-left: -14px;">รายละเอียดผู้ยืม</h5>  
+              <hr style="margin-top: -5px; margin-left: -14px;">
+              <div style="margin-top: -25px; line-height: 30px;">
+              <b>ชื่อ-นามสกุล : </b> <%= datas.stu_name %> <br>
+              <b>รหัสนิสิต : </b> <%= datas.stu_id %> <br>
+              <b>ชั้นปีที่ : </b> <%= datas.stu_year %> <br>
+              <b>เบอร์โทรติดต่อ1 : </b>
+              <input type="text" id="tel1" onkeypress="return checkLetter1(event)"><br>
+              <b>เบอร์โทรติดต่อ2 : </b>
+              <input type="text" id="tel2" onkeypress="return checkLetter2(event)"><br>
+              <b>รายวิชา : </b>
+              <select id="subject_select">
+                <option disabled selected>เลือกรายวิชา</option>
+                <% if (subjects.length > 0 ) {%>
+                  <% subjects.forEach((sub, index) => { %>
+                    <option value="<%=sub.sub_id%>">
+                      <%= sub.sub_id %> | <%= sub.sub_section %>&nbsp; <%= sub.sub_name %>
+                    </option>
+                  <% }) %>
+                <% } else {%> 
+                  <option disabled>
+                    ไม่พบรายวิชาที่คุณเรียนในเทอมนี้
+                  </option> 
+                <% } %>
+              </select>
+              <br>
+              <b>วัตถุประสงค์​ : </b><br>
+              <textarea id="obj1" cols="24" rows="3" placeholder="ระบุวัตถุประสงค์ที่ต้องยืมอุปกรณ์"></textarea>
+              <br><br>
+              <a href="/equip_borrow/<%=usn%>&<%=allSet[0][0].set_id%>" class="btn btn-primary">ย้อนกลับ</a>&nbsp;&nbsp;
+              <button id="submit1" type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter">
+                  ยืนยันการยืม
+              </button>
+              </div>
+            </div>
+          </div>
+        </div>
+  </div>
+</div>
+
+<!-- ======== Modal ======== -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">
+          โปรดตรวจสอบข้อมูลการยืมอีกครั้ง
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">
+            <div style="margin-top: -22px;">&times;</div>
+          </span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form method="POST" action="/add/borrow">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-xs-12 col-md-12 col-lg-12" style="font-size: 12px;">
+                <h3><div class="box"></div>&nbsp;&nbsp;&nbsp;&nbsp;ใบยืมคืนอุปกรณ์ครุภัณฑ์</h3>
+                <h5 style="color: #333; font-size: 14px;">วันและเวลาในการยืม</h5>  
+                <hr style="margin-top: -5px;">
+
+                <div class="col-xs-6 col-md-6 col-lg-6">
+                  <div style="margin-top: -25px; line-height: 30px;">
+                    <b>วันที่ทำรายการ : </b> <%= borToday %> <br>
+                    <input name="d_today" value="<%=borToday%>" hidden>
+                    <b>วันที่รับของ : </b> <%= borrowD %> <br>
+                    <input name="d_borrow" value="<%=borrowD%>" hidden>
+                    <b>วันที่คืนของ : </b> <%= returnD %> <br>
+                    <input name="d_return" value="<%=returnD%>" hidden>
+                  </div>
+                </div>
+
+                <div class="col-xs-6 col-md-6 col-lg-6" style="margin-bottom: 20px;">
+                  <div style="margin-top: -25px; line-height: 30px;">
+                    <b>เวลา : </b> <%= borTime %> <br>
+                    <input name="t_today" value="<%=borTime%>" hidden>
+                    <b>เวลา : </b> <%= borrowT %> <br>
+                    <input name="t_borrow" value="<%=borrowT%>" hidden>
+                    <b>เวลา : </b> <%= returnT %> <br>
+                    <input name="t_return" value="<%=returnT%>" hidden>
+                  </div>
+                </div>
+
+                <h5 style="color: #333; font-size: 14px;">
+                  รายการอุปกรณ์
+                </h5>  
+                <hr style="margin-top: -5px;">
+                  
+                <div class="col-xs-6 col-md-6 col-lg-6" style="margin-top: -25px; line-height: 30px;">
+                  <div class="portfolio-item">
+                    <img src="/portfolio/<%=allSet[0][0].set_pic%>" class="img-responsive">
+                  </div>
+                </div>
+
+                <div class="col-xs-6 col-md-6 col-lg-6" style="margin-top: -25px; line-height: 30px;">
+                  <div style="padding-top: 10px;">
+                    <input name="all_equip" value="<%=allCheck%>" hidden>
+                    <% var borrow0 = allSet[0][0].set_can_borrow; %>
+                    <% if (borrow0 == 'o') {%>
+                      <b>
+                        <input type="checkbox" checked readonly>
+                        &nbsp;<%= allSet[0][0].set_name%>
+                      </b><br>
+                    <% }%>
+
+                    <% allSet.forEach((value, index) => { %>
+                      <% var borrow1 = value[0].type_can_borrow; %>
+                      <% var borrow2 = value[0].equip_can_borrow; %>
+                      <% if (borrow1 == 'o') {%>
+                        <b>
+                          <input type="checkbox" checked readonly>
+                          &nbsp;<%= value[0].type_name %>
+                        </b><br>
+                      <% }%>
+                      <% if (borrow2 == 'o') { %>
+                        <b>
+                          <input type="checkbox" checked readonly>
+                          &nbsp;<%= value[0].equip_name %>
+                        </b><br>
+                      <% }%>
+                    <% })%>
+                  </div>
+                </div>
+
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                  <table class="table">
+                    <thead>
+                      <% var y = ""; %>
+                      <% for (i = 0 ; i < (allSet.length) ; i ++ ) { %>
+                        <% allSet[i].forEach((value, index) => { %>
+                          <% var ids = value.type_id; %>
+  
+                          <% if (y != ids) { %>
+                            <% y = ids; %>
+                            <tr>
+                              <th scope="col"><%= i+1 %></th>
+                              <th scope="col"><%= value.type_name %></th>
+                              <th scope="col">จำนวน</th>
+                            </tr>
+                          <% } %>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td scope="row"></td>
+                          <td><%= value.equip_name %></td>
+                          <td><%= value.equip_amount %></td>
+                        </tr>
+                      </tbody>
+                        <% }) %>
+                      <% } %>
+                  </table>
+                </div>
+
+                  <br>
+                  
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                  <h5 style="color: #333; font-size: 14px; margin-left: -14px;">
+                    รายละเอียดผู้ยืม
+                  </h5>  
+                  <hr style="margin-top: -5px; margin-left: -14px;">
+                  
+                  <div style="margin-top: -25px; line-height: 30px;">
+                    <b>ชื่อ-นามสกุล : </b> <%= datas.stu_name %> <br>
+                    <b>รหัสนิสิต : </b> <%= datas.stu_id %> <br>
+                    <input name="mem_id" value="<%=datas.stu_id%>" hidden>
+                    <b>เบอร์โทรติดต่อ1 : </b>
+                    <span id="t1"></span><br>
+                    <input name="phone1" id="int1" hidden>
+                    <b>เบอร์โทรติดต่อ2 : </b> 
+                    <span id="t2"></span><br>
+                    <input name="phone2" id="int2" hidden>
+                    <b>รายวิชา : </b> 
+                    <span id="subs"></span><br>
+                    <input name="sub" id="sj" hidden>
+                    <b>วัตถุประสงค์​ : </b><br>
+                    <textarea id="obj2" disabled cols="24" rows="3"></textarea><br>
+                    <input name="object" id="obj" hidden>
+                  </div>
+                </div>
+                  
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                  <h5 style="color: #333; font-size: 14px; margin-left: -14px;">
+                    ผู้รับผิดชอบ
+                  </h5>  
+                  <hr style="margin-top: -5px; margin-left: -14px;">
+                      
+                  <div style="margin-top: -25px; line-height: 30px;">
+                    <b>ลงชื่อผู้ยืม : </b> <%= datas.stu_name %> <br>
+                    <b>อาจารย์ประจำวิชา : </b> 
+                    <span id="subprof2"></span> <br>
+                    <input name="subpro" id="pro" hidden>
+                    <b>ผู้จัดเตรียม/ผู้ดูแลอุปกรณ์ : </b> 
+                    <span> <%= allSet[0][0].staff_name %> </span>
+                    <br><br>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">ย้อนกลับ</button>
+            <button type="submit" class="confirm btn btn-danger">
+              ยืนยันการยืม
+            </button>
+          </div>
+        </form>  
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<div id="footer">
+  <div class="container-fluid text-center copyrights">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="social">
+        <ul>
+          <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+          <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+          <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+        </ul>
+      </div>
+      <p>&copy; COLLEGE OF SOCIAL COMMUNICATION INNOVATION.ALL RIGHTS RESERVED<br><br>
+        TEL. 02-649-5000 EXT 11275 , 02-259-2343 EMAIL. PRCOSCISWU@GMAIL.COM
+      </p>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="/jquery.1.11.1.js"></script> 
+<script type="text/javascript" src="/bootstrap.js"></script> 
+<script type="text/javascript" src="/jquery.isotope.js"></script> 
+<script type="text/javascript" src="/main.js"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.css"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.js"></script>
+
+<script>
+    
+    $('#submit1').prop('disabled', true);
+    $('.confirm').click(function(){ 
+
+        swal({
+          title: 'การยืมเสร็จสมบูรณ์',
+          text: 'คุณได้ทำรายการยืมอุปกร์เรียบร้อยแล้ว!',
+          type: 'success',
+          confirmButtonText: '<a href="/student/<%=usn%>" style="color: #fff; padding: 20px;">กลับไปหน้าแรก</a>',
+        });
+    });
+
+
+    // =========== Add Phone, Subjuct, Object ==========
+    var phone1 = $('#tel1').val();
+    var phone2 = $('#tel2').val();
+    function checkLetter1(event) {
+      let x = event.charCode;
+      let n1 = document.getElementById("tel1").value;
+      return  ((n1.length < 12) && (x >= 48 && x <= 57));
+    }
+    function checkLetter2(event) {
+      let x = event.charCode;
+      let n2 = document.getElementById("tel2").value;
+      return  ((n2.length < 12) && (x >= 48 && x <= 57));
+    }
+
+    $('#tel1').keyup(function() {
+      let n = $(this).val()
+      if (n.length == 3) {
+        $(this).val(n + '-')
+      } else if (n.length == 7) {
+        $(this).val(n + '-')
+      }
+    })
+
+    $('#tel1').change(function() {
+      phone1 = $(this).val();
+      $('#t1').text(phone1);
+      $('#int1').val(phone1);
+    });
+    if (phone1.length < 1) {
+      $('#t1').text('-');
+      $('#int1').val('-');
+    } else {
+      $('#t1').text(phone1);
+      $('#int1').val(phone1);
+    }
+
+    $('#tel2').keyup(function() {
+      let n = $(this).val()
+      if (n.length == 3) {
+        $(this).val(n + '-')
+      } else if (n.length == 7) {
+        $(this).val(n + '-')
+      }
+    })
+
+    $('#tel2').change(function() {
+      phone2 = $(this).val();
+      $('#t2').text(phone2);
+      $('#int2').val(phone2);
+    });
+    if (phone2.length < 1) {
+      $('#t2').text('-');
+      $('#int2').val('-');
+    } else {
+      $('#t2').text(phone2);
+      $('#int2').val(phone2);
+    }
+
+    // Select Subject
+    $('#subject_select').change(function() {
+      $("#subs").text($(this).val());
+      $('#sj').val($(this).val());
+      $('#submit1').prop('disabled', !($(this).val() && $('#obj1').val()));
+
+      let optionIndex = $('#subject_select').prop('selectedIndex')
+      var getSubjects = <%-JSON.stringify(subjects)%>;
+      getSubjects = getSubjects[optionIndex - 1].sub_professor;
+
+      $('#subprof2').text(getSubjects);
+      $('#pro').val(getSubjects);
+    });
+    
+
+    // Text Area
+    $('#obj1').keyup(function() {
+      if ($(this).val().length > 0 && $('#subject_select').val()) {
+        $('#submit1').prop('disabled', false);
+        $('#obj2').val($(this).val());
+        $('#obj').val($(this).val());
+      }
+      else {
+        $('#submit1').prop('disabled', true);
+      }
+    });
+    
+    
+</script>
+
+</body>
+</html>

@@ -2594,3 +2594,334 @@
 
     };
 }));
+
+/* ===== เลือกเวลายืม-คืน (สัมพันธ์กับ calendarStyle.css) ===== */
+var offset = $('.hbitem')[0].offsetTop;
+var offset3 = $('.hritem')[0].offsetTop;
+
+function scrollDiv(class_name, item_select, offset_name) {
+    var itemselect = item_select;
+    var cTop = offset_name - class_name.scrollTop();
+    var cHeight = itemselect.height();
+    var pHeight = class_name.height();
+
+    /* ถ้าวันที่ยืมกับวันที่คืนเป็นวันเดียวกัน */
+    let date1 = $('#date-range200').val();
+    let date2 = $('#date-range201').val();
+    let indexhb = $('.hbitem.selected').index();
+
+    if (date1 == date2) {
+        $('.hritem').eq(indexhb + 1).click()
+        //alert((cTop + cHeight > pHeight) + ' ' + cTop + ' ' + cHeight + ' ' + pHeight)
+    }
+
+    if (cTop < 0) {
+        // ถ้า scroll ขึ้น และ itemselect จะหลุดกรอบ
+        itemselect.css({
+            'top': class_name.scrollTop(),
+            'bottom': ''
+        }).addClass('pAbsolute');
+    }
+    else if (cTop + cHeight > pHeight) {
+        // ถ้า scroll ลง และ itemselect จะหลุดกรอบ
+        itemselect.css({
+            'bottom': -class_name.scrollTop(),
+            'top': ''
+        }).addClass('pAbsolute');
+    }
+    else {
+        itemselect.css({
+            'top': '',
+            'bottom': ''
+        }).removeClass('pAbsolute');
+    }
+}
+
+$('.hbitem').click(function () {
+    offset = this.offsetTop;
+    $('.hbitem').removeClass('selected').removeClass('pAbsolute');
+    $(this).addClass('selected');
+
+    // Calculate the difference
+    var distortion = offset - this.offsetTop;
+    
+    // Remove the distortion by manual scroll.
+    var $parent = $(this).parent();
+    $parent.scrollTop($parent.scrollTop() - distortion);
+    
+    offset = this.offsetTop;
+
+    /* ถ้าวันที่ยืมกับวันที่คืนเป็นวันเดียวกัน */
+    let date1 = $('#date-range200').val();
+    let date2 = $('#date-range201').val();
+    let indexhb = $(this).index();
+
+    if (date1.length > 0 && date2.length > 0) {
+        if (date1 == date2) {
+            for (i=0 ;i<(indexhb + 1); i++) {
+                $('.hritem').eq(i).hide()
+            }
+
+            if ((indexhb + 1) >= ($('.hbitem').length)) {
+                $('.hritem').hide()
+                $('.mritem').hide()
+            }
+
+            $('.hritem').eq(indexhb + 1).click()
+            scrollDiv($('.hrtime'), $('.hritem.selected'), offset3)
+        }
+    }
+});
+
+$('.hritem').click(function () {
+    offset3 = this.offsetTop;
+    $('.hritem').removeClass('selected').removeClass('pAbsolute');
+    $(this).addClass('selected');
+
+    var distortion = offset3 - this.offsetTop;
+    var $parent = $(this).parent();
+    $parent.scrollTop($parent.scrollTop() - distortion);
+    offset3 = this.offsetTop;
+});
+
+$('.hbtime').scroll(function () {
+    scrollDiv($(this), $('.hbitem.selected'), offset)
+});
+
+$('.hrtime').scroll(function () {
+    scrollDiv($(this), $('.hritem.selected'), offset3)
+});
+
+var offset2 = $('.mbitem')[0].offsetTop;
+$('.mbitem').click(function () {
+    offset2 = this.offsetTop;
+    $('.mbitem').removeClass('selected').removeClass('pAbsolute');
+    $(this).addClass('selected');
+    var distortion = offset2 - this.offsetTop;
+    
+    var $parent = $(this).parent();
+    $parent.scrollTop($parent.scrollTop() - distortion);
+    
+    offset2 = this.offsetTop;
+});
+
+var offset4 = $('.mritem')[0].offsetTop;
+$('.mritem').click(function () {
+    offset4 = this.offsetTop;
+    $('.mritem').removeClass('selected').removeClass('pAbsolute');
+    $(this).addClass('selected');
+    var distortion = offset4 - this.offsetTop;
+    
+    var $parent = $(this).parent();
+    $parent.scrollTop($parent.scrollTop() - distortion);
+    offset4 = this.offsetTop;
+});
+
+$('.mbtime').scroll(function () {
+    scrollDiv($(this), $('.mbitem.selected'), offset2)
+});
+
+$('.mrtime').scroll(function () {
+    scrollDiv($(this), $('.mritem.selected'), offset4)
+});
+
+/* ==== กดลูกศร เลื่อนขึ้น / เลื่อนลง ==== */
+$('.tb-up').click(function() {
+    //$('.hbtime').scrollTop(0);
+    //let timeM = $('.mbitem.selected').text();
+    let timeH = $('.hbitem.selected').index();
+    let timeM = $('.mbitem.selected').index();
+
+    if ((timeM > 0) && (timeM < ($('.mbitem').length))) {
+        let nexttm = $('.mbitem').eq(timeM-1);
+        $('.mbitem').removeClass('selected').removeClass('pAbsolute');
+        nexttm.addClass('selected');
+        nexttm.click();
+        scrollDiv($('.mbtime'), $('.mbitem.selected'), offset2)
+    } else {
+        if (timeH == 0) {
+            let nexth1 = $('.hbitem').eq(0);
+            $('.hbitem').removeClass('selected').removeClass('pAbsolute');
+            nexth1.addClass('selected');
+            nexth1.click();
+            scrollDiv($('.hbtime'), $('.hbitem.selected'), offset)
+
+            let nextm1 = $('.mbitem').eq(0);
+            $('.mbitem').removeClass('selected').removeClass('pAbsolute');
+            nextm1.addClass('selected');
+            nextm1.click();
+            scrollDiv($('.mbtime'), $('.mbitem.selected'), offset2)
+        }
+        else if ((timeH > 0) && (timeH < ($('.hbitem').length))) {
+            let nexth2 = $('.hbitem').eq(timeH-1);
+            $('.hbitem').removeClass('selected').removeClass('pAbsolute');
+            nexth2.addClass('selected');
+            nexth2.click();
+            scrollDiv($('.hbtime'), $('.hbitem.selected'), offset)
+
+            let nextm2 = $('.mbitem').eq(($('.mbitem').length - 1));
+            $('.mbitem').removeClass('selected').removeClass('pAbsolute');
+            nextm2.addClass('selected');
+            nextm2.click();
+            scrollDiv($('.mbtime'), $('.mbitem.selected'), offset2)
+        }
+    }
+});
+
+$('.tr-up').click(function() {
+    let timeH = $('.hritem.selected').index();
+    let timeM = $('.mritem.selected').index();
+
+    if ((timeM > 0) && (timeM < ($('.mritem').length))) {
+        let nexttm = $('.mritem').eq(timeM-1);
+        $('.mritem').removeClass('selected').removeClass('pAbsolute');
+        nexttm.addClass('selected');
+        nexttm.click();
+        scrollDiv($('.mrtime'), $('.mritem.selected'), offset4)
+    } else {
+        /* ถ้าวันที่ยืมตรงกับวันที่คืน */
+        let date1 = $('#date-range200').val();
+        let date2 = $('#date-range201').val();
+        let indexhb = $('.hbitem.selected').index();
+
+        if (date1 == date2) {
+            // if ((timeH >= 0) && (timeH <= (indexhb + 1))) {
+            //     let canSelect = $('.hritem').eq(indexhb + 1)
+            //     $('.hritem').removeClass('selected').removeClass('pAbsolute');
+            //     canSelect.addClass('selected');
+            //     canSelect.click();
+            //     scrollDiv($('.hrtime'), $('.hritem.selected'), offset3)
+
+            //     let selectm = $('.mbitem').eq(0);
+            //     $('.mbitem').removeClass('selected').removeClass('pAbsolute');
+            //     selectm.addClass('selected');
+            //     selectm.click();
+            //     scrollDiv($('.mbtime'), $('.mbitem.selected'), offset2)
+            // }
+            // else if (timeH > (indexhb + 1) && (timeH < ($('.hritem').length))) {
+            //     let nexth2 = $('.hritem').eq(timeH-1);
+            //     $('.hritem').removeClass('selected').removeClass('pAbsolute');
+            //     nexth2.addClass('selected');
+            //     nexth2.click();
+            //     scrollDiv($('.hrtime'), $('.hritem.selected'), offset3)
+    
+            //     let nextm2 = $('.mritem').eq(($('.mritem').length - 1));
+            //     $('.mritem').removeClass('selected').removeClass('pAbsolute');
+            //     nextm2.addClass('selected');
+            //     nextm2.click();
+            //     scrollDiv($('.mrtime'), $('.mritem.selected'), offset4)
+            // }
+        }
+        else {
+            if (timeH == 0) {
+                let nexth1 = $('.hritem').eq(0);
+                $('.hritem').removeClass('selected').removeClass('pAbsolute');
+                nexth1.addClass('selected');
+                nexth1.click();
+                scrollDiv($('.hrtime'), $('.hritem.selected'), offset3)
+    
+                let nextm1 = $('.mritem').eq(0);
+                $('.mritem').removeClass('selected').removeClass('pAbsolute');
+                nextm1.addClass('selected');
+                nextm1.click();
+                scrollDiv($('.mrtime'), $('.mritem.selected'), offset4)
+            }
+            else if ((timeH > 0) && (timeH < ($('.hritem').length))) {
+                let nexth2 = $('.hritem').eq(timeH-1);
+                $('.hritem').removeClass('selected').removeClass('pAbsolute');
+                nexth2.addClass('selected');
+                nexth2.click();
+                scrollDiv($('.hrtime'), $('.hritem.selected'), offset3)
+    
+                let nextm2 = $('.mritem').eq(($('.mritem').length - 1));
+                $('.mritem').removeClass('selected').removeClass('pAbsolute');
+                nextm2.addClass('selected');
+                nextm2.click();
+                scrollDiv($('.mrtime'), $('.mritem.selected'), offset4)
+            }
+        }
+    }
+});
+
+$('.tb-down').click(function() {
+    let timeH = $('.hbitem.selected').index();
+    let timeM = $('.mbitem.selected').index();
+
+    if (timeM < ($('.mbitem').length - 1)) {
+        let nexttm = $('.mbitem').eq(timeM+1);
+        $('.mbitem').removeClass('selected').removeClass('pAbsolute');
+        nexttm.addClass('selected');
+        nexttm.click();
+        scrollDiv($('.mbtime'), $('.mbitem.selected'), offset2)
+    } else {
+        if (timeH == ($('.hbitem').length - 1)) {
+            let nexth1 = $('.hbitem').eq(($('.hbitem').length - 1));
+            $('.hbitem').removeClass('selected').removeClass('pAbsolute');
+            nexth1.addClass('selected');
+            nexth1.click();
+            scrollDiv($('.hbtime'), $('.hbitem.selected'), offset)
+
+            let nextm1 = $('.mbitem').eq(($('.mbitem').length - 1));
+            $('.mbitem').removeClass('selected').removeClass('pAbsolute');
+            nextm1.addClass('selected');
+            nextm1.click();
+            scrollDiv($('.mbtime'), $('.mbitem.selected'), offset2)
+        }
+        else if (timeH <= ($('.hbitem').length - 1)) {
+            let nexth2 = $('.hbitem').eq(timeH+1);
+            $('.hbitem').removeClass('selected').removeClass('pAbsolute');
+            nexth2.addClass('selected');
+            nexth2.click();
+            scrollDiv($('.hbtime'), $('.hbitem.selected'), offset)
+
+            let nextm2 = $('.mbitem').eq(0);
+            $('.mbitem').removeClass('selected').removeClass('pAbsolute');
+            nextm2.addClass('selected');
+            nextm2.click();
+            scrollDiv($('.mbtime'), $('.mbitem.selected'), offset2)
+        }
+    }
+});
+
+$('.tr-down').click(function() {
+    let timeH = $('.hritem.selected').index();
+    let timeM = $('.mritem.selected').index();
+
+    if (timeM < ($('.mritem').length - 1)) {
+        let nexttm = $('.mritem').eq(timeM+1);
+        $('.mritem').removeClass('selected').removeClass('pAbsolute');
+        nexttm.addClass('selected');
+        nexttm.click();
+        scrollDiv($('.mrtime'), $('.mritem.selected'), offset4)
+    } else {
+        if (timeH == ($('.hritem').length - 1)) {
+            let nexth1 = $('.hritem').eq(($('.hritem').length - 1));
+            $('.hritem').removeClass('selected').removeClass('pAbsolute');
+            nexth1.addClass('selected');
+            nexth1.click();
+            scrollDiv($('.hrtime'), $('.hritem.selected'), offset3)
+
+            let nextm1 = $('.mritem').eq(($('.mritem').length - 1));
+            $('.mritem').removeClass('selected').removeClass('pAbsolute');
+            nextm1.addClass('selected');
+            nextm1.click();
+            scrollDiv($('.mrtime'), $('.mritem.selected'), offset4)
+        }
+        else if (timeH <= ($('.hritem').length - 1)) {
+            let nexth2 = $('.hritem').eq(timeH+1);
+            $('.hritem').removeClass('selected').removeClass('pAbsolute');
+            nexth2.addClass('selected');
+            nexth2.click();
+            scrollDiv($('.hrtime'), $('.hritem.selected'), offset3)
+
+            let nextm2 = $('.mritem').eq(0);
+            $('.mritem').removeClass('selected').removeClass('pAbsolute');
+            nextm2.addClass('selected');
+            nextm2.click();
+            scrollDiv($('.mrtime'), $('.mritem.selected'), offset4)
+        }
+    }
+});
+
+
+

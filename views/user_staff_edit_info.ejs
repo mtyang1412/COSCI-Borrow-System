@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COSCI - ระบบยืมคืนอุปกรณ์ครุภัณฑ์</title>
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!-- =============== Bootstrap =============== -->
+<link rel="stylesheet" type="text/css"  href="/bootstrap.css">
+
+<!-- =============== Stylesheet =============== -->
+<link rel="stylesheet" type="text/css"  href="/style.css">
+<link rel="stylesheet" type="text/css"  href="/profileStyle.css">
+<link rel="stylesheet" type="text/css"  href="/userStyle.css">
+<link rel="stylesheet" type="text/css"  href="/borrowStyle.css">
+<link rel="stylesheet" type="text/css"  href="/fontface.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Kanit:200,300,400,500,600,700&amp;subset=thai" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.css">
+
+</head>
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<!-- =============== Navigation =============== -->
+<nav id="menu" class="navbar navbar-default navbar-fixed-top">
+  <div class="container"> 
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span><span class="icon-bar"></span>
+        <span class="icon-bar"></span> 
+      </button>
+      <a class="navbar-brand page-scroll" href="#">
+        <img class="logo-header" src="/cosciLogo.png">
+      </a>
+    </div>
+    
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/user_staff/<%=usn%>" class="page-scroll">Equipment&nbsp;&nbsp;&nbsp;•</a></li>
+        <li><a href="/user/logout" class="page-scroll">LOGOUT&nbsp;&nbsp;&nbsp;<i class="fa fa-sign-out"></i>&nbsp;</a></li>
+        <li class="user-tag">
+          <a href="/user_staff/<%=usn%>/profile" id="user-tag-a">
+            <i class="fa fa-user"></i>&nbsp;&nbsp;ID : <%= datas.mem_username %>&nbsp;&nbsp;
+            <br>
+            <i class="fa fa-clock-o"></i>&nbsp;&nbsp;DATE : <%= todays %>
+            <div class="img-user"><img src="/user/<%= datas.mem_pic %>"></div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div id="portfolio">
+  <div class="section-profile-title">
+    <div class="overlay">
+      <div class="container">
+        <div class="row">
+          <br><br><br><br>
+          <div class="user-text">
+            <h2>สวัสดี, <%= datas.staff_name %></h2>
+            <hr>
+          </div>
+
+          <div class="container">
+            <form method="post" enctype="multipart/form-data">
+              <div class="row" id="user-profile">
+                <div class="col-lg-3 col-md-4 col-sm-4">
+                  <div class="main-box clearfix">
+                    <div style="right: 60px; padding-top: 20px; position: absolute;">
+                      <button class="btn btn-primary" type="button">
+                        <i class="fa fa-camera upload-button"></i>
+                        <input class="file-upload" name="image" id="image" style="display: none;" type="file" accept="image/*"/>
+                      </button>
+                    </div>
+                                    
+                    <img src="/user/<%=datas.mem_pic%>" alt="" class="profile-img img-responsive center-block">
+                      <div class="profile-details">
+                        <ul class="fa-ul">
+                          <li>
+                            <i class="fa-li fa fa-user"></i>
+                            ชื่อผู้ใช้ : <span><%= datas.mem_username%></span>
+                          </li>
+                        </ul>
+                      </div>
+                  </div>
+                </div>
+                
+                <div class="col-lg-9 col-md-8 col-sm-8">
+                  <div class="main-box clearfix">
+                    <div class="profile-header">
+                      <h3><span>ข้อมูลส่วนตัว</span></h3>
+                      <div class="edit">
+                        <div class="dropdown edit-profile">
+                          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-gear"></i></button>
+                          <ul class="dropdown-menu pull-right">
+                            <li><a href="#">แก้ไขข้อมูลส่วนตัว</a></li>
+                            <li><a href="/user_staff/<%=usn%>/profile/edit-pass">เปลี่ยนรหัสผ่าน</a></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+       
+                    <div class="row profile-user-info">
+                      <div class="col-sm-12 col-lg-5 col-md-12">
+                        <div class="profile-user-details clearfix">
+                          <div class="profile-user-details-label">
+                            รหัสประจำตัว
+                          </div>
+                          <div class="profile-user-details-value">
+                            : <%= datas.mem_id%>
+                          </div>
+                        </div>
+                                        
+                        <div class="profile-user-details clearfix">
+                          <div class="profile-user-details-label">
+                            ชื่อ-นามสกุล
+                          </div>
+                          <div class="profile-user-details-value">
+                            : <%= datas.staff_name%>
+                          </div>
+                        </div>
+
+                        <div class="profile-user-details clearfix">
+                          <div class="profile-user-details-label">
+                            ตำแหน่ง
+                          </div>
+                          <div class="profile-user-details-value">
+                            : <%= datas.staff_position%>
+                          </div>
+                        </div>
+                      </div>
+           
+                      <div class="col-sm-12 col-lg-7 col-md-12 profile-social">
+                        <div class="profile-user-details clearfix">
+                          <div class="profile-user-details-label">
+                            อีเมล
+                          </div>
+                          <div class="profile-user-details-value">
+                            <input class="form-field" id="email1" type="text" name="email" value="<%= datas.mem_email%>" onkeypress="return emailLetter(event)" />
+                            <input style="display: none;" id="email2" name="email" value="<%= datas.mem_email%>"/><br>
+                            <span id="show-mail" style="font-size: 11px; color: red;" hidden>
+                              รูปแบบอีเมลไม่ถูกต้อง!!
+                            </span>
+                          </div>
+                        </div>
+                        
+                        <div class="profile-user-details clearfix">
+                          <div class="profile-user-details-label">
+                            เบอร์โทรศัพท์
+                          </div>
+                          <div class="profile-user-details-value">
+                            <input class="form-field" id="phone1" type="text" name="phone" value="<%= datas.mem_phone%>" onkeypress="return isNumber(event)" />
+                            <input style="display: none;" class="form-field" id="phone2" type="text" name="phone" value="<%= datas.mem_phone%>"/>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="col-sm-12 col-lg-12 col-md-12" style="margin-top: 30px;">
+                        <div style="text-align: center;">
+                            <a href="/user_staff/<%=usn%>/profile" class="btn btn-primary">ยกเลิก</a>&nbsp;&nbsp;
+                            <button type="submit" id="submit-change" class="confirm btn btn-danger" disabled="true">ยืนยัน</button>
+                        </div>
+                      </div>
+                    </div>  
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+<div id="footer">
+        <div class="container-fluid text-center copyrights">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="social">
+              <ul>
+                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+              </ul>
+            </div>
+            <p>&copy; COLLEGE OF SOCIAL COMMUNICATION INNOVATION.ALL RIGHTS RESERVED<br><br>
+              TEL. 02-649-5000 EXT 11275 , 02-259-2343 EMAIL. PRCOSCISWU@GMAIL.COM
+            </p>
+          </div>
+        </div>
+</div>
+    
+<!-- Menu Toggle Script -->
+
+<script type="text/javascript" src="/jquery.1.11.1.js"></script> 
+<script type="text/javascript" src="/bootstrap.js"></script> 
+<script type="text/javascript" src="/jquery.isotope.js"></script> 
+<script type="text/javascript" src="/main.js"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.css"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.js"></script>
+
+<script>
+$(document).ready(function() {  
+    var readURL = function(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('.profile-img').attr('src', e.target.result);
+            $("#submit-change").attr("disabled", false);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+
+    $(".file-upload").on('change', function(){
+        readURL(this);
+    });
+
+    $(".upload-button").on('click', function() {
+    $(".file-upload").click();
+    });
+});
+
+$('.confirm').click(function(){  
+    swal({
+        title: 'แก้ไข้ข้อมูลสำเร็จ',
+        text: 'แก้ไข้ข้อมูลเรียบร้อยแล้ว!',
+        type: 'success',
+        confirmButtonText: '<a href="/user_staff/<%=usn%>/profile" style="color: #fff; padding: 20px;">กลับไปหน้าโปรไฟล์</a>',
+	});
+});
+
+function isNumber(event) {
+  let x = event.charCode;
+  let n = document.getElementById("phone1").value;
+  return  ((n.length < 12) && (x >= 48 && x <= 57));
+}
+
+$("#phone1").keyup(function(){
+    if ($("#phone1").val() != $("#phone2").val()) {
+      let n = $(this).val()
+      if (n.length < 12) {
+        if (n.length == 3) {
+          $(this).val(n + '-')
+        } else if (n.length == 7) {
+          $(this).val(n + '-')
+        }
+        $("#submit-change").attr("disabled", true);
+      }
+      else {
+        $("#submit-change").attr("disabled", false);
+      }
+    }
+    else {
+        $("#submit-change").attr("disabled", true);
+    }
+})
+
+function emailLetter(event) {
+  var x = event.charCode;
+  return  ((x == 46) || (x == 95) || 
+          (x == 64) ||
+          (x >= 48 && x <= 57) || 
+          (x >= 65 && x <= 90) || 
+          (x >= 97 && x <= 122));
+}
+
+$("#email1").keyup(function(){
+    if ($("#email1").val() != $("#email2").val()) {
+      let strMail = $(this).val();
+      let mailFormat = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      
+      if (mailFormat.test(strMail)) {
+        $('#show-mail').hide();
+        $("#submit-change").attr("disabled", false);
+      } else {
+        $("#submit-change").attr("disabled", true);
+        $('#show-mail').show();
+      }
+    }
+    else {
+      $('#show-mail').hide();
+      $("#submit-change").attr("disabled", true);
+    }
+})
+
+
+</script>
+</body>
+</html>

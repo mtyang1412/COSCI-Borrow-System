@@ -1,0 +1,251 @@
+ /*
+ * FullCalendar v3.9.0
+ * Docs & License: https://fullcalendar.io/
+ * (c) 2018 Adam Shaw
+ */
+
+  
+  .fc-popover .fc-header .fc-close {
+    cursor: pointer; 
+  }
+  
+  /* Scrolling Container */
+  .fc-scroller {
+    -webkit-overflow-scrolling: touch; 
+  }
+  
+  /* TODO: move to agenda/basic */
+  .fc-scroller > .fc-day-grid,
+  .fc-scroller > .fc-time-grid {
+    position: relative;
+    width: 100%;
+  }
+  
+  /* ---------- Popover ---------- */
+  .fc-popover  {
+    background-color: white;
+  }
+  
+  .fc-day-header{
+      padding: 11px 7px;
+      font-size: 18px;
+      color: white;
+      font-weight: 500;
+      background-color: #212121;
+  }
+  
+  .btn{
+    font-size: 15px !important;
+    text-transform: uppercase;
+    font-weight: 600;
+    box-shadow: none !important;
+    border: 0;
+    padding: 10px 20px;
+  }
+
+  .btn:focus{
+    box-shadow: none;
+  }
+
+  .btn.btn-primary{
+    background: #262626;
+    color: #ffffff;
+  }
+
+  .fc-body {
+    background-color: #f9f9f9;
+  }
+  
+  .fc-right {
+   font-size: 20px;
+   color: black;
+   font-weight: 400;
+  }
+
+  .fc h2 {
+    font-size: 30px;
+ }
+  
+  /* ---------- Date Style --------- */
+  .fc-day-number {
+    font-size: 14px;
+    margin-right: 4px;
+    margin-top: 4px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    /* line-height: 15px; */
+    text-align: center;
+    color: #2C2D2D;
+  }
+  
+  .fc-day-number:hover {
+    text-decoration: none !important;
+    color: black;
+  }
+  
+  .fc-today .fc-day-number {
+    background-color: gray;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .fc-today {
+    background-color: #f9f9f9;
+  }
+
+  .fc-day.fc-sat {
+    background-color: #E4E9E9;
+  }
+
+  .fc-day.fc-sun {
+    background-color: #D6D6D6;
+  }
+  
+  
+  /* Set Event as Dot */
+  .fc-month-view .fc-row .fc-day {
+    /* Aligns the event dots at the bottom of the cell. */
+    vertical-align: bottom;
+  }
+  
+  .fc-month-view .fc-day .fc-event-dot {
+    cursor: default;
+    margin-left: 2px;
+    margin-bottom: 0px;
+    width: 7px;
+    height: 7px;
+  }
+
+  /* Color Box */
+  .colorBox {
+    width: 10px;
+    height: 10px;
+    vertical-align: middle;
+  }
+
+  /* ===== เลือกเวลายืม-คืน ===== */
+  .time-select {
+    margin-top: 70px;
+    height: 300px;
+    /* width: 25%;
+    float: left; */
+    padding: 5px;
+    text-align: center;
+  }
+
+  .timebox {
+    background-color: white;
+    border-radius: 5px;
+    margin: auto;
+  }
+
+  .hbtime {
+    float: left;
+    position: relative;
+    height: 60px;
+    overflow: auto;
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
+  }
+  .hbtime::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+  }
+
+  .hrtime {
+    float: left;
+    position: relative;
+    height: 60px;
+    overflow: auto;
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
+  }
+  .hrtime::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+  }
+
+  .hbitem {
+    padding: 0 8px;
+    cursor: pointer;
+  }
+  .hritem {
+    padding: 0 8px;
+    cursor: pointer;
+  }
+
+  .selected {
+    background-color: darkgray;
+    border-radius: 5px;
+    width: 35px;
+  }
+
+  .mbtime {
+    float: left;
+    position: relative;
+    height: 60px;
+    overflow: auto;
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
+  }
+  .mbtime::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+  }
+
+  .mrtime {
+    float: left;
+    position: relative;
+    height: 60px;
+    overflow: auto;
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
+  }
+  .mrtime::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+  }
+
+  .mbitem {
+    padding: 0 8px;
+    cursor: pointer;
+  }
+
+  .mritem {
+    padding: 0 8px;
+    cursor: pointer;
+  }
+
+  .pAbsolute {
+    position: absolute;
+  }
+
+  .time-middle {
+    float: left;
+    padding: 0 6px;
+  }
+
+  .tb-up {
+    width: 100%;
+    padding-top: 2px;
+    cursor: pointer;
+  }
+
+  .tb-down {
+    width: 100%;
+    padding-top: -2px;
+    cursor: pointer;
+  }
+
+  .tr-up {
+    width: 100%;
+    padding-top: 2px;
+    cursor: pointer;
+  }
+  .tr-down {
+    width: 100%;
+    padding-top: -2px;
+    cursor: pointer;
+  }
+

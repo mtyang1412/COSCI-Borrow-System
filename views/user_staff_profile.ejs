@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COSCI - ระบบยืมคืนอุปกรณ์ครุภัณฑ์</title>
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!-- =============== Bootstrap =============== -->
+<link rel="stylesheet" type="text/css"  href="/bootstrap.css">
+
+<!-- =============== Stylesheet =============== -->
+<link rel="stylesheet" type="text/css"  href="/style.css">
+<link rel="stylesheet" type="text/css"  href="/userStyle.css">
+<link rel="stylesheet" type="text/css"  href="/borrowStyle.css">
+<link rel="stylesheet" type="text/css"  href="/profileStyle.css">
+<link rel="stylesheet" type="text/css"  href="/fontface.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Kanit:200,300,400,500,600,700&amp;subset=thai" rel="stylesheet">
+
+</head>
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<!-- =============== Navigation =============== -->
+<nav id="menu" class="navbar navbar-default navbar-fixed-top">
+  <div class="container"> 
+    <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span><span class="icon-bar"></span> <span class="icon-bar"></span> 
+        </button>
+        <a class="navbar-brand page-scroll" href="#">
+          <img class="logo-header" src="/cosciLogo.png">
+        </a>
+      </div>
+          
+    <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/user_staff/<%=usn%>" class="page-scroll">Equipment&nbsp;&nbsp;&nbsp;•</a></li>
+          <li><a href="/user/logout" class="page-scroll">LOGOUT&nbsp;&nbsp;&nbsp;<i class="fa fa-sign-out"></i>&nbsp;</a></li>
+          <li class="user-tag">
+            <a href="#" id="user-tag-a">
+              <i class="fa fa-user"></i>&nbsp;&nbsp;ID : <%= datas.mem_username %>&nbsp;&nbsp;
+              <br>
+              <i class="fa fa-clock-o"></i>&nbsp;&nbsp;DATE : <%= todays %>
+              <div class="img-user"><img src="/user/<%= datas.mem_pic %>"></div>
+            </a>
+          </li>
+        </ul>
+      </div>
+  </div>
+</nav>
+
+<div id="portfolio">
+  <div class="section-profile-title">
+    <div class="overlay">
+      <div class="container">
+        <div class="row">
+          <br><br><br><br>
+          <div class="user-text">
+            <h2>สวัสดี, <%= datas.staff_name %></h2>
+            <hr>
+          </div>
+
+          <div class="container">
+            <div class="row" id="user-profile">
+              <div class="col-lg-3 col-md-4 col-sm-4">
+                <div class="main-box clearfix">
+                    <img src="/user/<%= datas.mem_pic %>" alt="" class="profile-img img-responsive center-block">
+                
+                    <div class="profile-details">
+                      <ul class="fa-ul">
+                        <li>
+                          <i class="fa-li fa fa-user"></i>
+                          ชื่อผู้ใช้ : <span><%= datas.mem_username%></span>
+                        </li>
+                      </ul>
+                    </div>
+                </div>
+              </div>
+                
+              <div class="col-lg-9 col-md-8 col-sm-8">
+                <div class="main-box clearfix">
+                  <div class="profile-header">
+                    <h3><span>ข้อมูลส่วนตัว</span></h3>
+                    <div class="edit">
+                      <div class="dropdown edit-profile">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                          <i class="fa fa-gear"></i>
+                        </button>
+                        <ul class="dropdown-menu pull-right">
+                          <li><a href="/user_staff/<%=usn%>/profile/edit-info">แก้ไขข้อมูลส่วนตัว</a></li>
+                          <li><a href="/user_staff/<%=usn%>/profile/edit-pass">เปลี่ยนรหัสผ่าน</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                
+                  <div class="row profile-user-info">
+                    <div class="col-sm-12 col-lg-5 col-md-12">
+                      <div class="profile-user-details clearfix">
+                        <div class="profile-user-details-label">รหัสประจำตัว</div>
+                        <div class="profile-user-details-value">
+                            : <%= datas.mem_id%>
+                        </div>
+                      </div>
+                                        
+                      <div class="profile-user-details clearfix">
+                        <div class="profile-user-details-label">ชื่อ-นามสกุล</div>
+                        <div class="profile-user-details-value">
+                            : <%= datas.staff_name%>
+                        </div>
+                      </div>
+
+                      <div class="profile-user-details clearfix">
+                        <div class="profile-user-details-label">ตำแหน่ง</div>
+                        <div class="profile-user-details-value">
+                            : <%= datas.staff_position%>
+                        </div>
+                      </div>
+                    </div>
+                                    
+                    <div class="col-sm-12 col-lg-7 col-md-12 profile-social">
+                      <div class="profile-user-details clearfix">
+                        <div class="profile-user-details-label">อีเมล</div>
+                        <div class="profile-user-details-value">
+                            : <%= datas.mem_email%>
+                        </div>
+                      </div>
+                                        
+                      <div class="profile-user-details clearfix">
+                        <div class="profile-user-details-label">เบอร์โทรศัพท์</div>
+                        <div class="profile-user-details-value">
+                            : <%= datas.mem_phone%>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                
+                  <div class="tabs-wrapper profile-tabs">
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a href="#tab-borrow" data-toggle="tab">รายการยืม-คืนปัจจุบัน</a></li>
+                      <li><a href="#tab-history" data-toggle="tab">ประวัติการยืม-คืน</a></li>
+                    </ul>
+                
+                    <div class="tab-content">
+                      <div class="tab-pane fade" id="tab-history">
+                        <div class="table-responsive">
+                          <table class="table">
+                            <tbody>
+                              <tr>
+                                <td class="text-center">
+                                    <i class="fa fa-check"></i>
+                                </td>
+                                <td>
+                                    Raviporn ได้ทำการยืม-คืน <a>camera a</a> เสร็จสมบูรณ์แล้ว
+                                </td>
+                                <td>
+                                    2019/12/25 13:00
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-center">
+                                    <i class="fa fa-check"></i>
+                                </td>
+                                <td>
+                                    Raviporn ได้ทำการยืม-คืน <a>camera b</a> เสร็จสมบูรณ์แล้ว.
+                                </td>
+                                <td>
+                                    2019/10/10 12:30
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-center">
+                                    <i class="fa fa-check"></i>
+                                </td>
+                                <td>
+                                    Raviporn ได้ทำการยืม-คืน <a>camera basic</a> เสร็จสมบูรณ์แล้ว.
+                                </td>
+                                <td>
+                                    2018/05/08 15:15
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                
+                      <div class="tab-pane fade in active" id="tab-borrow">
+                        <ul class="widget-users row">
+                          <li class="col-md-6">
+                              <div class="img">
+                                <img src="/portfolio/camera-a.jpg" alt="">
+                              </div>
+                              <div class="details">
+                                <div class="equip-name">
+                                  <a href="#" data-toggle="modal" data-target="#exampleModalCenter1">Camera B</a>
+                                </div>
+                                <div class="time">
+                                  <i class="fa fa-clock-o"></i> วันที่คืน : 10/01/2020
+                                </div>
+                                <div class="type">
+                                  <span class="label label-success" data-toggle="tooltip" data-placement="right" data-html="true" title="โปรดส่งคืนอุปกรณ์ให้ตรงตามวันและเวลาที่นัดหมายไว้">ยืมอุปกรณ์เรียบร้อย</span>
+                                </div>
+                              </div>
+                          </li>       
+                        </ul>
+                        
+                        <ul class="widget-users row">
+                          <li class="col-md-6">
+                            <div class="img">
+                                <img src="/portfolio/camera-a.jpg" alt="">
+                            </div>
+                            <div class="details">
+                                <div>
+                                    <a href="#" data-toggle="modal" data-target="#exampleModalCenter2">Camera Basic</a>
+                                </div>
+                                <div class="time">
+                                    <i class="fa fa-clock-o"></i> วันที่รับของ : 05/01/2020 <br>
+                                </div>
+                                <div class="type">
+                                    <span class="label label-confirm" data-toggle="tooltip" data-placement="right" data-html="true" title="อุปกรณ์ของคุณถูกจัดเตรียมแล้ว<br>รับอุปกรณ์ได้ตามวันและเวลาที่ได้<br>ทำการนัดหมายไว้">เตรียมรับอุปกรณ์</span>
+                                </div>
+                            </div>
+                          </li>
+                        </ul>
+                        
+                        <ul class="widget-users row">
+                          <li class="col-md-6">
+                            <div class="img">
+                                <img src="/portfolio/camera-a.jpg" alt="">
+                            </div>
+                            <div class="details">
+                                <div>
+                                    <a href="#" data-toggle="modal" data-target="#exampleModalCenter3">Camera A</a>
+                                </div>
+                                <div class="time">
+                                    <i class="fa fa-clock-o"></i> วันที่ยืม : 25/12/2019
+                                </div>
+                                <div class="type">
+                                    <span class="label label-wait" data-toggle="tooltip" data-placement="right" data-html="true" title="แอดมินกำลังตรวจสอบอุปกรณ์<br>โดยจะใช้เวลาประมาณ 2-3<br>โปรดเข้ามาเช็คสถานะอีกครั้ง">รอตรวจสอบ</span>
+                                </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">สถานะ&nbsp;&nbsp;<span class="label label-success">ยืมอุปกรณ์เรียบร้อย</span></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true"><div style="margin-top: -22px;">&times;</div></span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-xs-12 col-md-12 col-lg-12" style="font-size: 12px;">
+                <h3><div class="box"></div>&nbsp;&nbsp;&nbsp;&nbsp;ใบยืมคืนอุปกรณ์ครุภัณฑ์</h3>
+                <h5 style="color: #333; font-size: 14px;">วันและเวลาในการยืม</h5>  
+                <hr style="margin-top: -5px;">
+                <div class="col-xs-6 col-md-6 col-lg-6">
+                    <div style="margin-top: -25px; line-height: 30px;">
+                        <b>วันที่ขอ : </b> bor_borrowDate<br>
+                        <b>วันที่รับของ : </b> bor_receiveDate<br>
+                        <b>วันที่คืนของ : </b> bor_returnDate<br>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-md-6 col-lg-6" style="margin-bottom: 20px;">
+                    <div style="margin-top: -25px; line-height: 30px;">
+                        <b>เวลา : </b> bor_borrowTime<br>
+                        <b>เวลา : </b> bor_receiveTime<br>
+                        <b>เวลา : </b> bor_returnTime<br>
+                    </div>
+                </div>
+                <h5 style="color: #333; font-size: 14px;">รายการอุปกรณ์</h5>  
+                <hr style="margin-top: -5px;">
+                <div class="col-xs-6 col-md-6 col-lg-6" style="margin-top: -25px; line-height: 30px;">
+                    <div class="portfolio-item">
+                        <img src="/portfolio/camera-basic.jpg" class="img-responsive">
+                    </div>
+                </div>
+                <div class="col-xs-6 col-md-6 col-lg-6" style="margin-top: -25px; line-height: 30px;">
+                    <div style="padding-top: 10px;">
+                        <b><input type="checkbox" value="" checked readonly>&nbsp;ชุดอุปกรณ์กล้อง 70D</b><br>
+                        <b><input type="checkbox" value="" checked readonly>&nbsp;อุปกรณ์เสียง</b><br>
+                        <b><input type="checkbox" value="" checked readonly>&nbsp;GRIP</b><br>                   
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">1</th>
+                                <th scope="col">ชุดอุปกรณ์กล้อง 70D</th>
+                                <th scope="col">จำนวน</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td scope="row"></td>
+                                <td>Canon 70D+Camera bag</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td scope="row"></td>
+                                <td>เลนส์ 18-135 mm</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td scope="row"></td>
+                                <td>RODE Shot gun Microphane+Cable+grip</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td scope="row"></td>
+                                <td>ขาตั้งกล้อง Manfrotto (Monopod/Tripod)</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td scope="row"></td>
+                                <td>Battery Charger</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td scope="row"></td>
+                                <td>Battery</td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <td scope="row"></td>
+                                <td>SD Card (Sandisk Extreme 32G)</td>
+                                <td>1</td>
+                            </tr>
+                        </tbody>
+                          
+                        <thead>
+                            <tr>
+                                <th scope="col">3</th>
+                                <th scope="col">อุปกรณ์เสียง</th>
+                                <th scope="col">จำนวน</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td scope="row"></td>
+                                <td>Wireless Microphone Sony</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td scope="row"></td>
+                                <td>Wireless Microphone</td>
+                                <td>1</td>
+                            </tr>
+                        </tbody>
+                          
+                        <thead>
+                            <tr>
+                                <th scope="col">5</th>
+                                <th scope="col">GRIP</th>
+                                <th scope="col">จำนวน</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td scope="row"></td>
+                                <td>Tripod(FSB4)</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td scope="row"></td>
+                                <td>slider Cinevate/Edelkrone</td>
+                                <td>1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <h5 style="color: #333; font-size: 14px; margin-left: -14px;">รายละเอียดผู้ยืม</h5>  
+                    <hr style="margin-top: -5px; margin-left: -14px;">
+                    <div style="margin-top: -25px; line-height: 30px;">
+                        <b>ชื่อ-นามสกุล : </b> stu_fname / stu_lname<br>
+                        <b>รหัสนิสิต : </b> stu_id<br>
+                        <b>ชั้นปีที่ : </b> stu_year<br>
+                        <b>เบอร์โทรติดต่อ1 : </b> bor_borrowTel1<br>
+                        <b>เบอร์โทรติดต่อ2 : </b> bor_borrowTel2<br>
+                        <b>รายวิชา : </b> sub_id / sub_name<br>
+                        <b>วัตถุประสงค์​ : </b><br>
+                        <textarea disabled cols="24" rows="3">เพื่อใช้ถ่ายภาพยนต์ประกอบการเรียนในวิชา</textarea><br>
+                    </div>
+                </div>
+                          
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <h5 style="color: #333; font-size: 14px; margin-left: -14px;">ผู้รับผิดชอบ</h5>  
+                    <hr style="margin-top: -5px; margin-left: -14px;">
+                    <div style="margin-top: -25px; line-height: 30px;">
+                        <b>ลงชื่อผู้ยืม : </b> stu_fname<br>
+                        <b>อาจารย์ที่ปรึกษา/มอบหมาย : </b> sub_professor<br>
+                        <b>ผู้จัดเตรียม/ผู้ดูแลอุปกรณ์ : </b> ad_name<br><br>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary"><i class="fa fa-print"></i></button>
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter1-1">คืนอุปกรณ์</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">สถานะ&nbsp;&nbsp;<span class="label label-confirm">เตรียมรับอุปกรณ์</span></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true"><div style="margin-top: -22px;">&times;</div></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-xs-12 col-md-12 col-lg-12" style="font-size: 12px;">
+                <h3><div class="box"></div>&nbsp;&nbsp;&nbsp;&nbsp;ใบยืมคืนอุปกรณ์ครุภัณฑ์</h3>
+                <h5 style="color: #333; font-size: 14px;">วันและเวลาในการยืม</h5>  
+                <hr style="margin-top: -5px;">
+                <div class="col-xs-6 col-md-6 col-lg-6">
+                  <div style="margin-top: -25px; line-height: 30px;">
+                    <b>วันที่ขอ : </b> bor_borrowDate<br>
+                    <b>วันที่รับของ : </b> bor_receiveDate<br>
+                    <b>วันที่คืนของ : </b> bor_returnDate<br>
+                  </div>
+                </div>
+                <div class="col-xs-6 col-md-6 col-lg-6" style="margin-bottom: 20px;">
+                  <div style="margin-top: -25px; line-height: 30px;">
+                    <b>เวลา : </b> bor_borrowTime<br>
+                    <b>เวลา : </b> bor_receiveTime<br>
+                    <b>เวลา : </b> bor_returnTime<br>
+                  </div>
+                </div>
+                <h5 style="color: #333; font-size: 14px;">รายการอุปกรณ์</h5>  
+                <hr style="margin-top: -5px;">
+                <div class="col-xs-6 col-md-6 col-lg-6" style="margin-top: -25px; line-height: 30px;">
+                  <div class="portfolio-item">
+                    <img src="/portfolio/camera-basic.jpg" class="img-responsive">
+                  </div>
+                </div>
+                <div class="col-xs-6 col-md-6 col-lg-6" style="margin-top: -25px; line-height: 30px;">
+                  <div style="padding-top: 10px;">
+                    <b><input type="checkbox" value="" checked readonly>&nbsp;ชุดอุปกรณ์กล้อง 70D</b><br>
+                    <b><input type="checkbox" value="" checked readonly>&nbsp;อุปกรณ์เสียง</b><br>
+                    <b><input type="checkbox" value="" checked readonly>&nbsp;GRIP</b><br>                   
+                  </div>
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">1</th>
+                        <th scope="col">ชุดอุปกรณ์กล้อง 70D</th>
+                        <th scope="col">จำนวน</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td scope="row"></td>
+                        <td>Canon 70D+Camera bag</td>
+                        <td>1</td>
+                      </tr>
+                      <tr>
+                        <td scope="row"></td>
+                        <td>เลนส์ 18-135 mm</td>
+                        <td>1</td>
+                      </tr>
+                      <tr>
+                        <td scope="row"></td>
+                        <td>RODE Shot gun Microphane+Cable+grip</td>
+                        <td>1</td>
+                      </tr>
+                      <tr>
+                        <td scope="row"></td>
+                        <td>ขาตั้งกล้อง Manfrotto (Monopod/Tripod)</td>
+                        <td>1</td>
+                      </tr>
+                      <tr>
+                        <td scope="row"></td>
+                        <td>Battery Charger</td>
+                        <td>1</td>
+                      </tr>
+                      <tr>
+                        <td scope="row"></td>
+                        <td>Battery</td>
+                        <td>2</td>
+                      </tr>
+                      <tr>
+                        <td scope="row"></td>
+                        <td>SD Card (Sandisk Extreme 32G)</td>
+                        <td>1</td>
+                      </tr>
+                    </tbody>
+                          
+                    <thead>
+                      <tr>
+                        <th scope="col">3</th>
+                        <th scope="col">อุปกรณ์เสียง</th>
+                        <th scope="col">จำนวน</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td scope="row"></td>
+                            <td>Wireless Microphone Sony</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td scope="row"></td>
+                            <td>Wireless Microphone</td>
+                            <td>1</td>
+                        </tr>
+                    </tbody>
+                          
+                    <thead>
+                        <tr>
+                            <th scope="col">5</th>
+                            <th scope="col">GRIP</th>
+                            <th scope="col">จำนวน</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td scope="row"></td>
+                            <td>Tripod(FSB4)</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td scope="row"></td>
+                            <td>slider Cinevate/Edelkrone</td>
+                            <td>1</td>
+                        </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <br>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <h5 style="color: #333; font-size: 14px; margin-left: -14px;">รายละเอียดผู้ยืม</h5>  
+                    <hr style="margin-top: -5px; margin-left: -14px;">
+                    <div style="margin-top: -25px; line-height: 30px;">
+                        <b>ชื่อ-นามสกุล : </b> stu_fname / stu_lname<br>
+                        <b>รหัสนิสิต : </b> stu_id<br>
+                        <b>ชั้นปีที่ : </b> stu_year<br>
+                        <b>เบอร์โทรติดต่อ1 : </b> bor_borrowTel1<br>
+                        <b>เบอร์โทรติดต่อ2 : </b> bor_borrowTel2<br>
+                        <b>รายวิชา : </b> sub_id / sub_name<br>
+                        <b>วัตถุประสงค์​ : </b><br>
+                        <textarea disabled cols="24" rows="3">เพื่อใช้ถ่ายภาพยนต์ประกอบการเรียนในวิชา</textarea><br>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <h5 style="color: #333; font-size: 14px; margin-left: -14px;">ผู้รับผิดชอบ</h5>  
+                    <hr style="margin-top: -5px; margin-left: -14px;">
+                    <div style="margin-top: -25px; line-height: 30px;">
+                        <b>ลงชื่อผู้ยืม : </b> stu_fname<br>
+                        <b>อาจารย์ที่ปรึกษา/มอบหมาย : </b> sub_professor<br>
+                        <b>ผู้จัดเตรียม/ผู้ดูแลอุปกรณ์ : </b> ad_name<br><br>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary"><i class="fa fa-print"></i></button>
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter2-2">ตรวจสอบและรับอุปกรณ์</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalCenterTitle">สถานะ&nbsp;&nbsp;<span class="label label-wait">รอตรวจสอบ</span></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true"><div style="margin-top: -22px;">&times;</div></span>
+              </button>
+        </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-xs-12 col-md-12 col-lg-12" style="font-size: 12px;">
+                          <h3><div class="box"></div>&nbsp;&nbsp;&nbsp;&nbsp;ใบยืมคืนอุปกรณ์ครุภัณฑ์</h3>
+                          <h5 style="color: #333; font-size: 14px;">วันและเวลาในการยืม</h5>  
+                          <hr style="margin-top: -5px;">
+                          <div class="col-xs-6 col-md-6 col-lg-6">
+                              <div style="margin-top: -25px; line-height: 30px;">
+                              <b>วันที่ขอ : </b> bor_borrowDate<br>
+                              <b>วันที่รับของ : </b> bor_receiveDate<br>
+                              <b>วันที่คืนของ : </b> bor_returnDate<br>
+                              </div>
+                          </div>
+                          <div class="col-xs-6 col-md-6 col-lg-6" style="margin-bottom: 20px;">
+                              <div style="margin-top: -25px; line-height: 30px;">
+                              <b>เวลา : </b> bor_borrowTime<br>
+                              <b>เวลา : </b> bor_receiveTime<br>
+                              <b>เวลา : </b> bor_returnTime<br>
+                              </div>
+                          </div>
+                          <h5 style="color: #333; font-size: 14px;">รายการอุปกรณ์</h5>  
+                          <hr style="margin-top: -5px;">
+                          <div class="col-xs-6 col-md-6 col-lg-6" style="margin-top: -25px; line-height: 30px;">
+                              <div class="portfolio-item">
+                                  <img src="/portfolio/camera-basic.jpg" class="img-responsive">
+                              </div>
+                          </div>
+                          <div class="col-xs-6 col-md-6 col-lg-6" style="margin-top: -25px; line-height: 30px;">
+                              <div style="padding-top: 10px;">
+                              <b><input type="checkbox" value="" checked readonly>&nbsp;ชุดอุปกรณ์กล้อง 70D</b><br>
+                              <b><input type="checkbox" value="" checked readonly>&nbsp;อุปกรณ์เสียง</b><br>
+                              <b><input type="checkbox" value="" checked readonly>&nbsp;GRIP</b><br>                   
+                              </div>
+                          </div>
+                          <div class="col-xs-12 col-md-12 col-lg-12">
+                                <table class="table">
+                                        <thead>
+                                          <tr>
+                                            <th scope="col">1</th>
+                                            <th scope="col">ชุดอุปกรณ์กล้อง 70D</th>
+                                            <th scope="col">จำนวน</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr>
+                                            <td scope="row"></td>
+                                            <td>Canon 70D+Camera bag</td>
+                                            <td>1</td>
+                                          </tr>
+                                          <tr>
+                                            <td scope="row"></td>
+                                            <td>เลนส์ 18-135 mm</td>
+                                            <td>1</td>
+                                          </tr>
+                                          <tr>
+                                            <td scope="row"></td>
+                                            <td>RODE Shot gun Microphane+Cable+grip</td>
+                                            <td>1</td>
+                                          </tr>
+                                          <tr>
+                                            <td scope="row"></td>
+                                            <td>ขาตั้งกล้อง Manfrotto (Monopod/Tripod)</td>
+                                            <td>1</td>
+                                          </tr>
+                                          <tr>
+                                            <td scope="row"></td>
+                                            <td>Battery Charger</td>
+                                            <td>1</td>
+                                          </tr>
+                                          <tr>
+                                            <td scope="row"></td>
+                                            <td>Battery</td>
+                                            <td>2</td>
+                                          </tr>
+                                          <tr>
+                                            <td scope="row"></td>
+                                            <td>SD Card (Sandisk Extreme 32G)</td>
+                                            <td>1</td>
+                                          </tr>
+                                        </tbody>
+                          
+                                        <thead>
+                                              <tr>
+                                                <th scope="col">3</th>
+                                                <th scope="col">อุปกรณ์เสียง</th>
+                                                <th scope="col">จำนวน</th>
+                                              </tr>
+                                        </thead>
+                                        <tbody>
+                                              <tr>
+                                                <td scope="row"></td>
+                                                <td>Wireless Microphone Sony</td>
+                                                <td>1</td>
+                                              </tr>
+                                              <tr>
+                                                <td scope="row"></td>
+                                                <td>Wireless Microphone</td>
+                                                <td>1</td>
+                                              </tr>
+                                        </tbody>
+                          
+                                        <thead>
+                                            <tr>
+                                              <th scope="col">5</th>
+                                              <th scope="col">GRIP</th>
+                                              <th scope="col">จำนวน</th>
+                                            </tr>
+                                      </thead>
+                                      <tbody>
+                                            <tr>
+                                              <td scope="row"></td>
+                                              <td>Tripod(FSB4)</td>
+                                              <td>1</td>
+                                            </tr>
+                                            <tr>
+                                              <td scope="row"></td>
+                                              <td>slider Cinevate/Edelkrone</td>
+                                              <td>1</td>
+                                            </tr>
+                                      </tbody>
+                                      </table>
+                          </div>
+                          <br>
+                          <div class="col-xs-12 col-md-12 col-lg-12">
+                              <h5 style="color: #333; font-size: 14px; margin-left: -14px;">รายละเอียดผู้ยืม</h5>  
+                              <hr style="margin-top: -5px; margin-left: -14px;">
+                              <div style="margin-top: -25px; line-height: 30px;">
+                              <b>ชื่อ-นามสกุล : </b> stu_fname / stu_lname<br>
+                              <b>รหัสนิสิต : </b> stu_id<br>
+                              <b>ชั้นปีที่ : </b> stu_year<br>
+                              <b>เบอร์โทรติดต่อ1 : </b> bor_borrowTel1<br>
+                              <b>เบอร์โทรติดต่อ2 : </b> bor_borrowTel2<br>
+                              <b>รายวิชา : </b> sub_id / sub_name<br>
+                              <b>วัตถุประสงค์​ : </b><br>
+                              <textarea disabled cols="24" rows="3">เพื่อใช้ถ่ายภาพยนต์ประกอบการเรียนในวิชา</textarea><br>
+                              </div>
+                          </div>
+                          <div class="col-xs-12 col-md-12 col-lg-12">
+                              <h5 style="color: #333; font-size: 14px; margin-left: -14px;">ผู้รับผิดชอบ</h5>  
+                              <hr style="margin-top: -5px; margin-left: -14px;">
+                              <div style="margin-top: -25px; line-height: 30px;">
+                              <b>ลงชื่อผู้ยืม : </b> stu_fname<br>
+                              <b>อาจารย์ที่ปรึกษา/มอบหมาย : </b> sub_professor<br>
+                              <b>ผู้จัดเตรียม/ผู้ดูแลอุปกรณ์ : </b> ad_name<br><br>
+                              </div>
+                          </div>
+                      </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary"><i class="fa fa-print"></i></button>
+              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter3-3">ยกเลิกการยืม</button>
+            </div>
+          </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModalCenter1-1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="padding: 20px;">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">การคืนอุปกรณ์</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><div style="margin-top: -22px;">&times;</div></span>
+                    </button>
+                  </div>
+                  <div class="modal-body" style="height: 100px;">
+                      <div class="container-fluid">
+                          ตรวจสอบอุปกรณ์ที่ได้ยืมไป ณ วันที่เดินทางไปคืนอุปกรณ์ <b>กดยืนยันต่อหน้าเจ้าหน้าที่เท่านั้น</b>
+                          เพื่อยืนยันว่าได้คืนอุปกรณ์ทั้งหมดตามที่ทำรายการยืมไว้ครบถ้วน
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn" style="border-bottom: transparent;" data-dismiss="modal">ยกเลิก</button>
+                    <button type="button" class="btn btn-danger">ยืนยัน</button>
+                  </div>
+                </div>
+              </div>
+</div>
+
+<div class="modal fade" id="exampleModalCenter2-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="padding: 20px;">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">ตรวจสอบอุปกรณ์</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><div style="margin-top: -22px;">&times;</div></span>
+                    </button>
+                  </div>
+                  <div class="modal-body" style="height: 100px;">
+                      <div class="container-fluid">
+                          ตรวจสอบอุปกรณ์ที่ได้รับ ณ วันที่เดินทางไปรับอุปกรณ์ <b>กดยืนยันต่อหน้าเจ้าหน้าที่เท่านั้น</b>
+                          เพื่อยืนยันว่าได้รับอุปกรณ์ทั้งหมดตามที่แจ้งไว้ครบถ้วน
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn" style="border-bottom: transparent;" data-dismiss="modal">ยกเลิก</button>
+                    <button type="button" class="btn btn-danger">ยืนยัน</button>
+                  </div>
+                </div>
+              </div>
+</div>
+
+<div class="modal fade" id="exampleModalCenter3-3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="padding: 20px;">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">ยกเลิกการยืมอุปกรณ์</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><div style="margin-top: -22px;">&times;</div></span>
+                    </button>
+                  </div>
+                  <div class="modal-body" style="height: 70px;">
+                      <div class="container-fluid">
+                          หากต้องการยกเลิกการยืมอุปกรณ์ที่ได้ทำรายการไป <b>กดยืนยันเพื่อยกเลิกการทำรายการ</b>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn" style="border-bottom: transparent;" data-dismiss="modal">ยกเลิก</button>
+                    <button type="button" class="btn btn-danger">ยืนยัน</button>
+                  </div>
+                </div>
+              </div>
+</div>
+      
+<div id="footer">
+  <div class="container-fluid text-center copyrights">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="social">
+            <ul>
+            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+            <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+            </ul>
+        </div>
+        <p>&copy; COLLEGE OF SOCIAL COMMUNICATION INNOVATION.ALL RIGHTS RESERVED<br><br>
+            TEL. 02-649-5000 EXT 11275 , 02-259-2343 EMAIL. PRCOSCISWU@GMAIL.COM
+        </p>
+    </div>
+  </div>
+</div>
+    
+<!-- Menu Toggle Script -->
+
+<script type="text/javascript" src="/jquery.1.11.1.js"></script> 
+<script type="text/javascript" src="/bootstrap.js"></script> 
+<script type="text/javascript" src="/jquery.isotope.js"></script> 
+<script type="text/javascript" src="/main.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
+});
+
+$(document).ready(function() {
+
+$('.modal').on('hidden.bs.modal', function(event) {
+    $(this).removeClass( 'fv-modal-stack' );
+    $('body').data( 'fv_open_modals', $('body').data( 'fv_open_modals' ) - 1 );
+});
+
+$('.modal').on('shown.bs.modal', function (event) {
+    // keep track of the number of open modals
+    if ( typeof( $('body').data( 'fv_open_modals' ) ) == 'undefined' ) {
+        $('body').data( 'fv_open_modals', 0 );
+    }
+
+    // if the z-index of this modal has been set, ignore.
+    if ($(this).hasClass('fv-modal-stack')) {
+        return;
+    }
+
+    $(this).addClass('fv-modal-stack');
+    $('body').data('fv_open_modals', $('body').data('fv_open_modals' ) + 1 );
+    $(this).css('z-index', 1040 + (10 * $('body').data('fv_open_modals' )));
+    $('.modal-backdrop').not('.fv-modal-stack').css('z-index', 1039 + (10 * $('body').data('fv_open_modals')));
+    $('.modal-backdrop').not('fv-modal-stack').addClass('fv-modal-stack'); 
+
+});        
+});
+</script>
+
+</body>
+</html>

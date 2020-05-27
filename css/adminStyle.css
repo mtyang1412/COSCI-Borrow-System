@@ -1502,3 +1502,244 @@
     background-color: #286090;
     border-color: #204d74;
 }
+
+/* Admin -> (admin_show_data.ejs) */
+.waiting{
+  /* รอตรวจสอบ (p) */
+  background-color: #F3C137;
+}
+.getDevice{
+  /* อนุมัติแล้ว รอรับอุปกรณ์ (a) */
+  background-color: #007CB7;
+}
+.returnDevice{
+  /* รอคืนอุปกรณ์ รับอุปกรณ์ไปแล้ว (r) */
+  background-color: #25BB4B;
+}
+.notApprove{
+  /* ไม่อนุมัติ (x) */
+  background-color: #FF3A1A;
+}
+.borrowSuccess{
+  /* คืนอุปกรณ์แล้ว การยืมสมบูรณ์ (d) */
+  background-color: #A724A7;
+}
+.notreturn{
+  /* ไม่คืนอุปกรณ์ (n) */
+  background-color: #F22F8D;
+}
+
+.statusLeft {
+  float: left;
+}
+.statusRight {
+  float: right;
+}
+
+.borrower {
+  line-height: 30px;
+  width: 100%;
+}
+.borrower td {
+  vertical-align: top;
+}
+
+.textArea {
+  float: left;
+  margin-left: 20px;
+  margin-top: 8px;
+  width: 80%;
+  line-height: 25px;
+}
+
+.textArea textarea {
+  width: 90%;
+  height: 80px;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  resize: none;
+}
+
+.scroll {
+  margin-right: 5px;
+  width: 95%;
+  height: 490px;
+  overflow-x: auto;
+  line-height: 30px;
+}
+
+.submitdiv {
+  margin-top: 40px;
+  text-align: center;
+}
+.submitdiv button {
+  padding: 10px 40px;
+  margin-left: 10px;
+  border: 1px solid #ddd;
+  background-color: #ED482F;
+  color: white;
+  border-radius: 30px;
+  transition: background-color 0.2s;
+  font-size: 18px;
+}
+.submitdiv button:hover {
+  background-color: #9A0007;
+  color: #fff;
+  cursor: pointer;
+}
+
+.submitdiv a {
+  padding: 10px 40px;
+  margin-right: 10px;
+  border: 1px solid #ddd;
+  background-color: #007CB7;
+  color: white;
+  border-radius: 30px;
+  transition: background-color 0.2s;
+  font-size: 18px;
+  text-decoration: none;
+}
+.submitdiv a:hover {
+  background-color: #003A7F;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+
+.number-his {
+  text-align: center;
+}
+.number-his button {
+  display: inline-block;
+  background-color: transparent;
+  border: none;
+  width: 50px;
+  color: darkgray;
+}
+.number-his button:hover {
+  color: black;
+}
+.number-his button[disabled]:hover {
+  color: darkgray;
+}
+.number-his span {
+  display: inline-block;
+  width: 90px;
+}
+
+.searchBTN {
+  background-color: gray;
+  color: white;
+  border-radius: 5px;
+  border: transparent;
+  padding: 5px 10px;
+  display: inline-block;
+  transition-duration: 0.3s;
+  cursor: pointer;
+}
+.searchBTN:hover {
+  background-color: black;
+}
+
+.div-search {
+  margin-right: -20px;
+  margin-top: -60px;
+  text-align: right;
+}
+.search-form {
+  display: inline;
+  margin-right: 0;
+}
+
+.advancedSearchBTN {
+  background-color: darkviolet;
+  color: white;
+  border-radius: 5px;
+  border: transparent;
+  padding: 5px 10px;
+  display: inline-block;
+  transition-duration: 0.1s;
+  cursor: pointer;
+}
+.advancedSearchBTN:hover {
+  background-color: purple;
+}
+
+.cancelSearchBTN {
+  background-color: gray;
+  color: white;
+  border-radius: 10px;
+  border: transparent;
+  padding: 0 25px;
+  display: inline-block;
+  cursor: pointer;
+}
+.cancelSearchBTN:hover {
+  background-color: black;
+}
+.submitSearch {
+  background-color: red;
+  color: white;
+  border-radius: 10px;
+  border: transparent;
+  padding: 0 30px;
+  display: inline-block;
+  cursor: pointer;
+}
+.submitSearch:hover {
+  background-color: darkred;
+}
+
+.advancedSearchContent {
+  margin-top: 18px;
+  width: 95%;
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 35px;
+}
+.advancedSearchContent span {
+  margin-right: 15px;
+}
+.advancedSearchContent input {
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+}
+
+/* == Add Equip Button == */
+.add-equip {
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  background-color: #337AB7;
+  padding: 8px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  float: right;
+  border-radius: 40px;
+}
+.add-equip:hover {
+  background-color: #286090;
+  color: white;
+}
+
+.cancelSubmitBTN {
+  background-color: slateblue;
+  color: white;
+  border-radius: 10px;
+  border: transparent;
+  height: 27px; 
+  line-height: 27px; 
+  padding: 0 18px;
+  display: inline-block;
+  cursor: pointer;
+}
+.cancelSubmitBTN:hover {
+  background-color: darkblue;
+}

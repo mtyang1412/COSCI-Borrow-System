@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>COSCI - ระบบยืมคืนอุปกรณ์ครุภัณฑ์</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+  
+  <!-- =============== Bootstrap =============== -->
+  <link rel="stylesheet" type="text/css"  href="/bootstrap.css">
+  
+  <!-- =============== Stylesheet =============== -->
+  <link rel="stylesheet" type="text/css"  href="/style.css">
+  <link rel="stylesheet" type="text/css"  href="/equipStyle.css">
+  <link rel="stylesheet" type="text/css"  href="/userStyle.css">
+  <link rel="stylesheet" type="text/css"  href="/borrowStyle.css">
+  <link rel="stylesheet" type="text/css"  href="/dataStyle.css">
+  <link rel="stylesheet" type="text/css"  href="/fontface.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Kanit:200,300,400,500,600,700&amp;subset=thai" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.css">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+  <style>
+    .addTABLE {
+      width: 100%;
+      margin: 0 15px;
+      line-height: 35px;
+    }
+    .addTABLE tr th, td {
+      text-align: left;
+      vertical-align: middle;
+    }
+    .addTABLE td input[type="text"] {
+      height: 24px;
+      line-height: 24px;
+      padding-left: 10px;
+      width: 90%;
+      display: block;
+    }
+    .addTABLE td input[type="number"] {
+      height: 24px;
+      line-height: 24px;
+      padding-left: 10px;
+      width: 40%;
+    }
+    .addTABLE td select {
+      height: 22px;
+    }
+
+    .imgDIV {
+      width: 150px; 
+      height: 130px; 
+      background-color: black; 
+      border: solid white; 
+      margin: 8px 0 8px 15px; 
+      text-align: right; 
+      position: relative; 
+    }
+    .imgDIV .selectimg {
+      color: white;
+      font-size: 22px;
+      padding: 8px;
+      background-color: gray;
+      border-radius: 5px;
+      top: 5px; right: 5px;
+      cursor: pointer;
+      position: absolute;
+    }
+    .imgDIV .selectimg:hover {
+      background-color: #555555;
+    }
+    .imgDIV .setimg {
+      padding: 3px;
+      display: block;
+      max-width: 100%;
+      height: 100%;
+      margin: auto;
+    }
+
+    .addtypeBTN {
+      background-color: black;
+      color: white;
+      border: 2px solid white;
+      padding: 5px 20px;
+      border-radius: 10px;
+    }
+    .addtypeBTN:hover:enabled {
+      background-color: whitesmoke;
+      color: #454545;
+      font-weight: bold;
+      border: 2px solid #454545;
+    }
+    .addtypeBTN:disabled, .addtypeBTN[disabled] {
+      background-color: darkgray;
+    }
+
+    .cancelBTN {
+      background-color: gray;
+      color: white;
+      border-radius: 10px;
+      border: transparent;
+      padding: 5px 25px;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .cancelBTN:hover { background-color: black; }
+    .addtBTN {
+      background-color: red;
+      color: white;
+      border-radius: 10px;
+      border: transparent;
+      padding: 5px 25px;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .addtBTN:hover { background-color: darkred; }
+    .addtBTN:disabled, .addtBTN[disabled] {
+      background-color: pink;
+    }
+
+    .typeTABLE {
+      margin-top: 5px;
+      width: 100%;
+      line-height: 25px;
+    }
+    .typeTABLE th {
+      border-bottom: 1px solid gray;
+    }
+    .typeTABLE tr th {
+      padding-left: 10px;
+    }
+
+    .scrollDIV {
+      width: 100%;
+      height: 500px;
+      overflow: auto;
+    }
+
+    /* ---tooltip--- */
+    .tooltip1 {
+      margin-left: 12px;
+      position: relative;
+      cursor: pointer;
+    }
+    .tooltip1 .tooltiptext {
+      visibility: hidden;
+      background-color: #555;
+      color: #fff;
+      font-size: 10px;
+      text-align: center;
+      border-radius: 5px;
+      padding: 3px 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 80%;
+      left: 50%;
+      margin-left: -15px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .tooltip1 .tooltiptext::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+    }
+    .tooltip1:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+    
+</head>
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<!-- =============== Navigation =============== -->
+<nav id="menu" class="navbar navbar-default navbar-fixed-top">
+  <div class="container"> 
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> 
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span><span class="icon-bar"></span> 
+        <span class="icon-bar"></span> 
+      </button>
+      <a class="navbar-brand page-scroll" href="#">
+        <img class="logo-header" src="/cosciLogo.png">
+      </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/admin/<%=usn%>" class="page-scroll">Home&nbsp;&nbsp;&nbsp;•</a></li>
+        <li><a href="/admin/<%=usn%>/manage/equipment" class="page-scroll">Equipment&nbsp;&nbsp;&nbsp;•</a></li>
+        <li><a href="/admin/<%=usn%>/history/all" class="page-scroll">History&nbsp;&nbsp;&nbsp;•&nbsp;</a></li>
+        <li><a href="/user/logout" class="page-scroll">Logout&nbsp;&nbsp;<i class="fa fa-sign-out"></i>&nbsp;</a></li>
+        <li class="user-tag">
+          <a href="/admin/<%=usn%>/profile" id="user-tag-a">
+            <i class="fa fa-user"></i>&nbsp;&nbsp;ID : <%=datas.mem_id%> &nbsp;&nbsp;
+            <br>
+            <i class="fa fa-clock-o"></i>&nbsp;&nbsp;DATE : <%= todays %> 
+            <div class="img-user"><img src="/user/<%=datas.mem_pic%>"></div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Portfolio Section -->
+<div id="portfolio">
+  <div class="container" style="padding-bottom: 90px;">
+    <div class="row" style="margin-top: 90px;">
+      <div class="col-sm-12 col-md-12 col-lg-12" style="margin-bottom: -10px;">
+        <h3>แก้ไขอุปกรณ์</h3>
+        <hr style="border: 1px solid gray; border-radius: 5px; background-color: gray; width: 140px; margin-top: -5px;">
+      </div>
+
+      <div class="col-sm-6 col-md-6 col-lg-6">
+        <h5 style="color: #333;">
+          เซตอุปกรณ์
+        </h5>
+
+        <form action="/admin/<%=usn%>/edit/set" method="POST" enctype="multipart/form-data">
+          <!-- เพิ่มอุปกรณ์ Form -->
+          <input name="etall" id="alladdtype" hidden>
+          <input name="eeall" id="alladdequip" hidden>
+
+          <table class="addTABLE">
+            <tr>
+              <th style="width: 20%;">
+                SET ID
+              </th>
+              <td style="width: 80%;">
+                <input name="esid" type="text" value="<%=setsData[0].set_id%>" readonly>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                ชื่อเซต
+              </th>
+              <td>
+                <input name="esname" id="es1" type="text" value="<%=setsData[0].set_name%>" required>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                หมวดหมู่
+              </th>
+              <td>
+                <select name="escategory" id="es2" style="width: 90%;">
+                  <option disabled selected>-- เลือกหมวดหมู่ --</option>
+                  <option value="camera">กล้อง (camera)</option>
+                  <option value="assessory">อุปกรณ์ภาพยนตร์อื่นๆ (assessory)</option>
+                  <option value="device">อุปกรณ์คอมพิวเตอร์ (device)</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                ให้ยืมทั้งเซต
+              </th>
+              <td style="padding-left: 30px;">
+                <% if (setsData[0].set_can_borrow == 'o') { %>
+                  <input name="escanb" type="radio" value="o" id="esradioy" checked> &nbsp;&nbsp;ใช่
+                  <input name="escanb" type="radio" value="x" id="esradion" style="margin-left: 35px;"> &nbsp;&nbsp;ไม่ใช่
+                <% } else { %>
+                  <input name="escanb" type="radio" value="o" id="esradioy"> &nbsp;&nbsp;ใช่
+                  <input name="escanb" type="radio" value="x" id="esradion" style="margin-left: 35px;" checked> &nbsp;&nbsp;ไม่ใช่
+                <% } %>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                มี stock อยู่
+              </th>
+              <td>
+                <input name="esstock" style="width: 80%;" type="number" id="asn" value="<%=setsData[0].set_stock%>" min="1" onkeypress="return numLetter(event)">
+                  &nbsp;&nbsp;เซต
+              </td>
+            </tr>
+            <tr>
+              <th>
+                รูปภาพเซต
+              </th>
+              <td>
+                <div class="imgDIV">
+                  <img src="/portfolio/<%=setsData[0].set_pic%>" class="setimg">
+                  <i class="fa fa-camera selectimg"></i>
+                  <input name="esimage" id="uploadimg" type="file" accept="image/*" style="display: none;"/>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                ชื่อผู้ดูแลเซตนี้
+              </th>
+              <td>
+                <select name="esadmin" id="es6" style="width: 90%;">
+                  <option disabled selected>-- เลือกบุคลากรผู้ดูแลอุปกรณ์ --</option>
+                  <% admindata.forEach((v) => { %>
+                    <option value="<%=v.staff_id%>"><%=v.staff_name%></option>
+                  <% }) %>
+                </select>
+              </td>
+            </tr>
+          </table>
+
+          <br>
+
+          <div style="text-align: center; margin-bottom: 15px;">
+            <button type="submit" class="addtBTN" id="clicksubmitset">
+              บันทึกเซตอุปกรณ์
+            </button>
+          </div>
+        </form>
+
+        <hr style="background-color: darkgray; border: 1px dotted gray; height: 0.5px; width: 100%;">
+
+        <div style="text-align: center; margin-bottom: 15px;">
+          <button type="button" class="addtypeBTN" id="openaddt" data-toggle="modal" 
+          data-target="#addtype">
+            เพิ่มประเภท/ชุดอุปกรณ์
+          </button>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-md-6 col-lg-6">
+        <h5 style="color: #333;">
+          ประเภทและอุปกรณ์ในเซต
+        </h5>
+
+        <div class="scrollDIV">
+          <div style="margin-top: 13px; margin-bottom: 8px; width: 100%; text-align: right; font-size: 10px;">
+            <u>หมายเหตุ</u>
+            <span style="margin-left: 12px;">
+              o = ให้ยืมทั้งชุด/ประเภท
+            </span>
+            <span style="margin-left: 15px;">
+              x = ไม่ให้ยืมทั้งชุด/ประเภท
+            </span>
+          </div>
+          
+          <% let tid = '' %>
+          <% let eid = '' %>
+          <table class="typeTABLE">
+            <% setsData.forEach((v) => { %>
+              <% if (v.type_id != tid) { %>
+                <% tid = v.type_id %>
+                <tr>
+                  <th style="width: 5%; color: teal;">
+                    <%= v.type_can_borrow %>
+                  </th>
+                  <th style="width: 65%;">
+                    <input value="<%=v.type_id%>" hidden>
+                    <%= v.type_name %>
+                  </th>
+                  <th style="width: 10%;">จำนวน</th>
+                  <th style="width: 20%; padding-left: 20px;">
+                    <% if (v.equip_name != null) { %>
+                      <a class="fa fa-plus tooltip1 adde" style="color: darkgreen;"
+                      data-toggle="modal" data-target="#addequip">
+                        <span class="tooltiptext" style="width: 60px;">เพิ่มอุปกรณ์</span>
+                      </a>
+                      <a class="fa fa-pencil tooltip1 editt" style="color: darkorange;"
+                      data-toggle="modal" data-target="#edittype">
+                        <span class="tooltiptext">แก้ไข</span>
+                      </a>
+                      <a class="fa fa-trash tooltip1 deletet" style="color: crimson;"
+                      data-toggle="modal" data-target="#deletetype">
+                        <span class="tooltiptext">ลบ</span>
+                      </a>
+                    <% } else { %>
+                      <a class="fa fa-plus tooltip1 adde" style="color: darkgreen;"
+                      data-toggle="modal" data-target="#addequip">
+                        <span class="tooltiptext" style="width: 60px;">เพิ่มอุปกรณ์</span>
+                      </a>
+                      <a class="fa fa-trash tooltip1 deletet" style="color: crimson;"
+                      data-toggle="modal" data-target="#deletetype">
+                        <span class="tooltiptext">ลบ</span>
+                      </a>
+                    <% } %>
+                  </th>
+                </tr>
+              <% } %>
+              
+              <% if (v.equip_name != null) { %>
+                <tr>
+                  <td></td>
+                  <td>
+                    <input value="<%=v.equip_id%>" hidden>
+                    <%= v.equip_name %>
+                  </td>
+                  <td style="margin-left: 10px;">
+                    <%= v.equip_amount %>
+                  </td>
+                  <td style="text-align: center;">
+                    <a class="fa fa-pencil tooltip1 edite" style="color: gray;"
+                    data-toggle="modal" data-target="#editequip">
+                      <span class="tooltiptext">แก้ไข</span>
+                    </a>
+                    <a class="fa fa-trash tooltip1 deletee" style="color: gray;"
+                    data-toggle="modal" data-target="#deleteequip">
+                      <span class="tooltiptext">ลบ</span>
+                    </a>
+                  </td>
+                </tr>
+              <% } else { %>
+                <tr>
+                  <td></td>
+                  <td colspan="2" style="text-align: center;">
+                    เพิ่มอุปกรณ์ในชุด/ประเภทนี้ โดยกดปุ่ม "<i class="fa fa-plus"></i>"
+                  </td>
+                  <td></td>
+                </tr>
+              <% } %>
+            <% }) %>
+          </table>
+        </div>
+      </div>
+    </div>
+
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top: 40px; text-align: center;">
+        <a href="/admin/<%=usn%>/add/equipment" class="btn btn-primary">
+          ย้อนกลับ
+        </a>
+      </div>
+
+      <!-- ======== เพิ่มประเภทอุปกรณ์ ======== -->
+      <div id="addtype" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content" style="padding: 20px;">
+            <h5 style="font-size: 22px; color: black;">
+              เพิ่มประเภท/ชุดอุปกรณ์
+            </h5>
+            <form action="/admin/<%=usn%>/edit/add/type" method="POST">
+              <input name="etsid" value="<%=setsData[0].set_id%>" hidden>
+              <table style="width: 100%; margin-top: 25px; padding: 5px 15px; line-height: 35px;">
+                <tr>
+                  <td style="width: 25%;">
+                    ชื่อประเภท/ชุด
+                  </td>
+                  <td style="width: 75%;">
+                    <input name="etname" type="text" id="etn" style="height: 24px; line-height: 24px; width: 100%;" required>
+                  </td>
+                </tr>
+                <tr>
+                  <td>ให้ยืมทั้งชุด</td>
+                  <td>
+                    <input name="etcanb" hidden>
+                    <input type="radio" name="etb" value="o" id="tyes"> &nbsp;&nbsp;ใช่
+                    <input type="radio" name="etb" value="x" id="tno" style="margin-left: 35px;"> &nbsp;&nbsp;ไม่ใช่
+                  </td>
+                </tr>
+                <tr>
+                  <td>มี stock อยู่</td>
+                  <td>
+                    <input type="number" name="etstock" id="etstock" value="1" min="1" onkeypress="return numLetter(event)"
+                    style="height: 24px; line-height: 24px; padding-left: 10px; width: 100px;">
+                    &nbsp;&nbsp;ชุด (ต่อ 1 เซต)
+                  </td>
+                </tr>
+              </table>
+  
+              <div style="margin-top: 40px; margin-bottom: 10px; text-align: center;">
+                <button type="button" class="cancelBTN" data-toggle="modal" data-target="#addtype">
+                  ยกเลิก
+                </button>
+                <button type="submit" id="clickaddtype" class="addtBTN" disabled>
+                  เพิ่มประเภทอุปกรณ์
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======== แก้ไขประเภทอุปกรณ์ ======== -->
+      <div id="edittype" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content" style="padding: 20px;">
+            <h5 style="font-size: 22px; color: black;">
+              แก้ไขประเภท/ชุดอุปกรณ์
+            </h5>
+            
+            <form action="/admin/<%=usn%>/edit/type" method="POST">
+              <input name="newetsid" value="<%=setsData[0].set_id%>" hidden>
+              <input name="newetid" id="editt0" hidden>
+              <table style="width: 100%; margin-top: 25px; padding: 5px 15px; line-height: 35px;">
+                <tr>
+                  <td style="width: 25%;">
+                    ชื่อประเภท/ชุด
+                  </td>
+                  <td style="width: 75%;">
+                    <input name="newetname" type="text" id="editt1" style="height: 24px; line-height: 24px; width: 100%;">
+                  </td>
+                </tr>
+                <tr>
+                  <td>ให้ยืมทั้งชุด</td>
+                  <td>
+                    <input name="newetcanb" hidden>
+                    <input type="radio" name="newet" value="o" id="editt2"> &nbsp;&nbsp;ใช่
+                    <input type="radio" name="newet" value="x" id="editt3" style="margin-left: 35px;"> &nbsp;&nbsp;ไม่ใช่
+                  </td>
+                </tr>
+                <tr>
+                  <td>มี stock อยู่</td>
+                  <td>
+                    <input name="newetstock" type="number" id="editt4" min="1" onkeypress="return numLetter(event)"
+                    style="height: 24px; line-height: 24px; padding-left: 10px; width: 100px;">
+                    &nbsp;&nbsp;ชุด (ต่อ 1 เซต)
+                  </td>
+                </tr>
+              </table>
+
+              <div style="margin-top: 40px; margin-bottom: 10px; text-align: center;">
+                <button type="button" class="cancelBTN" data-toggle="modal" data-target="#edittype">
+                  ยกเลิก
+                </button>
+                <button type="submit" id="clickedittype" class="addtBTN">
+                  ยืนยันการแก้ไข
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======== เพิ่มอุปกรณ์ ======== -->
+      <div id="addequip" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content" style="padding: 20px;">
+            <h5 style="font-size: 22px; color: black;">
+              เพิ่มอุปกรณ์
+              <span id="addename" style="font-size: 15px;"></span>
+            </h5>
+            <form action="/admin/<%=usn%>/edit/add/equip" method="POST">
+              <input name="eesid" value="<%=setsData[0].set_id%>" hidden>
+              <input name="eetid" id="gettid" hidden>
+
+              <div style="width: 100%; margin-top: 25px; padding: 5px 15px; line-height: 35px;">
+                Serial Number
+                <input name="eeserial" type="text" id="e1" style="width: 65%; height: 24px; line-height: 24px; margin-left: 20px;">
+                <br>
+                ชื่ออุปกรณ์
+                <input name="eename" type="text" id="e2" style="width: 80%; height: 24px; line-height: 24px; margin-left: 20px;" required>
+                <br>
+                แบรนด์
+                <input name="eebrand" type="text" id="e3" style="width: 47%; height: 24px; line-height: 24px; margin: 0 20px;">
+                รุ่น
+                <input name="eemodel" type="text" id="e4" style="width: 19%; height: 24px; line-height: 24px; margin-left: 20px;">
+                <br>
+                จำนวนคงคลัง (Stock)
+                <input name="eestock" type="number" id="e5" min="1" value="1" onkeypress="return numLetter(event)" 
+                style="width: 35%; height: 24px; line-height: 24px; margin: 0 20px;"> (ต่อ 1 เซต)
+                <br>
+                จำนวนที่ให้ยืม
+                <input name="eeamount" type="number" id="e6" min="1" value="1" onkeypress="return numLetter(event)" 
+                style="width: 35%; height: 24px; line-height: 24px; margin: 0 20px;"> (ต่อ 1 เซต)
+                <br>
+              </div>
+        
+              <div style="margin-top: 40px; margin-bottom: 10px; text-align: center;">
+                <button type="button" class="cancelBTN" data-toggle="modal" data-target="#addequip">
+                  ยกเลิก
+                </button>
+                <button type="submit" id="clickaddequip" class="addtBTN" disabled>
+                  เพิ่มอุปกรณ์
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======== แก้ไขอุปกรณ์ ======== -->
+      <div id="editequip" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content" style="padding: 20px;">
+            <h5 style="font-size: 22px; color: black;">
+              แก้ไขอุปกรณ์
+              <span id="editename" style="font-size: 15px;"></span>
+            </h5>
+            <form action="/admin/<%=usn%>/edit/equip" method="POST">
+              <input name="edsid" value="<%=setsData[0].set_id%>" hidden>
+              <input name="edeid" id="editeid" hidden>
+
+              <div style="width: 100%; margin-top: 25px; padding: 5px 15px; line-height: 35px;">
+                Serial Number
+                <input name="edserial" type="text" id="ee1" style="width: 65%; height: 24px; line-height: 24px; margin-left: 20px;">
+                <br>
+                ชื่ออุปกรณ์
+                <input name="edname" type="text" id="ee2" style="width: 80%; height: 24px; line-height: 24px; margin-left: 20px;">
+                <br>
+                แบรนด์
+                <input name="edbrand" type="text" id="ee3" style="width: 47%; height: 24px; line-height: 24px; margin: 0 20px;">
+                รุ่น
+                <input name="edmodel" type="text" id="ee4" style="width: 19%; height: 24px; line-height: 24px; margin-left: 20px;">
+                <br>
+                จำนวนคงคลัง (Stock)
+                <input name="edstock" type="number" id="ee5" min="1" value="1" onkeypress="return numLetter(event)" 
+                style="width: 35%; height: 24px; line-height: 24px; margin: 0 20px;"> (ต่อ 1 เซต)
+                <br>
+                จำนวนที่ให้ยืม
+                <input name="edamount" type="number" id="ee6" min="1" value="1" onkeypress="return numLetter(event)" 
+                style="width: 35%; height: 24px; line-height: 24px; margin: 0 20px;"> (ต่อ 1 เซต)
+                <br>
+              </div>
+        
+              <div style="margin-top: 40px; margin-bottom: 10px; text-align: center;">
+                <button type="button" class="cancelBTN" data-toggle="modal" data-target="#editequip">
+                  ยกเลิก
+                </button>
+                <button type="submit" class="addtBTN">
+                  ยืนยันการแก้ไข
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+
+<!-- ======== ลบประเภทอุปกรณ์ ======== -->
+<div id="deletetype" class="modal fade">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="padding: 20px;">
+      <h5 style="font-size: 22px; color: black;">
+        ลบประเภทอุปกรณ์
+      </h5>
+      <form action="/admin/<%=usn%>/edit/delete/type" method="POST">
+        <input name="eesid" value="<%=setsData[0].set_id%>" hidden>
+        <input name="eetid" id="deletetid" hidden>
+        <div style="width: 100%; margin-top: 25px; padding: 5px 15px; line-height: 25px;">
+          <b>คุณแน่ใจหรือว่าต้องการลบประเภท/ชุดอุปกรณ์ "<span id="deletetname"></span>"</b> <br> 
+          ประเภทอุปกรณ์รวมถึงรายการอุปกรณ์ในประเภทนี้ทั้งหมดจะถูกลบทิ้งอย่างถาวร และคุณไม่สามารถแก้ไขหรือเรียกคืนได้อีก
+        </div>
+
+        <div style="margin-top: 40px; margin-bottom: 10px; text-align: center;">
+          <button type="button" class="cancelBTN" data-toggle="modal" data-target="#deletetype">
+            ยกเลิก
+          </button>
+          <button type="submit" class="addtBTN">
+            ลบประเภทอุปกรณ์
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ลบอุปกรณ์ -->
+<div id="deleteequip" class="modal fade">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="padding: 20px;">
+      <h5 style="font-size: 22px; color: black;">
+        ลบอุปกรณ์
+      </h5>
+      <form action="/admin/<%=usn%>/edit/delete/equip" method="POST">
+        <input name="desid" value="<%=setsData[0].set_id%>" hidden>
+        <input name="deeid" id="deleteeid" hidden>
+
+        <div style="width: 100%; margin-top: 25px; padding: 5px 15px; line-height: 25px;">
+          <b>คุณแน่ใจหรือว่าต้องการลบอุปกรณ์ "<span id="deleteename"></span>"</b> <br> 
+          อุปกรณ์นี้จะถูกลบทิ้งอย่างถาวร และคุณไม่สามารถแก้ไขหรือเรียกคืนได้อีก
+        </div>
+  
+        <div style="margin-top: 40px; margin-bottom: 10px; text-align: center;">
+          <button type="button" class="cancelBTN" data-toggle="modal" data-target="#deleteequip">
+            ยกเลิก
+          </button>
+          <button type="submit" class="addtBTN">
+            ลบอุปกรณ์
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+<div>
+  <!-- ดึงค่า footer มาแสดงจากไฟล์ footer.ejs -->
+  <%- include('footer') -%>
+</div>
+
+<script type="text/javascript" src="/jquery.1.11.1.js"></script> 
+<script type="text/javascript" src="/bootstrap.js"></script> 
+<script type="text/javascript" src="/jquery.isotope.js"></script> 
+<script type="text/javascript" src="/main.js"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.css"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.js"></script>
+
+<script>
+
+  var equipsData = <%-JSON.stringify(setsData)%>;
+  var adminsData = <%-JSON.stringify(admindata)%>;
+    
+  let setCanBorrow = equipsData[0].set_can_borrow;
+  var typeDic = new Object();
+  var equipDic = new Object();
+
+  function numLetter(event) {
+    var x = event.charCode;
+    return  (x >= 48 && x <= 57);
+  }
+
+  /* == เซต ตรวจว่าใส่ข้อมูลครบทุกช่อง == */
+  $('#clicksubmitset').hide();
+  function setInputAll() {
+    let name = $('#es1').val();
+
+    if (name) {
+      $('#clicksubmitset').show();
+    } else {
+      $('#clicksubmitset').hide();
+    }
+  }
+
+  /* == เซต name, category, set admin == */
+  $('#es1').keyup(function() {
+    setInputAll()
+  });
+  $('#es2').change(function() {
+    setInputAll()
+  });
+  $('#es6').change(function() {
+    setInputAll()
+  });
+
+  /* == เซต หมวดหมู่ == */
+  let categorys = ['camera', 'assessory', 'device']
+  for (i=0; i<(categorys.length) ;i++) {
+    if ((equipsData[0].set_category) == categorys[i]) {
+      document.getElementById("es2").selectedIndex = (i+1);
+    }
+  }
+
+  /* == เซต Stock == */
+  $('#asn').keyup(function() {
+    let number = $(this).val();
+    if (number < 1) {  $(this).val(1) }
+    setInputAll()
+  })
+  $('#asn').change(function() {
+    setInputAll()
+  });
+
+  /* == เซต Admin == */
+  for (a=0; a<(adminsData.length) ;a ++) {
+    if ((equipsData[0].staff_id) == (adminsData[a].staff_id)) {
+      document.getElementById("es6").selectedIndex = (a+1);
+    }
+  }
+
+  /* == เซต Image == */
+  function readURL(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        $('.setimg').attr('src', e.target.result);
+      }
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+  $('#uploadimg').change(function() {
+    readURL(this)
+    setInputAll()
+  })
+  $('.selectimg').click(function() {
+    $("#uploadimg").click();
+  });
+
+  /* == เซต radio ให้ยืมทั้งเซต == */
+  if ($('#esradioy').is(':checked')) {
+    $('#tno').attr('disabled', true)
+    $('#tyes').attr('disabled', true)
+    $('#editt2').attr('disabled', true)
+    $('#editt3').attr('disabled', true)
+  }
+  else if ($('#esradion').is(':checked')) {
+    $('#tno').attr('disabled', false)
+    $('#tyes').attr('disabled', false)
+    $('#editt2').attr('disabled', false)
+    $('#editt3').attr('disabled', false)
+  }
+
+  $('#esradioy').click(function() {
+    $('#tno').attr('disabled', true)
+    $('#tyes').attr('disabled', true)
+    $('#editt2').attr('disabled', true)
+    $('#editt3').attr('disabled', true)
+
+    if (setCanBorrow == 'o') {
+      $('#clicksubmitset').hide();
+    }
+    else {
+      setInputAll()
+    }
+  });
+  $('#esradion').click(function() {
+    $('#tno').attr('disabled', false)
+    $('#tyes').attr('disabled', false)
+    $('#editt2').attr('disabled', false)
+    $('#editt3').attr('disabled', false)
+    
+    if (setCanBorrow == 'x') {
+      $('#clicksubmitset').hide();
+    }
+    else {
+      setInputAll()
+    }
+  });
+
+  /* == เพิ่ม Type == */
+  $('#clickaddtype').prop('disabled', true);
+  $('.addtypeBTN').click(function() {
+    $('#etn').val(null);
+    $('#etstock').val(1);
+    if ($('#esradioy').is(':checked')) {
+      $('#tno').prop('checked', true);
+      $('#tyes').prop('checked', false);
+      $("input[name='etcanb']").val("x");
+      $('#clickaddtype').prop('disabled', true);
+    }
+    else {
+      $('#tno').prop('checked', false);
+      $('#tyes').prop('checked', false);
+      $('#clickaddtype').prop('disabled', true);
+    }
+  });
+
+    // ชื่อ type
+  $('#etn').keyup(function() {
+    let tstock = $('#etstock').val().length
+    if (($('#tno').is(':checked') || $('#tyes').is(':checked')) && $(this).val() && (tstock != 0)) {
+      $('#clickaddtype').prop('disabled', false);
+    }
+    else {
+      $('#clickaddtype').prop('disabled', true);
+    }
+  });
+
+    // radio type
+  $('#tno').click(function() {
+    $("input[name='etcanb']").val("x");
+    let tstock = $('#etstock').val().length
+    if ($('#etn').val() && (tstock != 0)) {
+      $('#clickaddtype').prop('disabled', false);
+    } else {
+      $('#clickaddtype').prop('disabled', true);
+    }
+  });
+  $('#tyes').click(function() {
+    $("input[name='etcanb']").val("o");
+    let tstock = $('#etstock').val().length
+    if ($('#etn').val() && (tstock != 0)) {
+      $('#clickaddtype').prop('disabled', false);
+    } else {
+      $('#clickaddtype').prop('disabled', true);
+    }
+  });
+
+    // stock type
+  $('#etstock').keyup(function() {
+    let tstock = $(this).val().length
+    if (($('#tno').is(':checked') || $('#tyes').is(':checked')) && $('#etn').val() && (tstock != 0)) {
+      $('#clickaddtype').prop('disabled', false);
+    }
+    else {
+      $('#clickaddtype').prop('disabled', true);
+    }
+  });
+  $('#etstock').change(function() {
+    let tstock = $(this).val().length
+    if (($('#tno').is(':checked') || $('#tyes').is(':checked')) && $('#etn').val() && (tstock != 0)) {
+      $('#clickaddtype').prop('disabled', false);
+    }
+    else {
+      $('#clickaddtype').prop('disabled', true);
+    }
+  });
+  
+  /* == แก้ไข type == */
+  $('.editt').click(function() {
+    let rowtable = $(this).closest('tr').find('th');
+    let findinput = rowtable.find('input');
+    let typeid = findinput.val();
+
+    equipsData.forEach(v => {
+      if (v.type_id == typeid) {
+        $('#editt0').val(v.type_id)
+        $('#editt1').val(v.type_name)
+        $('#editt4').val(v.type_stock)
+
+        if (v.type_can_borrow == 'o') {
+          $('#editt2').prop('checked', true);
+          $('#editt3').prop('checked', false);
+          $("input[name='newetcanb']").val("o");
+        }
+        else {
+          $('#editt2').prop('checked', false);
+          $('#editt3').prop('checked', true);
+          $("input[name='newetcanb']").val("x");
+        }
+      }
+    });
+  });
+
+    //ตรวจสอบว่าข้อมูลครบ
+  function edittallval() {
+    let tstock = $('#editt4').val().length;
+    let tname = $('#editt1').val();
+    if (tname && (tstock != 0)) {
+      $('#clickedittype').prop('disabled', false);
+    }
+    else {
+      $('#clickedittype').prop('disabled', true);
+    }
+  }
+
+    //ชื่อ type
+  $('#editt1').keyup(function() {
+    edittallval()
+  });
+    
+    // stock type
+  $('#editt4').keyup(function() {
+    edittallval()
+  });
+    
+    // radio type
+  $('#editt2').click(function() {
+    $("input[name='newetcanb']").val('o');
+    edittallval()
+  });
+  $('#editt3').click(function() {
+    $("input[name='newetcanb']").val('x');
+    edittallval()
+  });
+
+
+  /* -- เพิ่ม equipment -- */
+  $('#clickaddequip').prop('disabled', true);
+  $('.adde').click(function() {
+    let rowtable = $(this).closest('tr').find('th');
+    let findtypename = rowtable.eq(1).text();
+    let findinput = rowtable.find('input');
+    let typeid = findinput.val();
+
+    $('#gettid').val(typeid);
+    let nametype = '(ประเภท/ชุด: ' + findtypename + ')';
+    $('#addename').text(nametype);
+    $('#e1').val(null);
+    $('#e2').val(null);
+    $('#e3').val(null);
+    $('#e4').val(null);
+    $('#e5').val(1);
+    $('#e6').val(1);
+  });
+
+  $('#e2').keyup(function() {
+    let serial = $('#e1').val()
+    if (serial.length < 1) { $('#e1').val('-') }
+    
+    if ($(this).val().length < 1) {
+      $('#clickaddequip').prop('disabled', true);
+    } else {
+      $('#clickaddequip').prop('disabled', false);
+    }
+  })
+  $('#e5').keyup(function() {
+    let number = $(this).val()
+    if (number < 1) { $(this).val(1) }
+    let eamount = parseInt($('#e6').val());
+    if (eamount > parseInt(number)) { $('#e6').val(number) }
+
+    let brand = $('#e3').val().length
+    let model = $('#e4').val().length
+    if (brand < 1) { $('#e3').val('-') }
+    if (model < 1) { $('#e4').val('-') }
+  })
+  $('#e5').change(function() {
+    let number = $(this).val()
+    if (number < 1) { $(this).val(1) }
+    let eamount = parseInt($('#e6').val());
+    if (eamount > parseInt(number)) { $('#e6').val(number) }
+
+    let brand = $('#e3').val().length
+    let model = $('#e4').val().length
+    if (brand < 1) { $('#e3').val('-') }
+    if (model < 1) { $('#e4').val('-') }
+  });
+  $('#e6').keyup(function() {
+    let number = parseInt($(this).val())
+    let stock = parseInt($('#e5').val())
+    if (number < 1) { $(this).val(1) }
+    if (number > stock) { $(this).val(stock) }
+
+    if ($(this).val().length < 1) {
+      $('#clickaddequip').prop('disabled', true);
+    } else {
+      $('#clickaddequip').prop('disabled', false);
+    }
+  })
+  $('#e6').change(function() {
+    let number = parseInt($(this).val())
+    let stock = parseInt($('#e5').val())
+    if (number > stock) { $(this).val(stock) }
+    
+    let name = $('#e2').val().length
+    if (name < 1 || $(this).val().length < 1) {
+      $('#clickaddequip').prop('disabled', true);
+    } else {
+      $('#clickaddequip').prop('disabled', false);
+    }
+    let brand = $('#e3').val().length
+    let model = $('#e4').val().length
+    if (brand < 1) { $('#e3').val('-') }
+    if (model < 1) { $('#e4').val('-') }
+  });
+
+  /* -- ลบ type -- */
+  $('.deletet').click(function() {
+    let rowtable = $(this).closest('tr').find('th');
+    let findtypename = rowtable.eq(1).text();
+    let findinput = rowtable.find('input');
+    let typeid = findinput.val();
+
+    $('#deletetid').val(typeid);
+    $('#deletetname').text(findtypename)
+  });
+
+  /* == แก้ไข equip == */
+  $('.edite').click(function() {
+    let rowtable = $(this).closest('tr').find('td');
+    let findinput = rowtable.find('input');
+    let equipid = findinput.val();
+
+    equipsData.forEach(v => {
+      if (v.equip_id == equipid) {
+        let nametype = '(ประเภท/ชุด: ' + v.type_name + ')';
+        $('#editename').text(nametype);
+
+        $('#editeid').val(v.equip_id)
+        $('#ee1').val(v.equip_serial_number);
+        $('#ee2').val(v.equip_name);
+        $('#ee3').val(v.equip_brand);
+        $('#ee4').val(v.equip_model);
+        $('#ee5').val(v.equip_stock);
+        $('#ee6').val(v.equip_amount);
+      }
+    });
+  });
+
+  $('#ee2').keyup(function() {
+    let serial = $('#ee1').val()
+    if (serial.length < 1) { $('#ee1').val('-') }
+    
+    if ($(this).val().length < 1) {
+      $('#clickeditequip').prop('disabled', true);
+    } else {
+      $('#clickeditequip').prop('disabled', false);
+    }
+  })
+  $('#ee5').keyup(function() {
+    let number = $(this).val()
+    if (number < 1) { $(this).val(1) }
+    let eamount = parseInt($('#ee6').val());
+    if (eamount > parseInt(number)) { $('#ee6').val(number) }
+
+    let brand = $('#ee3').val().length
+    let model = $('#ee4').val().length
+    if (brand < 1) { $('#ee3').val('-') }
+    if (model < 1) { $('#ee4').val('-') }
+  })
+  $('#ee5').change(function() {
+    let number = $(this).val()
+    let eamount = parseInt($('#ee6').val());
+    if (eamount > parseInt(number)) { $('#ee6').val(number) }
+
+    let brand = $('#ee3').val().length
+    let model = $('#ee4').val().length
+    if (brand < 1) { $('#ee3').val('-') }
+    if (model < 1) { $('#ee4').val('-') }
+  });
+  $('#ee6').keyup(function() {
+    let number = parseInt($(this).val())
+    let stock = parseInt($('#ee5').val())
+    if (number < 1) { $(this).val(1) }
+    if (number > stock) { $(this).val(stock) }
+
+    if ($(this).val().length < 1) {
+      $('#clickeditequip').prop('disabled', true);
+    } else {
+      $('#clickeditequip').prop('disabled', false);
+    }
+  })
+  $('#ee6').change(function() {
+    let number = parseInt($(this).val())
+    let stock = parseInt($('#ee5').val())
+    if (number > stock) { $(this).val(stock) }
+    
+    if ($('#ee2').val().length < 1) {
+      $('#clickeditequip').prop('disabled', true);
+    } else {
+      $('#clickeditequip').prop('disabled', false);
+    }
+  });
+
+  /* == ลบ equip == */
+  $('.deletee').click(function() {
+    let rowtable = $(this).closest('tr').find('td');
+    let findinput = rowtable.find('input');
+    let equipname = rowtable.eq(1).text();
+    let equipid = findinput.val();
+
+    $('#deleteeid').val(equipid)
+    $('#deleteename').text(equipname)
+  })
+    
+</script>
+
+</body>
+</html>

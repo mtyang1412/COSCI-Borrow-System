@@ -30,15 +30,21 @@ header .intro-text {
     margin-top: 50px;
 }
 
+/* Checkbox */
 input[type=checkbox] {
-    transform: scale(1.1);
+    transform: scale(1.3, 1.3);
+    zoom: 1.1;
 }
 
 .a-button {
     padding: 10px 15px;
-    background-color: #007CB7 !important;
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+    background-color: #007CB7;
     color: #fff;
     border-radius: 10px;
+    transition: background-color 0.2s;
+    font-size: 17px;
   }
   .a-button:hover {
     background-color: #286090;

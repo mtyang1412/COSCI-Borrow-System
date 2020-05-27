@@ -1,5 +1,5 @@
 #portfolio .section-profile-title {
-    background: url(/bg.jpg) !important;
+    background: url(../bg.jpg) !important;
     background-position: center !important;
 	background-repeat: no-repeat !important;
     background-size: cover !important;
@@ -223,6 +223,10 @@
         background-color: #25bb4b;
     }
 
+    .label-not-approve {
+        background-color: #FF3A1A;
+    }
+
     @media only screen and (max-width: 440px) {
         .filter-block {
             float: none !important;
@@ -283,3 +287,4 @@
         box-shadow: none;
         -webkit-box-shadow: none;
     }
+    

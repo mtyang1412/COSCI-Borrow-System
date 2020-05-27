@@ -76,3 +76,43 @@ h2 {
     border-radius: 100%;
     background-color: #007CB7;
 }
+
+/* ----- Student Model hr */
+.under_hr {
+	width: 100%;
+	background: white;
+	margin-top: 15px;
+	margin-bottom: 35px;
+    border: 2px dotted;
+}
+
+/* ----- หน้าของตาราง ----- */
+.number-his {
+    text-align: center;
+  }
+  .number-his button {
+    display: inline-block;
+    background-color: transparent;
+    border: none;
+    width: 50px;
+    color: darkgray;
+  }
+  .number-his button:hover {
+    color: black;
+  }
+  .number-his button[disabled]:hover {
+    color: darkgray;
+  }
+  .number-his span {
+    display: inline-block;
+    width: 90px;
+  }
+
+/* ---- Student หน้าแรก ตารางรายการยืมคืน -----*/
+.borrowTable th, td {
+    padding: 0 15px;
+}
+.borrowTable tr {
+    border-top: 1px solid silver;;
+    border-bottom: 1px solid silver;;
+}

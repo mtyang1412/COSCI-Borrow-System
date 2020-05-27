@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COSCI - ระบบยืมคืนอุปกรณ์ครุภัณฑ์</title>
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!-- =============== Bootstrap =============== -->
+<link rel="stylesheet" type="text/css"  href="/bootstrap.css">
+
+<!-- =============== Stylesheet =============== -->
+<link rel="stylesheet" type="text/css"  href="/style.css">
+<link rel="stylesheet" type="text/css"  href="/equipStyle.css">
+<link rel="stylesheet" type="text/css"  href="/userStyle.css">
+<link rel="stylesheet" type="text/css"  href="/borrowStyle.css">
+<link rel="stylesheet" type="text/css"  href="/adminStyle.css">
+<link rel="stylesheet" type="text/css"  href="/dataStyle.css">
+<link rel="stylesheet" type="text/css"  href="/fontface.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Kanit:200,300,400,500,600,700&amp;subset=thai" rel="stylesheet">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+</head>
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<!-- =============== Navigation =============== -->
+<nav id="menu" class="navbar navbar-default navbar-fixed-top">
+  <div class="container"> 
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span><span class="icon-bar"></span>
+        <span class="icon-bar"></span> 
+      </button>
+      <a class="navbar-brand page-scroll" href="#">
+        <img class="logo-header" src="/cosciLogo.png">
+      </a>
+    </div>
+    
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/admin/<%=usn%>" class="page-scroll">Home&nbsp;&nbsp;&nbsp;•</a></li>
+        <li><a href="/admin/<%=usn%>/manage/equipment" class="page-scroll">Equipment&nbsp;&nbsp;&nbsp;•</a></li>
+        <li><a href="#" class="page-scroll">History&nbsp;&nbsp;&nbsp;•&nbsp;</a></li>
+        <li><a href="/user/logout" class="page-scroll">Logout&nbsp;&nbsp;<i class="fa fa-sign-out"></i>&nbsp;</a></li>
+        <li class="user-tag">
+          <a href="/admin/<%=usn%>/profile" id="user-tag-a">
+            <i class="fa fa-user"></i>&nbsp;&nbsp;
+            ID : <%= datas.mem_id %>&nbsp;&nbsp;
+              <br>
+            <i class="fa fa-clock-o"></i>&nbsp;&nbsp;DATE : <%= todays %>
+            <div class="img-user">
+              <img src="/user/<%=datas.mem_pic%>">
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Portfolio Section -->
+<div id="portfolio" style="padding-bottom: 90px;">
+  <div class="container">
+    <div class="row" style="margin-top: 160px;">
+      <div class="table-wrapper">
+        <div class="table-title">
+          <div class="row">
+            <div class="col-sm-7">
+              <h4 style="margin-top: -70px;">
+                ประวัติการยืม-คืน
+              </h4>
+            </div>
+            
+            <div class="col-sm-5">
+              <div class="div-search">
+                <form method="GET" class="search-form">
+                  <input id="search1" value="<%=inputval%>" style="padding: 0px 10px; margin: 2px 0; border: 1px solid #ccc; border-radius: 4px;" placeholder="  อุปกรณ์ / ชื่อ/ รหัสผู้ยืม" required>&nbsp;&nbsp;
+                  <button type="submit" class="searchBTN">
+                    <i class="fa fa-search"></i> ค้นหา
+                  </button>
+                </form>
+                <button class="advancedSearchBTN" data-toggle="modal" data-target="#advancedSearch">
+                  ค้นหาขั้นสูง
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <% if (setsData.length > 0) { %>
+            <% for (a=0; a<(setsData.length / 20) ;a++) { %>
+              <div class="d<%=a%>" style="width: 100%;">
+                <table class="table table-bordered" style="width: 100%;">
+                  <thead>
+                    <tr>
+                      <th style="width: 5%;"></th>
+                      <th style="width: 20%;">
+                        เซตอุปกรณ์
+                      </th>
+                      <th style="width: 10%;">
+                        วันที่ยืม
+                      </th>
+                      <th style="width: 10%;">
+                        วันที่คืน
+                      </th>
+                      <th style="width: 20%;">
+                        ผู้ยืม
+                    </th>
+                      <th style="width: 20%;">
+                        ผู้ดูแล
+                      </th>
+                      <th style="width: 15%;">
+                        สถานะ
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% let i=(a*20); %>
+                    <% while (i < (setsData.length) && i < ((a+1)*20)) { %>
+                    <tr>
+                      <td> <%= i+1 %> </td>
+                      <td>
+                        <a href="/admin/<%=usn%>&<%=setsData[i].bor_id%>/borrow-detail">
+                          <%= setsData[i].set_name %>
+                        </a>
+                        <br>
+                        <% if (setsData[i].set_can_borrow < 1) { %>
+                          <% let borID = setsData[i].bor_id %>
+                          <span style="font-size: 9px; line-height: 12px; display: block;"> (
+                            <% let comma = '' %>
+                            <% subSets.forEach((v) => { %>
+                              <% if (v.bor_id == borID) { %>
+                                <% if (v.type_can_borrow > 0) { %>
+                                  <%=comma%> <%= v.type_name %>
+                                <% } else { %>
+                                  <%=comma%> <%= v.equip_name %>
+                                <% } %>
+                                <% comma = ',' %>
+                              <% } %>
+                            <% }) %>
+                             )
+                          </span>
+                        <% } %>
+                      </td>
+                      <td>
+                        <%= setsData[i].bor_date %> <br>
+                        <%= setsData[i].bor_time %>
+                      </td>
+                      <td>
+                        <%= setsData[i].bor_return_date %> <br>
+                        <%= setsData[i].bor_return_time %>
+                      </td>
+                      <td>
+                        <% if (setsData[i].staff_bor_name == null) { %>
+                          <%= setsData[i].stu_name %>
+                        <% } else { %>
+                          <%= setsData[i].staff_bor_name %>
+                        <% } %>
+                      </td>
+                      <td>
+                        <%= setsData[i].staff_name %>
+                      </td>
+                      <td>
+                        <% if (setsData[i].bor_status == 'p') { %>
+                          รออนุมัติ
+                        <% } else if (setsData[i].bor_status == 'a') { %>
+                          เตรียมรับอุปกรณ์
+                        <% } else if (setsData[i].bor_status == 'r') { %>
+                          เตรียมคืนอุปกรณ์
+                        <% } else if (setsData[i].bor_status == 'd') { %>
+                          คืนอุปกรณ์แล้ว
+                        <% } else if (setsData[i].bor_status == 'x') { %>
+                          ไม่อนุมัติ
+                        <% } else { %>
+                          <b style="color: red;">
+                            ยังไม่คืนอุปกรณ์
+                          </b>
+                        <% } %>
+                      </td>
+                    </tr>
+                    <% i++ %>
+                    <% } %>
+                  </tbody>
+                </table>
+  
+                <div class="number-his">
+                  <button class="back"> << </button>
+                  <span>
+                    หน้า <%= a+1 %> / <%= Math.ceil(setsData.length / 20) %>
+                  </span>
+                  <button class="next"> >> </button>
+                </div>
+              </div>
+            <% } %>
+          <% } else { %>
+            <br><br>
+            <p style="text-align: center;">
+              ไม่พบประวัติการยืม-คืน
+            </p>
+          <% } %>
+
+        </div>
+      </div> 
+      
+      <div style="text-align: center;">
+        <button style="border-radius: 4px; padding: 7px; padding-left: 12px; padding-right: 12px;">
+          พิมพ์รายงาน
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="advancedSearch" class="modal fade">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="padding: 15px;">
+      <h5>การค้นหาขั้นสูง</h5>
+      <form action="/admin/history/advanced/<%=usn%>" method="POST">
+        <div class="advancedSearchContent">
+          <span>ปี ค.ศ. : </span>
+          <% let dnow = new Date() %>
+          <input type="number" name="hisyear" style="width: 30%;" id="inyear" min="2006" max="<%=dnow.getFullYear()%>" 
+          value="<%=dnow.getFullYear()%>" onkeypress="return numLetter(event)">
+          <span>เดือน : </span>
+          <select name="hismonth" style="width: 44%;">
+            <option value="0" selected>ทุกเดือน</option>
+            <option value="1">มกราคม</option>
+            <option value="2">กุมภาพันธ์</option>
+            <option value="3">มีนาคม</option>
+            <option value="4">เมษายน</option>
+            <option value="5">พฤษภาคม</option>
+            <option value="6">มิถุนายน</option>
+            <option value="7">กรกฎาคม</option>
+            <option value="8">สิงหาคม</option>
+            <option value="9">กันยายน</option>
+            <option value="10">ตุลาคม</option>
+            <option value="11">พฤศจิกายน</option>
+            <option value="12">ธันวาคม</option>
+          </select>
+          <br>
+          <span style="margin-right: 5%;">เซตอุปกรณ์ : </span>
+          <select name="hisset" style="width: 78%;">
+            <option value="">ทุกเซต</option>
+            <% advancedData.forEach((value) => { %>
+              <option value="<%=value.set_id%>"><%=value.set_name%></option>
+            <% }) %>
+          </select>
+          <br>
+          <span style="margin-right: 5%;">ประเภทผู้ยืม : </span>
+          <select name="hismemtype" style="width: 25%;">
+            <option value="" selected>ทั้งหมด</option>
+            <option value="student">นิสิต</option>
+            <option value="staff">อาจารย์/บุคลากร</option>
+          </select>
+          <span style="margin-left: 15px;">รหัสนิสิต/รหัสผู้ยืม : </span>
+          <input name="hisid" id="inid" onkeypress="return numLetter(event)" style="width: 23%;">
+          <br>
+          <span>ชื่อผู้ยืม&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+          <input name="hisborrower" style="width: 50%;">
+          <br>
+          <span>ชื่อผู้ดูแล &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>
+          <input name="hisadmin" style="width: 50%;" list="adminname">
+          <datalist id="adminname">
+            <% let adname = '' %>
+            <% advancedData.forEach((v) => { %>
+              <% if (adname != v.staff_name) { %>
+                <% adname = v.staff_name %>
+                <option value="<%=adname%>">
+              <% } %>
+            <% }) %>
+          </datalist>
+          <br>
+          <span>สถานะการยืม &nbsp;:</span>
+          <select name="hisstatus" style="width: 50%;">
+            <option value="">ทั้งหมด</option>
+            <option value="p">รออนุมัติ</option>
+            <option value="a">เตรียมรับอุปกรณ์</option>
+            <option value="r">เตรียมคืนอุปกรณ์</option>
+            <option value="d">คืนอุปกรณ์แล้ว</option>
+            <option value="n">ยังไม่คืนอุปกรณ์</option>
+            <option value="x">ไม่อนุมัติ</option>
+          </select>
+          <br><br>
+          <div style="text-align: center;">
+            <button class="cancelSearchBTN" data-toggle="modal" data-target="#advancedSearch">
+              ยกเลิก
+            </button>
+            <button type="submit" class="submitSearch">
+              ค้นหา
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<div>
+  <!-- ดึงค่า footer มาแสดงจากไฟล์ footer.ejs -->
+  <%- include('footer') -%>
+</div>
+
+<script type="text/javascript" src="/jquery.1.11.1.js"></script> 
+<script type="text/javascript" src="/bootstrap.js"></script> 
+<script type="text/javascript" src="/jquery.isotope.js"></script> 
+<script type="text/javascript" src="/main.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/datepicker.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/i18n/datepicker.en.js"></script>
+
+<script>
+  
+  /* ===== ปุ่ม ควบคุมตาราง ===== */
+  let username = <%-JSON.stringify(usn)%>;
+  let allBorrow = <%-JSON.stringify(setsData)%>;
+  let pageDiv = Math.ceil(allBorrow.length / 20)
+  
+  function disableBTN() {
+    if ($('.d0').is(':visible')) {
+      if ($('.d' + (pageDiv-1)).is(':visible')) {
+        $('.back').attr("disabled", true);
+        $('.next').attr("disabled", true);
+      } else {
+        $('.back').attr("disabled", true);
+        $('.next').attr("disabled", false);
+      }
+    }
+    else if ($('.d' + (pageDiv-1)).is(':visible')) {
+      $('.back').attr("disabled", false);
+      $('.next').attr("disabled", true);
+    }
+    else {
+      $('.back').attr("disabled", false);
+      $('.next').attr("disabled", false);
+    }
+  }
+
+  function hideDiv() {
+    for (i=0; i<(allBorrow.length) ;i++) {
+      $(".d" + i).hide();
+    }
+  }
+  hideDiv();
+  $(".d0").show();
+  disableBTN()
+
+  $('.next').click(function() {
+    let clickindex = $(this).index('.next');
+    hideDiv();
+    $(".d" + (clickindex + 1)).show();
+    disableBTN()
+  })
+
+  $('.back').click(function() {
+    let clickindex = $(this).index('.back');
+    hideDiv();
+    $(".d" + (clickindex - 1)).show();
+    disableBTN()
+  })
+
+  /* ===== Search ===== */
+  $('#search1').keyup(function() {
+    let actionURL = '/admin/' + username + '/history/' + $(this).val()
+    $('.search-form').attr('action', actionURL);
+  });
+
+  /* ===== Advanced Search ===== */
+  $('#inyear').keyup(function() {
+    let datenow = new Date()
+    let vv = $(this).val()
+    if (vv < 2006) {
+      $(this).val(2006)
+    }
+    else if (vv > datenow.getFullYear()) {
+      $(this).val(datenow.getFullYear())
+    }
+  })
+
+  function numLetter(event) {
+    var x = event.charCode;
+    return  (x >= 48 && x <= 57);
+  }
+
+</script>
+
+
+</body>
+</html>

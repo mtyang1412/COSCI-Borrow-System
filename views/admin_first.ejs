@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COSCI - ระบบยืมคืนอุปกรณ์ครุภัณฑ์</title>
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!-- =============== Bootstrap =============== -->
+<link rel="stylesheet" type="text/css"  href="/bootstrap.css">
+
+<!-- =============== Stylesheet =============== -->
+<link rel="stylesheet" type="text/css"  href="/style.css">
+<link rel="stylesheet" type="text/css"  href="/userStyle.css">
+<link rel="stylesheet" type="text/css"  href="/adminStyle.css">
+<link rel="stylesheet" type="text/css"  href="/fontface.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Kanit:200,300,400,500,600,700&amp;subset=thai">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/css/datepicker.css">
+
+</head>
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<!-- =============== Navigation =============== -->
+<nav id="menu" class="navbar navbar-default navbar-fixed-top">
+  <div class="container"> 
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> 
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span><span class="icon-bar"></span> 
+        <span class="icon-bar"></span> 
+      </button>
+      <a class="navbar-brand page-scroll" href="#">
+        <img class="logo-header" src="/cosciLogo.png">
+      </a>
+    </div>
+    
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" class="page-scroll">Home&nbsp;&nbsp;&nbsp;•</a></li>
+        <li><a href="/admin/<%=usn%>/manage/equipment" class="page-scroll">Equipment&nbsp;&nbsp;&nbsp;•</a></li>
+        <li><a href="/admin/<%=usn%>/history/all" class="page-scroll">History&nbsp;&nbsp;&nbsp;•&nbsp;</a></li>
+        <li><a href="/user/logout" class="page-scroll">Logout&nbsp;&nbsp;<i class="fa fa-sign-out"></i>&nbsp;</a></li>
+        <li class="user-tag">
+          <a href="/admin/<%=usn%>/profile" id="user-tag-a">
+            <i class="fa fa-user"></i>&nbsp;&nbsp;
+            ID : <%= datas.mem_id %>&nbsp;&nbsp;
+              <br>
+            <i class="fa fa-clock-o"></i>&nbsp;&nbsp;DATE : <%= todays %>
+            <div class="img-user">
+              <img src="/user/<%=datas.mem_pic%>">
+            </div>
+          </a>
+        </li>
+     </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Portfolio Section -->
+<div id="portfolio" style="padding-bottom: 90px;">
+  <div class="section-title">
+    <div class="overlay">
+      <div class="container">
+        <div class="row">
+          <br><br><br><br>
+          <div class="user-text">
+            <h2>สวัสดี Admin <br>
+              <span style="font-size: 28px;"> 
+                (<%= datas.staff_name %>) 
+              </span>
+            </h2>
+            <hr>
+            <p>ยินดีต้อนรับเข้าสู่ระบบ <br>" อุปกรณ์รอการอนุมัติอยู่ "<br>
+              <i class="fa fa-sort-down icon-down"></i>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+          
+  <div class="container">
+    <div class="row">
+      <div class="card">
+        <div class="card-body p-0">
+          <div id="calendar"></div>
+        </div>
+      </div>
+    </div>
+  </div>   
+</div>
+      
+<div>
+  <!-- ดึงค่า footer มาแสดงจากไฟล์ footer.ejs -->
+  <%- include('footer') -%>
+</div>
+    
+<!-- Menu Toggle Script -->
+
+<script type="text/javascript" src="/jquery.1.11.1.js"></script> 
+<script type="text/javascript" src="/bootstrap.js"></script> 
+<script type="text/javascript" src="/jquery.isotope.js"></script> 
+<script type="text/javascript" src="/main.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/datepicker.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/i18n/datepicker.en.js"></script>
+
+<script>
+$(function() {
+  let usn = <%-JSON.stringify(usn)%>;
+  let dataCalendar = <%-JSON.stringify(calData)%>;
+  var events = [];
+
+  for (i=0; i<dataCalendar.length; i++) {
+    if (dataCalendar[i].bor_status == 'p') {
+      events.push({
+          title:  'รอการอนุมัติ',
+          start:  dataCalendar[i].bor_date + 'T' + dataCalendar[i].bor_time,
+          end:    dataCalendar[i].bor_return_date + 'T' + dataCalendar[i].bor_return_time,
+          color  : '#F3C137',
+          url: '/admin/' + usn + '&' + dataCalendar[i].bor_id + '/borrow-detail'
+      })
+    } else if (dataCalendar[i].bor_status == 'a') {
+      events.push({
+          title:  'นัดรับอุปกรณ์',
+          start:  dataCalendar[i].bor_date + 'T' + dataCalendar[i].bor_time,
+          color  : '#007CB7',
+          url: '/admin/' + usn + '&' + dataCalendar[i].bor_id + '/borrow-detail'
+      })
+    } else if (dataCalendar[i].bor_status == 'r') {
+      events.push({
+          title:  'นัดคืนอุปกรณ์',
+          start:  dataCalendar[i].bor_return_date + 'T' + dataCalendar[i].bor_return_time,
+          color  : '#25BB4B',
+          url: '/admin/' + usn + '&' + dataCalendar[i].bor_id + '/borrow-detail'
+      })
+    }
+  }
+
+  var calendar = $('#calendar').fullCalendar({
+    header: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'month,agendaWeek,agendaDay'
+    },
+    themeSystem: 'bootstrap4',
+    defaultView: 'month',
+    timeFormat: 'h:mma',
+    allDaySlot: false,
+    eventOverlap: function(stillEvent, movingEvent) {
+      return true;
+    },
+    events: events,
+    editable: false,
+    selectable: true,
+    eventLimit: true,
+    selectHelper: false
+  });
+});
+
+</script>
+
+</body>
+</html>

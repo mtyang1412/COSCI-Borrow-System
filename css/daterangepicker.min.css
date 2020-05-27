@@ -12,6 +12,7 @@
     position:relative;
     z-index:2
 }
+
 .date-picker-wrapper {
     position:absolute;
     z-index:1;
@@ -92,14 +93,14 @@
     filter:alpha(opacity=1);
     opacity:.01
 }
-.date-picker-wrapper .month-wrapper { 
+.date-picker-wrapper .month-wrapper {
     border:1px solid #bfbfbf;
     border-radius:3px;
     background-color:#fff;
     padding: 20px;
     cursor:default;
     position:relative;
-    _overflow:hidden
+    _overflow:hidden;
 }
 .date-picker-wrapper .month-wrapper table {
     width:100%;

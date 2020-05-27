@@ -39,7 +39,8 @@ input[type="checkbox"][readonly] {
     background: #007CB7 ;
     width: 20px;
     height: 20px;
-    position: absolute;
+    display: inline-block;
+    vertical-align: middle;
 }
 /* Important part */
 .modal-dialog{

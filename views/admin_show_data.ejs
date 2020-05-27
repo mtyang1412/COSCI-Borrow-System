@@ -1,0 +1,1967 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COSCI - ระบบยืมคืนอุปกรณ์ครุภัณฑ์</title>
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!-- =============== Bootstrap =============== -->
+<link rel="stylesheet" type="text/css"  href="/bootstrap.css">
+
+<!-- =============== Stylesheet =============== -->
+<link rel="stylesheet" type="text/css"  href="/style.css">
+<link rel="stylesheet" type="text/css"  href="/equipStyle.css">
+<link rel="stylesheet" type="text/css"  href="/userStyle.css">
+<link rel="stylesheet" type="text/css"  href="/adminStyle.css">
+<link rel="stylesheet" type="text/css"  href="/fontface.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Kanit:200,300,400,500,600,700&amp;subset=thai" rel="stylesheet">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+</head>
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<!-- =============== Navigation =============== -->
+<nav id="menu" class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> 
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span><span class="icon-bar"></span> <span class="icon-bar"></span> 
+      </button>
+      <a class="navbar-brand page-scroll" href="#page-top"><img class="logo-header" src="/cosciLogo.png"></a>
+    </div>
+    
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/admin/<%=usn%>" class="page-scroll">Home&nbsp;&nbsp;&nbsp;•</a></li>
+        <li><a href="/admin/<%=usn%>/manage/equipment" class="page-scroll">Equipment&nbsp;&nbsp;&nbsp;•</a></li>
+        <li><a href="/admin/<%=usn%>/history/all" class="page-scroll">History&nbsp;&nbsp;&nbsp;•&nbsp;</a></li>
+        <li><a href="/user/logout" class="page-scroll">Logout&nbsp;&nbsp;<i class="fa fa-sign-out"></i>&nbsp;</a></li>
+        <li class="user-tag">
+          <a href="/admin/<%=usn%>/profile" id="user-tag-a">
+            <i class="fa fa-user"></i>&nbsp;&nbsp;ID : <%= datas.mem_id %>&nbsp;&nbsp;
+            <br>
+            <i class="fa fa-clock-o"></i>&nbsp;&nbsp;DATE : <%= todays %>
+            <div class="img-user"><img src="/user/<%= datas.mem_pic %>"></div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Portfolio Section -->
+<div id="portfolio">
+  <div class="container" style="padding-bottom: 90px;">
+    <div class="row" style="margin-top: 110px;">
+      <!-- ===== HEAD ===== -->
+      <% if (emData[0].bor_status == 'p') { %>
+      <div class="col-sm-12 col-md-12 col-lg-12">
+        <h3 class="statusLeft">
+          รายการยืม-คืนอุปกรณ์ครุภัณฑ์
+        </h3>
+        <h3 class="statusRight">
+          สถานะ&nbsp;
+            <span class="label waiting">
+              รอการอนุมัติ
+            </span>
+        </h3>
+      </div>
+
+      <form action="/admin/<%=usn%>/approve" method="POST">
+        <!-- ===== EQUIPMENT ===== -->
+        <input name="borID" value="<%=emData[0].bor_id%>" hidden>
+        <div class="col-sm-6 col-md-6 col-lg-6">
+          <h5 style="color: #333; font-size: 16px;">
+            รายการอุปกรณ์
+          </h5>  
+          <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+          
+          <div style="line-height: 30px;">
+            <% if (emData[0].set_can_borrow  == 'o') { %>
+              <input type="checkbox" checked onclick="return false;">
+              &nbsp; <%= emData[0].set_name %><br>
+            <% } else { %>
+              <% var typeID = "" %>
+              <% emData.forEach((v, i) => { %>
+                <% if (v.type_can_borrow  == 'o') { %>
+                  <% if (typeID != v.type_id) { %>
+                    <% typeID = v.type_id %>
+                    <input type="checkbox" checked onclick="return false;">
+                    &nbsp; <%= v.type_name %><br>
+                  <% } %>
+                <% } else { %>
+                  <input type="checkbox" checked onclick="return false;">
+                  &nbsp; <%= v.equip_name %><br>
+                <% } %>
+              <% }) %>
+            <% } %>
+          </div>
+
+          <br>
+
+          <div class="scroll">
+            <table class="table">
+              <thead>
+                <% var n = 0 %>
+                <% var tid = "" %>
+                <% emData.forEach((v, i) => { %>
+                  <tr>
+                    <% if (tid != v.type_id) { %>
+                      <% tid = v.type_id %>
+                    <td> <%= n = n + 1 %> </td>
+                    <td>
+                      <%= v.type_name %>
+                    </td>
+                    <td>จำนวน</td>
+                    <% } %>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+                    <td> <%= v.equip_name %> </td>
+                    <td>
+                      <input class="amountE" value="<%= v.bor_equip_amount %>" name="amounte" 
+                      onkeypress="return numLetter(event)" style="width: 30px; text-align: center;">
+                      <input name="eqID" value="<%=v.equip_id%>" hidden>
+                    </td>
+                  </tr>
+                </tbody>
+                <% }) %>
+            </table>
+          </div>
+        </div>
+
+        <!-- ===== BORROW DRTAIL & Approve ===== -->
+        <div class="col-sm-6 col-md-6 col-lg-6">
+          <div class="portfolio-item">
+            <h5 style="color: #333; font-size: 16px;">
+              วันและเวลาในการยืม
+            </h5>  
+            <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+            
+            <table style="width: 66%; line-height: 30px;">
+              <tr>
+                <td style="width: 21%;">
+                  วันที่ทำรายการ : 
+                </td>
+                <td style="width: 25%;">
+                  <%= emData[0].bor_book_date %> 
+                </td>
+                <td style="width: 10%;">
+                  เวลา : 
+                </td>
+                <td style="width: 10%;">
+                  <%= emData[0].bor_book_time %> 
+                </td>
+              </tr>
+              <tr>
+                <td style="width: 21%;">
+                  วันที่รับอุปกรณ์ :  
+                </td>
+                <td style="width: 25%;">
+                  <%= emData[0].bor_date %> 
+                </td>
+                <td style="width: 10%;">
+                  เวลา : 
+                </td>
+                <td style="width: 10%;">
+                  <%= emData[0].bor_time %> 
+                </td>
+              </tr>
+              <tr>
+                <td style="width: 21%;">
+                  วันที่คืนอุปกรณ์ :  
+                </td>
+                <td style="width: 25%;">
+                  <%= emData[0].bor_return_date %> 
+                </td>
+                <td style="width: 10%;">
+                  เวลา : 
+                </td>
+                <td style="width: 10%;">
+                  <%= emData[0].bor_return_time %> 
+                </td>
+              </tr>
+            </table>
+
+            <br>
+            <h5 style="color: #333; font-size: 16px;">
+              รายละเอียดผู้ยืม
+            </h5>  
+            <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+            <!-- ===== Member is Student ===== -->
+            <% if (emData[0].mem_type == 'student') { %>
+            <table class="borrower">
+              <tr>
+                <td style="width: 30%;">
+                  รหัสนิสิต : 
+                </td>
+                <td style="width: 70%;">
+                  <%= emData[0].mem_id %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  ชื่อ-นามสกุล : 
+                </td>
+                <td>
+                  <%= memData[0].stu_name %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  วิชาเอก : 
+                </td>
+                <td>
+                  <%= memData[0].maj_th_name %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  เบอร์โทรศัพท์ : 
+                </td>
+                <td>
+                  <%= emData[0].mem_phone %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  เบอร์โทรเพิ่มเติม 1 : 
+                </td>
+                <td>
+                  <%= emData[0].bor_phone1 %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  เบอร์โทรเพิ่มเติม 2 : 
+                </td>
+                <td>
+                  <%= emData[0].bor_phone2 %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  รายวิชา : 
+                </td>
+                <td>
+                  <%= emData[0].sub_id %> <%= emData[0].sub_name %>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  อาจารย์ประจำวิชา : 
+                </td>
+                <td>
+                  <%= emData[0].bor_sub_prof %>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  วัตถุประสงค์​ : 
+                </td>
+                <td>
+                  <%= emData[0].bor_object %>
+                </td>
+              </tr>
+            </table>
+            <% } else if (emData[0].mem_type == 'staff') { %>
+              <!-- ===== Member is Staff ===== -->
+              <table class="borrower">
+                <tr>
+                  <td style="width: 30%;">
+                    รหัสประจำตัว : 
+                  </td>
+                  <td style="width: 70%;">
+                    <%= emData[0].mem_id %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    ชื่อ-นามสกุล : 
+                  </td>
+                  <td>
+                    <%= memData[0].stu_name %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    เบอร์โทรศัพท์ : 
+                  </td>
+                  <td>
+                    <%= emData[0].mem_phone %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    เบอร์โทรเพิ่มเติม 1 : 
+                  </td>
+                  <td>
+                    <%= emData[0].bor_phone1 %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    เบอร์โทรเพิ่มเติม 2 : 
+                  </td>
+                  <td>
+                    <%= emData[0].bor_phone2 %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    รายวิชา : 
+                  </td>
+                  <td>
+                    <%= emData[0].sub_id %> <%= emData[0].sub_name %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    วัตถุประสงค์​ : 
+                  </td>
+                  <td>
+                    <%= emData[0].bor_object %>
+                  </td>
+                </tr>
+              </table>
+            <% } %>
+
+            <br><br>
+            <h5 style="color: #333; font-size: 16px;">
+              อนุมัติรายการยืม-คืนอุปกรณ์ครุภัณฑ์
+            </h5>  
+            <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+            
+            <div style="line-height: 30px;">
+              &nbsp;&nbsp;
+              <input type="radio" name="approve" value="a" id="radio1"> 
+              อนุมัติ
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <input type="radio" name="approve" value="x" id="radio2"> 
+              ไม่อนุมัติ
+              <br>
+              <div style="float: left;">หมายเหตุ:</div>
+              <div class="textArea">
+                <textarea id="txtarea" name="note">
+                </textarea>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ===== SUBMIT ===== -->
+        <div class="col-sm-12 col-md-12 col-lg-12 submitdiv">
+          <a href="/admin/<%=usn%>">
+            ยกเลิก
+          </a>
+          <button type="submit" id="subbtn" hidden>
+            ยืนยัน
+          </button>
+        </div>
+      </form>
+      <% } else if (emData[0].bor_status == 'a') { %>
+      <div class="col-sm-12 col-md-12 col-lg-12">
+        <h3 class="statusLeft">
+          รายการยืม-คืนอุปกรณ์ครุภัณฑ์
+        </h3>
+        <h3 class="statusRight">
+          สถานะ&nbsp;
+          <span class="label getDevice">
+            นัดรับอุปกรณ์
+          </span>
+        </h3>
+      </div>
+
+      <form action="/admin/<%=usn%>/approve" method="POST">
+        <!-- ===== EQUIPMENT ===== -->
+        <input name="borID" value="<%=emData[0].bor_id%>" hidden>
+        <div class="col-sm-6 col-md-6 col-lg-6">
+          <h5 style="color: #333; font-size: 16px;">
+            รายการอุปกรณ์
+          </h5>  
+          <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+          
+          <div style="line-height: 30px;">
+            <% if (emData[0].set_can_borrow  == 'o') { %>
+              <input type="checkbox" checked onclick="return false;">
+              &nbsp; <%= emData[0].set_name %><br>
+            <% } else { %>
+              <% var typeID = "" %>
+              <% emData.forEach((v, i) => { %>
+                <% if (v.type_can_borrow  == 'o') { %>
+                  <% if (typeID != v.type_id) { %>
+                    <% typeID = v.type_id %>
+                    <input type="checkbox" checked onclick="return false;">
+                    &nbsp; <%= v.type_name %><br>
+                  <% } %>
+                <% } else { %>
+                  <input type="checkbox" checked onclick="return false;">
+                  &nbsp; <%= v.equip_name %><br>
+                <% } %>
+              <% }) %>
+            <% } %>
+          </div>
+
+          <br>
+
+          <div class="scroll">
+            <table class="table">
+              <thead>
+                <% var n = 0 %>
+                <% var tid = "" %>
+                <% emData.forEach((v, i) => { %>
+                  <tr>
+                    <% if (tid != v.type_id) { %>
+                      <% tid = v.type_id %>
+                    <td> <%= n = n + 1 %> </td>
+                    <td>
+                      <%= v.type_name %>
+                    </td>
+                    <td>จำนวน</td>
+                    <% } %>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+                    <td> <%= v.equip_name %> </td>
+                    <td>
+                      <%= v.bor_equip_amount %>
+                    </td>
+                  </tr>
+                </tbody>
+                <% }) %>
+            </table>
+          </div>
+        </div>
+
+        <!-- ===== BORROW DRTAIL & Approve ===== -->
+        <div class="col-sm-6 col-md-6 col-lg-6">
+          <div class="portfolio-item">
+            <h5 style="color: #333; font-size: 16px;">
+              วันและเวลาในการยืม
+            </h5>  
+            <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+            
+            <table style="width: 66%; line-height: 30px;">
+              <tr>
+                <td style="width: 21%;">
+                  วันที่ทำรายการ : 
+                </td>
+                <td style="width: 25%;">
+                  <%= emData[0].bor_book_date %> 
+                </td>
+                <td style="width: 10%;">
+                  เวลา : 
+                </td>
+                <td style="width: 10%;">
+                  <%= emData[0].bor_book_time %> 
+                </td>
+              </tr>
+              <tr>
+                <td style="width: 21%;">
+                  วันที่รับอุปกรณ์ :  
+                </td>
+                <td style="width: 25%;">
+                  <%= emData[0].bor_date %> 
+                </td>
+                <td style="width: 10%;">
+                  เวลา : 
+                </td>
+                <td style="width: 10%;">
+                  <%= emData[0].bor_time %> 
+                </td>
+              </tr>
+              <tr>
+                <td style="width: 21%;">
+                  วันที่คืนอุปกรณ์ :  
+                </td>
+                <td style="width: 25%;">
+                  <%= emData[0].bor_return_date %> 
+                </td>
+                <td style="width: 10%;">
+                  เวลา : 
+                </td>
+                <td style="width: 10%;">
+                  <%= emData[0].bor_return_time %> 
+                </td>
+              </tr>
+            </table>
+
+            <br>
+            <h5 style="color: #333; font-size: 16px;">
+              รายละเอียดผู้ยืม
+            </h5>  
+            <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+            <!-- ===== Member is Student ===== -->
+            <% if (emData[0].mem_type == 'student') { %>
+            <table class="borrower">
+              <tr>
+                <td style="width: 30%;">
+                  รหัสนิสิต : 
+                </td>
+                <td style="width: 70%;">
+                  <%= emData[0].mem_id %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  ชื่อ-นามสกุล : 
+                </td>
+                <td>
+                  <%= memData[0].stu_name %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  วิชาเอก : 
+                </td>
+                <td>
+                  <%= memData[0].maj_th_name %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  เบอร์โทรศัพท์ : 
+                </td>
+                <td>
+                  <%= emData[0].mem_phone %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  เบอร์โทรเพิ่มเติม 1 : 
+                </td>
+                <td>
+                  <%= emData[0].bor_phone1 %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  เบอร์โทรเพิ่มเติม 2 : 
+                </td>
+                <td>
+                  <%= emData[0].bor_phone2 %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  รายวิชา : 
+                </td>
+                <td>
+                  <%= emData[0].sub_id %> <%= emData[0].sub_name %>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  อาจารย์ประจำวิชา : 
+                </td>
+                <td>
+                  <%= emData[0].bor_sub_prof %>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  วัตถุประสงค์​ : 
+                </td>
+                <td>
+                  <%= emData[0].bor_object %>
+                </td>
+              </tr>
+            </table>
+            <% } else if (emData[0].mem_type == 'staff') { %>
+              <!-- ===== Member is Staff ===== -->
+              <table class="borrower">
+                <tr>
+                  <td style="width: 30%;">
+                    รหัสประจำตัว : 
+                  </td>
+                  <td style="width: 70%;">
+                    <%= emData[0].mem_id %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    ชื่อ-นามสกุล : 
+                  </td>
+                  <td>
+                    <%= memData[0].stu_name %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    เบอร์โทรศัพท์ : 
+                  </td>
+                  <td>
+                    <%= emData[0].mem_phone %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    เบอร์โทรเพิ่มเติม 1 : 
+                  </td>
+                  <td>
+                    <%= emData[0].bor_phone1 %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    เบอร์โทรเพิ่มเติม 2 : 
+                  </td>
+                  <td>
+                    <%= emData[0].bor_phone2 %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    รายวิชา : 
+                  </td>
+                  <td>
+                    <%= emData[0].sub_id %> <%= emData[0].sub_name %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    วัตถุประสงค์​ : 
+                  </td>
+                  <td>
+                    <%= emData[0].bor_object %>
+                  </td>
+                </tr>
+              </table>
+            <% } %>
+
+            <br><br>
+            <h5 style="color: #333; font-size: 16px;">
+              อนุมัติรายการยืม-คืนอุปกรณ์ครุภัณฑ์
+            </h5>  
+            <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+            
+            <div style="line-height: 30px;">
+              &nbsp;&nbsp;
+              <input name="approve" value="r" hidden>
+              <i class="fa fa-check-square-o" style="color:red"></i>
+              <b style="font-size: 16px; color: red;">
+                อนุมัติ
+              </b>
+              <br>
+              &nbsp;&nbsp;
+              หมายเหตุ:
+              &nbsp;&nbsp;
+              <%= emData[0].bor_note %>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ===== SUBMIT ===== -->
+        <div class="col-sm-12 col-md-12 col-lg-12 submitdiv">
+          <a href="/admin/<%=usn%>">
+            ยกเลิก
+          </a>
+          <button type="submit">
+            ส่งมอบอุปกรณ์
+          </button>
+        </div>
+      </form>
+      <% } else if (emData[0].bor_status == 'r') { %>
+      <div class="col-sm-12 col-md-12 col-lg-12">
+        <h3 class="statusLeft">
+          รายการยืม-คืนอุปกรณ์ครุภัณฑ์
+        </h3>
+        <h3 class="statusRight">
+          สถานะ&nbsp;
+          <span class="label returnDevice">
+            นัดคืนอุปกรณ์
+          </span>
+        </h3>
+      </div>
+
+      <form action="/admin/<%=usn%>/approve" method="POST">
+        <!-- ===== EQUIPMENT ===== -->
+        <input name="borID" value="<%=emData[0].bor_id%>" hidden>
+        <div class="col-sm-6 col-md-6 col-lg-6">
+          <h5 style="color: #333; font-size: 16px;">
+            รายการอุปกรณ์
+          </h5>  
+          <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+          
+          <div style="line-height: 30px;">
+            <% if (emData[0].set_can_borrow  == 'o') { %>
+              <input type="checkbox" checked onclick="return false;">
+              &nbsp; <%= emData[0].set_name %><br>
+            <% } else { %>
+              <% var typeID = "" %>
+              <% emData.forEach((v, i) => { %>
+                <% if (v.type_can_borrow  == 'o') { %>
+                  <% if (typeID != v.type_id) { %>
+                    <% typeID = v.type_id %>
+                    <input type="checkbox" checked onclick="return false;">
+                    &nbsp; <%= v.type_name %><br>
+                  <% } %>
+                <% } else { %>
+                  <input type="checkbox" checked onclick="return false;">
+                  &nbsp; <%= v.equip_name %><br>
+                <% } %>
+              <% }) %>
+            <% } %>
+          </div>
+
+          <br>
+
+          <div class="scroll">
+            <table class="table">
+              <thead>
+                <% var n = 0 %>
+                <% var tid = "" %>
+                <% emData.forEach((v, i) => { %>
+                  <tr>
+                    <% if (tid != v.type_id) { %>
+                      <% tid = v.type_id %>
+                    <td> <%= n = n + 1 %> </td>
+                    <td>
+                      <%= v.type_name %>
+                    </td>
+                    <td>จำนวน</td>
+                    <% } %>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+                    <td> <%= v.equip_name %> </td>
+                    <td>
+                      <%= v.bor_equip_amount %>
+                    </td>
+                  </tr>
+                </tbody>
+                <% }) %>
+            </table>
+          </div>
+        </div>
+
+        <!-- ===== BORROW DRTAIL & Approve ===== -->
+        <div class="col-sm-6 col-md-6 col-lg-6">
+          <div class="portfolio-item">
+            <h5 style="color: #333; font-size: 16px;">
+              วันและเวลาในการยืม
+            </h5>  
+            <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+            
+            <table style="width: 66%; line-height: 30px;">
+              <tr>
+                <td style="width: 21%;">
+                  วันที่ทำรายการ : 
+                </td>
+                <td style="width: 25%;">
+                  <%= emData[0].bor_book_date %> 
+                </td>
+                <td style="width: 10%;">
+                  เวลา : 
+                </td>
+                <td style="width: 10%;">
+                  <%= emData[0].bor_book_time %> 
+                </td>
+              </tr>
+              <tr>
+                <td style="width: 21%;">
+                  วันที่รับอุปกรณ์ :  
+                </td>
+                <td style="width: 25%;">
+                  <%= emData[0].bor_date %> 
+                </td>
+                <td style="width: 10%;">
+                  เวลา : 
+                </td>
+                <td style="width: 10%;">
+                  <%= emData[0].bor_time %> 
+                </td>
+              </tr>
+              <tr>
+                <td style="width: 21%;">
+                  วันที่คืนอุปกรณ์ :  
+                </td>
+                <td style="width: 25%;">
+                  <%= emData[0].bor_return_date %> 
+                </td>
+                <td style="width: 10%;">
+                  เวลา : 
+                </td>
+                <td style="width: 10%;">
+                  <%= emData[0].bor_return_time %> 
+                </td>
+              </tr>
+            </table>
+
+            <br>
+            <h5 style="color: #333; font-size: 16px;">
+              รายละเอียดผู้ยืม
+            </h5>  
+            <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+            <!-- ===== Member is Student ===== -->
+            <% if (emData[0].mem_type == 'student') { %>
+            <table class="borrower">
+              <tr>
+                <td style="width: 30%;">
+                  รหัสนิสิต : 
+                </td>
+                <td style="width: 70%;">
+                  <%= emData[0].mem_id %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  ชื่อ-นามสกุล : 
+                </td>
+                <td>
+                  <%= memData[0].stu_name %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  วิชาเอก : 
+                </td>
+                <td>
+                  <%= memData[0].maj_th_name %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  เบอร์โทรศัพท์ : 
+                </td>
+                <td>
+                  <%= emData[0].mem_phone %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  เบอร์โทรเพิ่มเติม 1 : 
+                </td>
+                <td>
+                  <%= emData[0].bor_phone1 %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  เบอร์โทรเพิ่มเติม 2 : 
+                </td>
+                <td>
+                  <%= emData[0].bor_phone2 %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  รายวิชา : 
+                </td>
+                <td>
+                  <%= emData[0].sub_id %> <%= emData[0].sub_name %>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  อาจารย์ประจำวิชา : 
+                </td>
+                <td>
+                  <%= emData[0].bor_sub_prof %>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  วัตถุประสงค์​ : 
+                </td>
+                <td>
+                  <%= emData[0].bor_object %>
+                </td>
+              </tr>
+            </table>
+            <% } else if (emData[0].mem_type == 'staff') { %>
+              <!-- ===== Member is Staff ===== -->
+              <table class="borrower">
+                <tr>
+                  <td style="width: 30%;">
+                    รหัสประจำตัว : 
+                  </td>
+                  <td style="width: 70%;">
+                    <%= emData[0].mem_id %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    ชื่อ-นามสกุล : 
+                  </td>
+                  <td>
+                    <%= memData[0].stu_name %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    เบอร์โทรศัพท์ : 
+                  </td>
+                  <td>
+                    <%= emData[0].mem_phone %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    เบอร์โทรเพิ่มเติม 1 : 
+                  </td>
+                  <td>
+                    <%= emData[0].bor_phone1 %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    เบอร์โทรเพิ่มเติม 2 : 
+                  </td>
+                  <td>
+                    <%= emData[0].bor_phone2 %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    รายวิชา : 
+                  </td>
+                  <td>
+                    <%= emData[0].sub_id %> <%= emData[0].sub_name %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    วัตถุประสงค์​ : 
+                  </td>
+                  <td>
+                    <%= emData[0].bor_object %>
+                  </td>
+                </tr>
+              </table>
+            <% } %>
+
+            <br><br>
+            <h5 style="color: #333; font-size: 16px;">
+              อนุมัติรายการยืม-คืนอุปกรณ์ครุภัณฑ์
+            </h5>  
+            <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+            
+            <div style="line-height: 30px;">
+              &nbsp;&nbsp;
+              <input name="approve" value="d" hidden>
+              <i class="fa fa-check-square-o" style="color:red"></i>
+              <b style="font-size: 16px; color: red;">
+                รับอุปกรณ์ไปแล้ว
+              </b>
+              <br>
+              &nbsp;&nbsp;
+              หมายเหตุ:
+              &nbsp;&nbsp;
+              <%= emData[0].bor_note %>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ===== SUBMIT ===== -->
+        <div class="col-sm-12 col-md-12 col-lg-12 submitdiv">
+          <a href="/admin/<%=usn%>">
+            ยกเลิก
+          </a>
+          <button type="submit">
+            รับคืนอุปกรณ์
+          </button>
+        </div>
+      </form>
+      <% } else if (emData[0].bor_status == 'x') { %>
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <h3 class="statusLeft">
+            รายการยืม-คืนอุปกรณ์ครุภัณฑ์
+          </h3>
+          <h3 class="statusRight">
+            สถานะ&nbsp;
+            <span class="label notApprove">
+              ไม่อนุมัติ
+            </span>
+          </h3>
+        </div>
+  
+        <!-- ===== EQUIPMENT ===== -->
+        <div class="col-sm-6 col-md-6 col-lg-6">
+          <h5 style="color: #333; font-size: 16px;">
+            รายการอุปกรณ์
+          </h5>  
+          <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+          
+          <div style="line-height: 30px;">
+            <% if (emData[0].set_can_borrow  == 'o') { %>
+              <input type="checkbox" checked onclick="return false;">
+              &nbsp; <%= emData[0].set_name %><br>
+            <% } else { %>
+              <% var typeID = "" %>
+              <% emData.forEach((v, i) => { %>
+                <% if (v.type_can_borrow == 'o') { %>
+                  <% if (typeID != v.type_id) { %>
+                    <% typeID = v.type_id %>
+                    <input type="checkbox" checked onclick="return false;">
+                    &nbsp; <%= v.type_name %><br>
+                  <% } %>
+                <% } else { %>
+                  <input type="checkbox" checked onclick="return false;">
+                  &nbsp; <%= v.equip_name %><br>
+                <% } %>
+              <% }) %>
+            <% } %>
+          </div>
+
+          <br>
+
+          <div class="scroll">
+            <table class="table">
+              <thead>
+                <% var n = 0 %>
+                <% var tid = "" %>
+                <% emData.forEach((v, i) => { %>
+                  <tr>
+                    <% if (tid != v.type_id) { %>
+                      <% tid = v.type_id %>
+                    <td> <%= n = n + 1 %> </td>
+                    <td>
+                      <%= v.type_name %>
+                    </td>
+                    <td>จำนวน</td>
+                    <% } %>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+                    <td> <%= v.equip_name %> </td>
+                    <td>
+                      <%= v.bor_equip_amount %>
+                    </td>
+                  </tr>
+                </tbody>
+                <% }) %>
+            </table>
+          </div>
+        </div>
+
+        <!-- ===== BORROW DRTAIL & Approve ===== -->
+        <div class="col-sm-6 col-md-6 col-lg-6">
+          <div class="portfolio-item">
+            <h5 style="color: #333; font-size: 16px;">
+              วันและเวลาในการยืม
+            </h5>  
+            <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+            
+            <table style="width: 66%; line-height: 30px;">
+              <tr>
+                <td style="width: 21%;">
+                  วันที่ทำรายการ : 
+                </td>
+                <td style="width: 25%;">
+                  <%= emData[0].bor_book_date %> 
+                </td>
+                <td style="width: 10%;">
+                  เวลา : 
+                </td>
+                <td style="width: 10%;">
+                  <%= emData[0].bor_book_time %> 
+                </td>
+              </tr>
+              <tr>
+                <td style="width: 21%;">
+                  วันที่รับอุปกรณ์ :  
+                </td>
+                <td style="width: 25%;">
+                  <%= emData[0].bor_date %> 
+                </td>
+                <td style="width: 10%;">
+                  เวลา : 
+                </td>
+                <td style="width: 10%;">
+                  <%= emData[0].bor_time %> 
+                </td>
+              </tr>
+              <tr>
+                <td style="width: 21%;">
+                  วันที่คืนอุปกรณ์ :  
+                </td>
+                <td style="width: 25%;">
+                  <%= emData[0].bor_return_date %> 
+                </td>
+                <td style="width: 10%;">
+                  เวลา : 
+                </td>
+                <td style="width: 10%;">
+                  <%= emData[0].bor_return_time %> 
+                </td>
+              </tr>
+            </table>
+
+            <br>
+            <h5 style="color: #333; font-size: 16px;">
+              รายละเอียดผู้ยืม
+            </h5>  
+            <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+            <!-- ===== Member is Student ===== -->
+            <% if (emData[0].mem_type == 'student') { %>
+            <table class="borrower">
+              <tr>
+                <td style="width: 30%;">
+                  รหัสนิสิต : 
+                </td>
+                <td style="width: 70%;">
+                  <%= emData[0].mem_id %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  ชื่อ-นามสกุล : 
+                </td>
+                <td>
+                  <%= memData[0].stu_name %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  วิชาเอก : 
+                </td>
+                <td>
+                  <%= memData[0].maj_th_name %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  เบอร์โทรศัพท์ : 
+                </td>
+                <td>
+                  <%= emData[0].mem_phone %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  เบอร์โทรเพิ่มเติม 1 : 
+                </td>
+                <td>
+                  <%= emData[0].bor_phone1 %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  เบอร์โทรเพิ่มเติม 2 : 
+                </td>
+                <td>
+                  <%= emData[0].bor_phone2 %> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  รายวิชา : 
+                </td>
+                <td>
+                  <%= emData[0].sub_id %> <%= emData[0].sub_name %>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  อาจารย์ประจำวิชา : 
+                </td>
+                <td>
+                  <%= emData[0].bor_sub_prof %>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  วัตถุประสงค์​ : 
+                </td>
+                <td>
+                  <%= emData[0].bor_object %>
+                </td>
+              </tr>
+            </table>
+            <% } else if (emData[0].mem_type == 'staff') { %>
+              <!-- ===== Member is Staff ===== -->
+              <table class="borrower">
+                <tr>
+                  <td style="width: 30%;">
+                    รหัสประจำตัว : 
+                  </td>
+                  <td style="width: 70%;">
+                    <%= emData[0].mem_id %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    ชื่อ-นามสกุล : 
+                  </td>
+                  <td>
+                    <%= memData[0].stu_name %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    เบอร์โทรศัพท์ : 
+                  </td>
+                  <td>
+                    <%= emData[0].mem_phone %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    เบอร์โทรเพิ่มเติม 1 : 
+                  </td>
+                  <td>
+                    <%= emData[0].bor_phone1 %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    เบอร์โทรเพิ่มเติม 2 : 
+                  </td>
+                  <td>
+                    <%= emData[0].bor_phone2 %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    รายวิชา : 
+                  </td>
+                  <td>
+                    <%= emData[0].sub_id %> <%= emData[0].sub_name %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    วัตถุประสงค์​ : 
+                  </td>
+                  <td>
+                    <%= emData[0].bor_object %>
+                  </td>
+                </tr>
+              </table>
+            <% } %>
+
+            <br><br>
+            <h5 style="color: #333; font-size: 16px;">
+              อนุมัติรายการยืม-คืนอุปกรณ์ครุภัณฑ์
+            </h5>  
+            <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+            
+            <div style="line-height: 30px;">
+              &nbsp;&nbsp;
+              <i class="fa fa-times-circle" style="color:red"></i>
+              <b style="font-size: 16px; color: red;">
+                ไม่อนุมัติ
+              </b>
+              <br>
+              &nbsp;&nbsp;
+              หมายเหตุ:
+              &nbsp;&nbsp;
+              <%= emData[0].bor_note %>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ===== SUBMIT ===== -->
+        <div class="col-sm-12 col-md-12 col-lg-12 submitdiv">
+          <a href="/admin/<%=usn%>">
+            ยกเลิก
+          </a>
+        </div>
+        <% } else if (emData[0].bor_status == 'd') { %>
+          <div class="col-sm-12 col-md-12 col-lg-12">
+            <h3 class="statusLeft">
+              รายการยืม-คืนอุปกรณ์ครุภัณฑ์
+            </h3>
+            <h3 class="statusRight">
+              สถานะ&nbsp;
+              <span class="label borrowSuccess">
+                คืนอุปกรณ์แล้ว
+              </span>
+            </h3>
+          </div>
+    
+          <!-- ===== EQUIPMENT ===== -->
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <h5 style="color: #333; font-size: 16px;">
+              รายการอุปกรณ์
+            </h5>  
+            <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+            
+            <div style="line-height: 30px;">
+              <% if (emData[0].set_can_borrow == 'o') { %>
+                <input type="checkbox" checked onclick="return false;">
+                &nbsp; <%= emData[0].set_name %><br>
+              <% } else { %>
+                <% var typeID = "" %>
+                <% emData.forEach((v, i) => { %>
+                  <% if (v.type_can_borrow == 'o') { %>
+                    <% if (typeID != v.type_id) { %>
+                      <% typeID = v.type_id %>
+                      <input type="checkbox" checked onclick="return false;">
+                      &nbsp; <%= v.type_name %><br>
+                    <% } %>
+                  <% } else { %>
+                    <input type="checkbox" checked onclick="return false;">
+                    &nbsp; <%= v.equip_name %><br>
+                  <% } %>
+                <% }) %>
+              <% } %>
+            </div>
+  
+            <br>
+  
+            <div class="scroll">
+              <table class="table">
+                <thead>
+                  <% var n = 0 %>
+                  <% var tid = "" %>
+                  <% emData.forEach((v, i) => { %>
+                    <tr>
+                      <% if (tid != v.type_id) { %>
+                        <% tid = v.type_id %>
+                      <td> <%= n = n + 1 %> </td>
+                      <td>
+                        <%= v.type_name %>
+                      </td>
+                      <td>จำนวน</td>
+                      <% } %>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td></td>
+                      <td> <%= v.equip_name %> </td>
+                      <td>
+                        <%= v.bor_equip_amount %>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <% }) %>
+              </table>
+            </div>
+          </div>
+  
+          <!-- ===== BORROW DRTAIL & Approve ===== -->
+          <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="portfolio-item">
+              <h5 style="color: #333; font-size: 16px;">
+                วันและเวลาในการยืม
+              </h5>  
+              <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+              
+              <table style="width: 66%; line-height: 30px;">
+                <tr>
+                  <td style="width: 21%;">
+                    วันที่ทำรายการ : 
+                  </td>
+                  <td style="width: 25%;">
+                    <%= emData[0].bor_book_date %> 
+                  </td>
+                  <td style="width: 10%;">
+                    เวลา : 
+                  </td>
+                  <td style="width: 10%;">
+                    <%= emData[0].bor_book_time %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 21%;">
+                    วันที่รับอุปกรณ์ :  
+                  </td>
+                  <td style="width: 25%;">
+                    <%= emData[0].bor_date %> 
+                  </td>
+                  <td style="width: 10%;">
+                    เวลา : 
+                  </td>
+                  <td style="width: 10%;">
+                    <%= emData[0].bor_time %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 21%;">
+                    วันที่คืนอุปกรณ์ :  
+                  </td>
+                  <td style="width: 25%;">
+                    <%= emData[0].bor_return_date %> 
+                  </td>
+                  <td style="width: 10%;">
+                    เวลา : 
+                  </td>
+                  <td style="width: 10%;">
+                    <%= emData[0].bor_return_time %> 
+                  </td>
+                </tr>
+              </table>
+  
+              <br>
+              <h5 style="color: #333; font-size: 16px;">
+                รายละเอียดผู้ยืม
+              </h5>  
+              <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+              <!-- ===== Member is Student ===== -->
+              <% if (emData[0].mem_type == 'student') { %>
+              <table class="borrower">
+                <tr>
+                  <td style="width: 30%;">
+                    รหัสนิสิต : 
+                  </td>
+                  <td style="width: 70%;">
+                    <%= emData[0].mem_id %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    ชื่อ-นามสกุล : 
+                  </td>
+                  <td>
+                    <%= memData[0].stu_name %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    วิชาเอก : 
+                  </td>
+                  <td>
+                    <%= memData[0].maj_th_name %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    เบอร์โทรศัพท์ : 
+                  </td>
+                  <td>
+                    <%= emData[0].mem_phone %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    เบอร์โทรเพิ่มเติม 1 : 
+                  </td>
+                  <td>
+                    <%= emData[0].bor_phone1 %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    เบอร์โทรเพิ่มเติม 2 : 
+                  </td>
+                  <td>
+                    <%= emData[0].bor_phone2 %> 
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    รายวิชา : 
+                  </td>
+                  <td>
+                    <%= emData[0].sub_id %> <%= emData[0].sub_name %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    อาจารย์ประจำวิชา : 
+                  </td>
+                  <td>
+                    <%= emData[0].bor_sub_prof %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    วัตถุประสงค์​ : 
+                  </td>
+                  <td>
+                    <%= emData[0].bor_object %>
+                  </td>
+                </tr>
+              </table>
+              <% } else if (emData[0].mem_type == 'staff') { %>
+                <!-- ===== Member is Staff ===== -->
+                <table class="borrower">
+                  <tr>
+                    <td style="width: 30%;">
+                      รหัสประจำตัว : 
+                    </td>
+                    <td style="width: 70%;">
+                      <%= emData[0].mem_id %> 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      ชื่อ-นามสกุล : 
+                    </td>
+                    <td>
+                      <%= memData[0].stu_name %> 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      เบอร์โทรศัพท์ : 
+                    </td>
+                    <td>
+                      <%= emData[0].mem_phone %> 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      เบอร์โทรเพิ่มเติม 1 : 
+                    </td>
+                    <td>
+                      <%= emData[0].bor_phone1 %> 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      เบอร์โทรเพิ่มเติม 2 : 
+                    </td>
+                    <td>
+                      <%= emData[0].bor_phone2 %> 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      รายวิชา : 
+                    </td>
+                    <td>
+                      <%= emData[0].sub_id %> <%= emData[0].sub_name %>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      วัตถุประสงค์​ : 
+                    </td>
+                    <td>
+                      <%= emData[0].bor_object %>
+                    </td>
+                  </tr>
+                </table>
+              <% } %>
+  
+              <br><br>
+              <h5 style="color: #333; font-size: 16px;">
+                อนุมัติรายการยืม-คืนอุปกรณ์ครุภัณฑ์
+              </h5>  
+              <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+              
+              <div style="line-height: 30px;">
+                &nbsp;&nbsp;
+                <i class="fa fa-smile-o" style="color:red"></i>
+                <b style="font-size: 16px; color: red;">
+                  คืนอุปกรณ์เรียบร้อย
+                </b>
+                <br>
+                &nbsp;&nbsp;
+                หมายเหตุ:
+                &nbsp;&nbsp;
+                <%= emData[0].bor_note %>
+              </div>
+  
+            </div>
+          </div>
+  
+          <!-- ===== SUBMIT ===== -->
+          <div class="col-sm-12 col-md-12 col-lg-12 submitdiv">
+            <a href="/admin/<%=usn%>">
+              ยกเลิก
+            </a>
+          </div>
+          <% } else { %>
+            <div class="col-sm-12 col-md-12 col-lg-12">
+              <h3 class="statusLeft">
+                รายการยืม-คืนอุปกรณ์ครุภัณฑ์
+              </h3>
+              <h3 class="statusRight">
+                สถานะ&nbsp;
+                <span class="label notreturn">
+                  คืนอุปกรณ์ล่าช้า
+                </span>
+              </h3>
+            </div>
+            
+            <form action="/admin/<%=usn%>/approve" method="POST">
+              <!-- ===== EQUIPMENT ===== -->
+              <input name="borID" value="<%=emData[0].bor_id%>" hidden>
+              <div class="col-sm-6 col-md-6 col-lg-6">
+                <h5 style="color: #333; font-size: 16px;">
+                  รายการอุปกรณ์
+                </h5>  
+                <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+                
+                <div style="line-height: 30px;">
+                  <% if (emData[0].set_can_borrow == 'o') { %>
+                    <input type="checkbox" checked onclick="return false;">
+                    &nbsp; <%= emData[0].set_name %><br>
+                  <% } else { %>
+                    <% var typeID = "" %>
+                    <% emData.forEach((v, i) => { %>
+                      <% if (v.type_can_borrow == 'o') { %>
+                        <% if (typeID != v.type_id) { %>
+                          <% typeID = v.type_id %>
+                          <input type="checkbox" checked onclick="return false;">
+                          &nbsp; <%= v.type_name %><br>
+                        <% } %>
+                      <% } else { %>
+                        <input type="checkbox" checked onclick="return false;">
+                        &nbsp; <%= v.equip_name %><br>
+                      <% } %>
+                    <% }) %>
+                  <% } %>
+                </div>
+      
+                <br>
+      
+                <div class="scroll">
+                  <table class="table">
+                    <thead>
+                      <% var n = 0 %>
+                      <% var tid = "" %>
+                      <% emData.forEach((v, i) => { %>
+                        <tr>
+                          <% if (tid != v.type_id) { %>
+                            <% tid = v.type_id %>
+                          <td> <%= n = n + 1 %> </td>
+                          <td>
+                            <%= v.type_name %>
+                          </td>
+                          <td>จำนวน</td>
+                          <% } %>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td></td>
+                          <td> <%= v.equip_name %> </td>
+                          <td>
+                            <%= v.bor_equip_amount %>
+                          </td>
+                        </tr>
+                      </tbody>
+                      <% }) %>
+                  </table>
+                </div>
+              </div>
+      
+              <!-- ===== BORROW DRTAIL & Approve ===== -->
+              <div class="col-sm-6 col-md-6 col-lg-6">
+                <div class="portfolio-item">
+                  <h5 style="color: #333; font-size: 16px;">
+                    วันและเวลาในการยืม
+                  </h5>  
+                  <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+                  
+                  <table style="width: 66%; line-height: 30px;">
+                    <tr>
+                      <td style="width: 21%;">
+                        วันที่ทำรายการ : 
+                      </td>
+                      <td style="width: 25%;">
+                        <%= emData[0].bor_book_date %> 
+                      </td>
+                      <td style="width: 10%;">
+                        เวลา : 
+                      </td>
+                      <td style="width: 10%;">
+                        <%= emData[0].bor_book_time %> 
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 21%;">
+                        วันที่รับอุปกรณ์ :  
+                      </td>
+                      <td style="width: 25%;">
+                        <%= emData[0].bor_date %> 
+                      </td>
+                      <td style="width: 10%;">
+                        เวลา : 
+                      </td>
+                      <td style="width: 10%;">
+                        <%= emData[0].bor_time %> 
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 21%;">
+                        วันที่คืนอุปกรณ์ :  
+                      </td>
+                      <td style="width: 25%;">
+                        <%= emData[0].bor_return_date %> 
+                      </td>
+                      <td style="width: 10%;">
+                        เวลา : 
+                      </td>
+                      <td style="width: 10%;">
+                        <%= emData[0].bor_return_time %> 
+                      </td>
+                    </tr>
+                  </table>
+      
+                  <br>
+                  <h5 style="color: #333; font-size: 16px;">
+                    รายละเอียดผู้ยืม
+                  </h5>  
+                  <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+                  <!-- ===== Member is Student ===== -->
+                  <% if (emData[0].mem_type == 'student') { %>
+                  <table class="borrower">
+                    <tr>
+                      <td style="width: 30%;">
+                        รหัสนิสิต : 
+                      </td>
+                      <td style="width: 70%;">
+                        <%= emData[0].mem_id %> 
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        ชื่อ-นามสกุล : 
+                      </td>
+                      <td>
+                        <%= memData[0].stu_name %> 
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        วิชาเอก : 
+                      </td>
+                      <td>
+                        <%= memData[0].maj_th_name %> 
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        เบอร์โทรศัพท์ : 
+                      </td>
+                      <td>
+                        <%= emData[0].mem_phone %> 
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        เบอร์โทรเพิ่มเติม 1 : 
+                      </td>
+                      <td>
+                        <%= emData[0].bor_phone1 %> 
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        เบอร์โทรเพิ่มเติม 2 : 
+                      </td>
+                      <td>
+                        <%= emData[0].bor_phone2 %> 
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        รายวิชา : 
+                      </td>
+                      <td>
+                        <%= emData[0].sub_id %> <%= emData[0].sub_name %>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        อาจารย์ประจำวิชา : 
+                      </td>
+                      <td>
+                        <%= emData[0].bor_sub_prof %>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        วัตถุประสงค์​ : 
+                      </td>
+                      <td>
+                        <%= emData[0].bor_object %>
+                      </td>
+                    </tr>
+                  </table>
+                  <% } else if (emData[0].mem_type == 'staff') { %>
+                    <!-- ===== Member is Staff ===== -->
+                    <table class="borrower">
+                      <tr>
+                        <td style="width: 30%;">
+                          รหัสประจำตัว : 
+                        </td>
+                        <td style="width: 70%;">
+                          <%= emData[0].mem_id %> 
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          ชื่อ-นามสกุล : 
+                        </td>
+                        <td>
+                          <%= memData[0].stu_name %> 
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          เบอร์โทรศัพท์ : 
+                        </td>
+                        <td>
+                          <%= emData[0].mem_phone %> 
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          เบอร์โทรเพิ่มเติม 1 : 
+                        </td>
+                        <td>
+                          <%= emData[0].bor_phone1 %> 
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          เบอร์โทรเพิ่มเติม 2 : 
+                        </td>
+                        <td>
+                          <%= emData[0].bor_phone2 %> 
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          รายวิชา : 
+                        </td>
+                        <td>
+                          <%= emData[0].sub_id %> <%= emData[0].sub_name %>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          วัตถุประสงค์​ : 
+                        </td>
+                        <td>
+                          <%= emData[0].bor_object %>
+                        </td>
+                      </tr>
+                    </table>
+                  <% } %>
+      
+                  <br><br>
+                  <h5 style="color: #333; font-size: 16px;">
+                    อนุมัติรายการยืม-คืนอุปกรณ์ครุภัณฑ์
+                  </h5>  
+                  <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
+                  
+                  <div style="line-height: 30px;">
+                    &nbsp;&nbsp;
+                    <input name="approve" value="d" hidden>
+                    <i class="fa fa-exclamation-circle" style="color:red"></i>
+                    <b style="font-size: 16px; color: red;">
+                      <% let today = new Date() %>
+                      <% let retdate = new Date(emData[0].bor_return_date + 'T' + emData[0].bor_return_time) %>
+                      <% let difDay = parseInt((today - retdate) / (1000 * 60 * 60 * 24), 10) %>
+                      คืนอุปกรณ์ล่าช้า (เลยกำหนดแล้ว <%= difDay %> วัน)
+                    </b>
+                    <br>
+                    &nbsp;&nbsp;
+                    หมายเหตุ:
+                    &nbsp;&nbsp;
+                    <%= emData[0].bor_note %>
+                  </div>
+      
+                </div>
+              </div>
+      
+              <!-- ===== SUBMIT ===== -->
+              <div class="col-sm-12 col-md-12 col-lg-12 submitdiv">
+                <a href="/admin/<%=usn%>">
+                  ยกเลิก
+                </a>
+                <button type="submit">
+                  รับคืนอุปกรณ์
+                </button>
+              </div>
+            </form>
+          <% } %>
+
+    </div>
+  </div>
+</div>
+
+<div>
+  <!-- ดึงค่า footer มาแสดงจากไฟล์ footer.ejs -->
+  <%- include('footer') -%>
+</div>
+
+
+<script type="text/javascript" src="/jquery.1.11.1.js"></script> 
+<script type="text/javascript" src="/bootstrap.js"></script> 
+<script type="text/javascript" src="/jquery.isotope.js"></script> 
+<script type="text/javascript" src="/main.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+
+
+<script>
+
+  let equipData = <%-JSON.stringify(emData)%>;
+  $('#txtarea').val('')
+
+  function numLetter(event) {
+    var x = event.charCode;
+    return  (x >= 48 && x <= 57);
+  }
+
+  $(".amountE").keyup(function(){
+    let v = $(this).val().length;
+    if (v > 3) {
+      let cut = $(this).val();
+      $(this).val(cut.substr(0, 3))
+    }
+    $('#radio1').prop("checked", false)
+    $('#txtarea').val("")
+    $('#subbtn').hide()
+  });
+
+  $('#radio1').change(function() {
+    let amounts = $(".amountE")
+    let txt = ''
+    $('#txtarea').val(txt)
+    for (i=0; i<amounts.length ;i++) {
+      let a = equipData[i].bor_equip_amount
+      let b = $(amounts[i]).val()
+      
+      if (a != b) {
+        txt += 'มี ' + b + ' ' + equipData[i].equip_name + '; ';
+        $('#txtarea').val(txt)
+      }
+    }
+    if ($('#txtarea').val().length < 1) {
+      $('#txtarea').val("-")
+    }
+    $('#subbtn').show();
+  });
+
+  $('#radio2').change(function() {
+    let txt = 'ไม่อนุมัติเพราะ'
+    $('#txtarea').val(txt)
+    $('#subbtn').hide()
+  });
+
+  $('#txtarea').keydown(function() {
+    const noa = $('#radio2')
+    if (noa.val() && ($(this).val().length > 20)) {
+      $('#subbtn').show()
+    } else {
+      $('#subbtn').hide()
+    }
+  });
+
+
+</script>
+
+</body>
+</html>

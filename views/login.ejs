@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>COSCI - ระบบยืมคืนครุภัณฑ์</title>
+  <title>COSCI - ระบบยืมคืนอุปกรณ์ครุภัณฑ์</title>
   <meta name="description" content="">
 
   <!-- =============== Bootstrap =============== -->
@@ -29,7 +29,7 @@
         <span class="icon-bar"></span><span class="icon-bar"></span> 
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand page-scroll" href="#page-top"><img class="logo-header" src="/cosciLogo.png"></a>
+      <a class="navbar-brand page-scroll" href="/#page-top"><img class="logo-header" src="/cosciLogo.png"></a>
     </div>
     
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -51,7 +51,7 @@
             <div class="intro-text">
                <h1>College of Social<br>
                    Communication Innovation</h1><hr>
-               <p>เข้าสู่ระบบการยืมคืนครุภัณฑ์</p>
+               <p>เข้าสู่ระบบการยืมคืนอุปกรณ์ครุภัณฑ์</p>
                <div class="toggle-bar">
                   <div class="toggle-login active">
                     <span>เข้าสู่ระบบ</span>
@@ -65,7 +65,7 @@
                 <form class="login-form" action="login" method="POST">
                   <span> <%= datas %> </span>
                   <div class="input-section">
-                    <input class="user-input" type="text" name="username" placeholder="ชื่อผู้ใช้ (username) / รหัสนิสิต" required>
+                    <input class="user-input" type="text" name="username" placeholder="ชื่อผู้ใช้ (username) / รหัสนิสิต / รหัสประจำตัว" required>
                   </div>
                   <div class="input-section">
                     <input class="user-input" type="password" name="password" placeholder="รหัสผ่าน" required>
@@ -79,17 +79,19 @@
                 <form class="register-form" action="/check_id" method="POST">
                   <span> <%= datas2 %> </span>
                   <div class="input-section">
-                    <input class="user-input" type="text" name="stuid" placeholder="รหัสนิสิต" required>
+                    <input class="user-input" type="text" name="stuid" placeholder="รหัสนิสิต / รหัสประจำตัว" required>
                   </div>
-                  <input class="a-btn" type="submit"> <br>
+                  <input class="a-btn" type="submit" value="ยืนยัน"> <br>
                   <div class="a-toggle">
                     <p>สมัครสมาชิกแล้ว?</p>
                   </div>
                 </form>
                </div>
 
-               <div class="register-body2" id="register-body2" style="display: none;">
+               <!-- === Student Register ===== -->
+               <div class="register-body2" id="stu-regist" style="display: none;">
                 <form class="register-form" action="/register" method="POST">
+                  <input value="student" name="status" hidden>
                   <div class="input-section">
                     <input class="user-input" type="text" name="stuid" value="<%= member.stu_id%>" readonly>
                   </div>
@@ -111,10 +113,12 @@
                     <span id="show-pass" style="display: none;">รหัสผ่านไม่ตรงกัน!!</span>
                   </div>
                   <div class="input-section">
-                    <input class="user-input" type="email" name="email" placeholder="อีเมล" required>
+                    <input class="user-input" type="email" id="mail" name="email" placeholder="อีเมล" onkeypress="return checkLetter(event)" required>
+                    <br>
+                    <span id="show-mail" hidden>รูปแบบอีเมลไม่ถูกต้อง!!</span>
                   </div>
                   <div class="input-section">
-                    <input class="user-input" type="text" name="phone" placeholder="เบอร์โทรศัพท์" required>
+                    <input class="user-input" type="text" name="phone" id="phoneNum" placeholder="เบอร์โทรศัพท์มือถือ" onkeypress="return isNumber(event)" required>
                   </div>
                   <input type="submit" id="submit-regist" class="btn btn-action" value="สมัครสมาชิก">
                 </form>
@@ -145,7 +149,6 @@
 
 <script type="text/javascript" src="/jquery.1.11.1.js"></script> 
 <script type="text/javascript" src="/bootstrap.js"></script> 
-<script type="text/javascript" src="/SmoothScroll.js"></script> 
 <script type="text/javascript" src="/jquery.isotope.js"></script> 
 <script type="text/javascript" src="/main.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -159,7 +162,7 @@
   $("#submit-regist").attr("disabled", true);
 
   $('.toggle-register').click(function(){
-    $(".register-body2").slideUp("fast");
+    $("#stu-regist").slideUp("fast");
     $(this).addClass('active');
     $('.toggle-login').removeClass('active');
     $('.login-body').slideUp("slow");
@@ -167,7 +170,7 @@
   });
 
   $('.toggle-login').click(function(){
-    $(".register-body2").slideUp("fast");
+    $("#stu-regist").slideUp("fast");
     $(this).addClass('active');
     $('.toggle-register').removeClass('active');
     $('.register-body').slideUp("slow");
@@ -175,7 +178,7 @@
   });
 
   $('.a-toggle').click(function(){
-    $(".register-body2").slideUp("fast");
+    $("#stu-regist").slideUp("fast");
     $('.toggle-login').addClass('active');
     $('.toggle-register').removeClass('active');
     $('.register-body').slideUp("slow");
@@ -183,10 +186,10 @@
   });
 
   /* ----- Show Register Form ----- */
-  if (isRegist == true) {
+  if (isRegist == 'stu') {
     $(document).ready(function(){
       $('.register-body').slideUp("fast");
-      $(".register-body2").slideDown("slow");
+      $("#stu-regist").slideDown("slow");
     });
   }
 
@@ -194,7 +197,11 @@
   // Check Username
   function checkLetter(event) {
     var x = event.charCode;
+    // 46 = .   // 95 = _   // 48-57 = 0-9
+    // 65-90 = A-Z    // 97-122 = a-z
+    // 64 = @
     return  ((x == 46) || (x == 95) || 
+            (x == 64) ||
             (x >= 48 && x <= 57) || 
             (x >= 65 && x <= 90) || 
             (x >= 97 && x <= 122));
@@ -214,29 +221,79 @@
       $("#show-username").text("ใช้อักษรภาษาอังกฤษ 2 ตัวขึ้นไป อาจผสมกับตัวเลข จุด หรือสัญลักษณ์ _");
     }
     else {
-      $("#submit-regist").attr("disabled", false);
       $("#show-username").hide();
+      if ($("#pass1").val() !== "") {
+        //$("#submit-regist").attr("disabled", false);
+      } else {
+        $("#submit-regist").attr("disabled", true);
+      }
     }
   })
 
   $("#pass2").keyup(function(){
-    if ($("#pass1").val() == $("#pass2").val()) {
+    if ($("#pass1").val().length < 1) {
+      $("#show-pass").text("กำหนดรหัสผ่านของคุณ");
+      $("#show-pass").show();
+      $("#submit-regist").attr("disabled", true);
+    }
+    else if ($("#pass1").val() == $("#pass2").val()) {
       $("#show-pass").hide();
-      $("#submit-regist").attr("disabled", false);
+      //$("#submit-regist").attr("disabled", false);
     }
     else {
+      $("#show-pass").text("รหัสผ่านไม่ตรงกัน!!");
       $("#show-pass").show();
       $("#submit-regist").attr("disabled", true);
     }
   })
+
   $("#pass1").keyup(function(){
-    if ($("#pass1").val() === $("#pass2").val()) {
-      $("#show-pass").hide();
-      $("#submit-regist").attr("disabled", false);
-    }
-    else {
+    if ($("#pass1").val().length < 1) {
+      $("#show-pass").text("กำหนดรหัสผ่านของคุณ");
       $("#show-pass").show();
       $("#submit-regist").attr("disabled", true);
+    }
+    else if ($("#pass1").val() === $("#pass2").val()) {
+      $("#show-pass").hide();
+      //$("#submit-regist").attr("disabled", false);
+    }
+    else {
+      $("#show-pass").text("รหัสผ่านไม่ตรงกัน!!");
+      $("#show-pass").show();
+      $("#submit-regist").attr("disabled", true);
+    }
+  })
+
+  /* --- Check Email --- */
+  $('#mail').keydown(function() {
+    let strMail = $(this).val();
+    let mailFormat = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    
+    if (mailFormat.test(strMail)) {
+      $("#show-mail").hide();
+    } else {
+      $("#show-mail").show();
+      $("#submit-regist").attr("disabled", true);
+    }
+  })
+
+  /* --- Check Phone Number --- */
+  function isNumber(event) {
+    let x = event.charCode;
+    let n = document.getElementById("phoneNum").value;
+    return  ((n.length < 12) && (x >= 48 && x <= 57));
+  }
+  $('#phoneNum').keyup(function() {
+    let n = $(this).val()
+    
+    if (n.length == 3) {
+      $(this).val(n + '-')
+    } else if (n.length == 7) {
+      $(this).val(n + '-')
+    } else if (n.length < 12) {
+      $("#submit-regist").attr("disabled", true);
+    } else {
+      $("#submit-regist").attr("disabled", false);
     }
   })
 

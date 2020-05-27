@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COSCI - ระบบยืมคืนอุปกรณ์ครุภัณฑ์</title>
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!-- =============== Bootstrap =============== -->
+<link rel="stylesheet" type="text/css"  href="/bootstrap.css">
+
+<!-- =============== Stylesheet =============== -->
+<link rel="stylesheet" type="text/css"  href="/style.css">
+<link rel="stylesheet" type="text/css"  href="/equipStyle.css">
+<link rel="stylesheet" type="text/css"  href="/userStyle.css">
+<link rel="stylesheet" type="text/css"  href="/borrowStyle.css">
+<link rel="stylesheet" type="text/css"  href="/adminStyle.css">
+<link rel="stylesheet" type="text/css"  href="/dataStyle.css">
+<link rel="stylesheet" type="text/css"  href="/fontface.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Kanit:200,300,400,500,600,700&amp;subset=thai" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+<style>
+  .cancelBTN {
+      background-color: gray;
+      color: white;
+      border-radius: 10px;
+      border: transparent;
+      padding: 5px 25px;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .cancelBTN:hover { background-color: black; }
+    .addtBTN {
+      background-color: red;
+      color: white;
+      border-radius: 10px;
+      border: transparent;
+      padding: 5px 25px;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .addtBTN:hover { background-color: darkred; }
+    .addtBTN:disabled, .addtBTN[disabled] {
+      background-color: pink;
+    }
+</style>
+
+</head>
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<!-- =============== Navigation =============== -->
+<nav id="menu" class="navbar navbar-default navbar-fixed-top">
+  <div class="container"> 
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> 
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span><span class="icon-bar"></span> 
+        <span class="icon-bar"></span> 
+      </button>
+      <a class="navbar-brand page-scroll" href="#">
+        <img class="logo-header" src="/cosciLogo.png">
+      </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/admin/<%=usn%>" class="page-scroll">Home&nbsp;&nbsp;&nbsp;•</a></li>
+        <li><a href="/admin/<%=usn%>/manage/equipment" class="page-scroll">Equipment&nbsp;&nbsp;&nbsp;•</a></li>
+        <li><a href="/admin/<%=usn%>/history/all" class="page-scroll">History&nbsp;&nbsp;&nbsp;•&nbsp;</a></li>
+        <li><a href="/user/logout" class="page-scroll">Logout&nbsp;&nbsp;<i class="fa fa-sign-out"></i>&nbsp;</a></li>
+        <li class="user-tag">
+          <a href="/admin/<%=usn%>/profile" id="user-tag-a">
+            <i class="fa fa-user"></i>&nbsp;&nbsp;ID : <%=datas.mem_id%> &nbsp;&nbsp;
+            <br>
+            <i class="fa fa-clock-o"></i>&nbsp;&nbsp;DATE : <%= todays %> 
+            <div class="img-user"><img src="/user/<%=datas.mem_pic%>"></div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Portfolio Section -->
+<div id="portfolio">
+  <div class="container">
+    <div class="row" style="margin-top: 160px;">
+      <div class="table-wrapper">
+        <div class="table-title">
+          <div class="row">
+            <div class="col-sm-8">
+              <h4 style="margin-top: -70px;">
+                เพิ่ม/แก้ไขอุปกรณ์
+              </h4>
+            </div>
+            
+            <div class="col-sm-4">
+              <div class="edit" style="margin-right: -20px; margin-top: -70px; text-align: right;">
+                <div class="dropdown">
+                  <button class="btn-top dropdown-toggle" type="button" data-toggle="dropdown">
+                    <i class="fa fa-reorder"></i>
+                  </button>
+                  <ul class="dropdown-menu pull-right">
+                    <li><a href="/admin/<%=usn%>/manage/equipment">เช็คสถานะอุปกรณ์</a></li>
+                    <li><a href="#">เพิ่ม-แก้ไขอุปกรณ์</a></li>
+                    <li><a href="/admin/<%=usn%>/equip/setting/all">ตั้งค่าอุปกรณ์</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+                
+          <div class="row">
+            <div class="col-sm-8"></div>
+            <div class="col-sm-4">
+              <a href="/admin/<%=usn%>/add/equipment2" class="add-equip">
+                <i class="fa fa-plus"></i> เพิ่มอุปกรณ์
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <table class="table table-bordered" id="settable" style="width: 100%;">
+          <thead>
+            <tr>
+              <th style="width: 10%;">
+                  SET ID
+              </th>
+              <th style="width: 35%;">
+                  ชื่อเซต
+              </th>
+              <th style="width: 15%;">
+                  หมวดหมู่
+              </th>
+              <th style="width: 10%;">
+                  ให้ยืมทั้งเซต
+              </th>
+              <th style="width: 20%;">
+                ชื่อผู้ดูแล
+              </th>
+              <th style="width: 10%;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (i=0; i<(setsData.length) ;i++) { %>
+            <tr>
+              <td> <%= setsData[i].set_id %> </td>
+              <td> <%= setsData[i].set_name %> </td>
+              <td> <%= setsData[i].set_category %> </td>
+              <td> 
+                <% if (setsData[i].set_can_borrow  == 'o') { %>
+                  ใช่
+                <% } else { %>
+                  ไม่ใช่
+                <% } %>
+              </td>
+              <td> <%= setsData[i].staff_name %> </td>
+              <td>
+                <a href="" class="edit editset" title="แก้ไข" data-toggle="tooltip">
+                  <i class="material-icons">&#xE254;</i>
+                </a>
+                <a class="delete deleteset" title="ลบ" data-toggle="tooltip">
+                  <i class="material-icons" data-toggle="modal" data-target="#deleteset">&#xE872;</i>
+                </a>
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>  
+    </div>
+  </div>
+</div>
+
+<!-- ======== ยืนยันการลบ ======== -->
+<div id="deleteset" class="modal fade">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="padding: 20px;">
+      <h5 style="font-size: 22px; color: black;">
+        ลบเซตอุปกรณ์
+      </h5>
+      <input name="esid" id="idset" hidden>
+      <div style="width: 100%; margin-top: 25px; padding: 5px 15px; line-height: 25px;">
+        <b>คุณแน่ใจหรือว่าต้องการลบเซตอุปกรณ์ "<span id="deletesname"></span>"</b> <br> 
+        เซตอุปกรณ์รวมถึงข้อมูลและรายการอุปกรณ์ในเซตนี้ทั้งหมดจะถูกลบทิ้งอย่างถาวร และคุณไม่สามารถแก้ไขหรือเรียกคืนได้อีก
+      </div>
+
+      <div style="margin-top: 40px; margin-bottom: 10px; text-align: center;">
+        <button type="button" class="cancelBTN" data-toggle="modal" data-target="#deleteset">
+          ยกเลิก
+        </button>
+        <button type="submit" class="addtBTN" id="clickdeleteset">
+          <a href="" id="adeleteset" style="color: white;">
+            ลบเซตอุปกรณ์
+          </a>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div>
+  <!-- ดึงค่า footer มาแสดงจากไฟล์ footer.ejs -->
+  <%- include('footer') -%>
+</div>
+
+<script type="text/javascript" src="/jquery.1.11.1.js"></script> 
+<script type="text/javascript" src="/bootstrap.js"></script> 
+<script type="text/javascript" src="/jquery.isotope.js"></script> 
+<script type="text/javascript" src="/main.js"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+  const usernames = <%-JSON.stringify(usn)%>;
+
+  $('[data-toggle="tooltip"]').tooltip();
+
+  $('.deleteset').click(function() {
+    let rowtable = $(this).closest('tr').find('td');
+    let id = rowtable.eq(0).text();
+    let name = rowtable.eq(1).text();
+    $('#idset').val(id);
+    $('#deletesname').text(name);
+  });
+
+  $('#clickdeleteset').click(function() {
+    let id = $('#idset').val();
+    id = id.substr(1, 3);
+    let url = '/admin/' + usernames + '/delete/' + id;
+    $('#adeleteset').attr("href", url);
+    $('#adeleteset').click();
+  });
+
+
+  $('.editset').click(function() {
+    let rowtable = $(this).closest('tr').find('td');
+    let id = rowtable.eq(0).text();
+    id = id.substr(1, 3);
+    let url = '/admin/' + usernames + '/edit/' + id;
+    $(this).attr("href", url);
+  });
+
+});
+
+</script>
+
+</body>
+</html>
