@@ -165,7 +165,7 @@ ex.borrow0 = app.post('/equip_borrow/:set_id', function(req, res) {
     );
 
     connection.query(
-        "SELECT bor_date,bor_return_date,bor_equip_id \
+        "SELECT bor_date,bor_return_date,bor_equip_id,set_stock,type_stock,equip_stock,set_can_borrow,type_can_borrow,equip_can_borrow \
         FROM borrow b, borrow_data bd, equipment e, equipment_type t, equipment_set s\
         WHERE (bd.bor_id = b.bor_id) AND (e.type_id = t.type_id AND t.set_id = s.set_id)\
         AND (bd.bor_equip_id = e.equip_id OR bd.bor_equip_id = t.type_id OR bd.bor_equip_id = s.set_id)\
@@ -174,63 +174,123 @@ ex.borrow0 = app.post('/equip_borrow/:set_id', function(req, res) {
         function(err1, result1) {
             if (err1) { console.error(); }
 
-            if (result1.length > 1) {
-                for (r=0; r<(result1.length) ;r++) {
+            if (result1.length > 0) {
+                let aaa = 0
+                var borrowArr = []
+                for (a=0; a<(result1.length) ;a++) {
+                    let boreid = result1[a].bor_equip_id
+                    let bordate = result1[a].bor_date
+                    let stock = 0
+
+                    if (result1[a].set_can_borrow == 'o') {
+                        stock = result1[a].set_stock
+                    }
+                    else if (result1[a].type_can_borrow == 'o') {
+                        stock = result1[a].type_stock
+                    }
+                    else {
+                        stock = result1[a].equip_stock
+                    }
                     connection.query(
-                        "INSERT INTO `borrow_temp` (`bor_date`, `bor_return_date`, `bor_equip_id`) \
-                        VALUES ('" + result1[r].bor_date + "', '" + result1[r].bor_return_date + "', '" + checkID + "-" + r + "');",
-                        function(err2, result2) {
-                            if (err2) { console.error(); }
-                            if (result2 == undefined) {
-                                if (checkOutID != undefined) {
-                                    console.log("เช็ค",checkID,"-",r)
+                        "SELECT *,\
+                                MAX(bor_date) AS min_date,\
+                                MIN(bor_return_date) AS max_date\
+                        FROM borrow b, borrow_data bd,\
+                            equipment e, equipment_type t, equipment_set s,\
+                            equipment_color, color_code\
+                        WHERE (b.bor_id = bd.bor_id) AND\
+                            (color_id = id) AND\
+                            (id_equip = e.equip_id OR id_equip = t.type_id OR id_equip = s.set_id) AND\
+                            (e.type_id = t.type_id AND t.set_id = s.set_id) AND\
+                            (bor_equip_id = e.equip_id OR bor_equip_id = t.type_id OR bor_equip_id = s.set_id) AND\
+                            (? BETWEEN bor_date AND bor_return_date) AND\
+                            (bor_equip_id = ?)\
+                        GROUP BY bor_data_id", [bordate, boreid],
+                        function(e2, r2) {
+                            if (e2) { console.error(); }
+                            aaa++
+                            if (r2.length >= stock) {
+                                let equipname = ''
+                                let equipid = ''
+                                let borstart = ''
+                                let borend = ''
+
+                                let min = r2[0].min_date;
+                                min = new Date(min);
+                                let max = r2[0].max_date
+                                max = new Date(max);
+
+                                for (r=0; r<(r2.length) ;r++) {
+                                    if (r2[r].set_can_borrow == 'o') {
+                                        equipname = r2[r].set_name
+                                        equipid = r2[r].set_id
+                                    }
+                                    else if (r2[r].type_can_borrow == 'o') {
+                                        equipname = r2[r].type_name
+                                        equipid = r2[r].type_id
+                                    }
+                                    else {
+                                        equipname = r2[r].equip_name
+                                        equipid = r2[r].equip_id
+                                    }
+
+                                    borstart = r2[r].min_date
+                                    borstart = new Date(borstart);
+                                    borend = r2[r].max_date
+                                    borend = new Date(borend);
+
+                                    if (borstart > min) {
+                                        min = borstart
+                                    }
+                                    if (borend < max) {
+                                        max = borend
+                                    }
+                                }
+
+                                borrowArr.push({
+                                  equips_id:      equipid,
+                                  equip_name:     equipname,
+                                  start_date:     min,
+                                  end_date:       max,
+                                })
+                            }
+
+                            if (aaa==(result1.length)) {
+                                /* ---- เอาค่าที่ซ้ำออกจาก borrowArr */
+                                borrowArr = Array.from(new Set(borrowArr.map(JSON.stringify))).map(JSON.parse);
+                                
+                                for (i=0; i<(borrowArr.length) ;i++) {
+                                    var start = String(borrowArr[i].start_date)
+                                    var end = String(borrowArr[i].end_date)
+
                                     connection.query(
-                                        "DELETE FROM `borrow_temp` WHERE `borrow_temp`.`bor_equip_id` LIKE '%" + checkID + "%';",
-                                        function(err2) {
+                                        "INSERT INTO `borrow_temp` (`bor_date`, `bor_return_date`, `bor_equip_id`) \
+                                        VALUES ('" + start + "', '" + end + "', '" + checkID + "-" + i + "');",
+                                        function(err2, result2) {
                                             if (err2) { console.error(); }
+                                            if (result2 == undefined) {
+                                                if (checkOutID != undefined) {
+                                                    connection.query(
+                                                        "DELETE FROM `borrow_temp` WHERE `borrow_temp`.`bor_equip_id` LIKE '%" + checkID + "%';",
+                                                        function(err2) {
+                                                            if (err2) { console.error(); }
+                                                            else {
+                                                                console.log('----- Borrow Data Temp Delete!! -----')
+                                                            }
+                                                        }
+                                                    );
+                                                }
+                                            }
                                             else {
-                                                console.log('----- Borrow Data Temp Delete!! -----')
+                                                console.log('----- Borrow Data Insert!! -----')
                                             }
                                         }
                                     );
-                                }
-                            }
-                            else {
-                                console.log('----- Borrow Data Insert!! -----')
+                                }               
                             }
                         }
                     );
                 }
-            }
-
-            if (result1.length > 0 && result1.length <= 1) {
-                connection.query(
-                    "INSERT INTO `borrow_temp` (`bor_date`, `bor_return_date`, `bor_equip_id`) \
-                    VALUES ('" + result1[0].bor_date + "', '" + result1[0].bor_return_date + "', '" + checkID + "');",
-                    function(err2, result2) {
-                        if (err2) { console.error(); }
-                        console.log("เช็ค",result2)
-                        if (result2 == undefined) {
-                            if (checkOutID != undefined) {
-                                connection.query(
-                                    "DELETE FROM `borrow_temp` WHERE `borrow_temp`.`bor_equip_id` = '" + checkID + "'",
-                                    function(err2) {
-                                        if (err2) { console.error(); }
-                                        else {
-                                            console.log('----- Borrow Data Temp Delete!! -----')
-                                        }
-                                    }
-                                );
-                            }
-                            else {
-                                res.redirect('/equip_borrow/' + set_id);
-                            }
-                        }
-                        else {
-                            console.log('----- Borrow Data Insert!! -----')
-                        }
-                    }
-                );
             }
             else {
                 res.redirect('/equip_borrow/' + set_id);
@@ -256,11 +316,11 @@ ex.borrow1 = app.get('/equip_borrow/:set_id', function(req, res) {
 
                 // SELECT holiday date
                 var holidayDate = [];
+
                 connection.query(
                     "SELECT * FROM calendar_holiday",
                     function(err0, result0) {
                         if (err0) {console.error(); }
-
                         for (i=0 ; i<result0.length ; i++) {
                             holidayDate.push(result0[i].holiday_date)
                         }
@@ -272,12 +332,11 @@ ex.borrow1 = app.get('/equip_borrow/:set_id', function(req, res) {
                     "SELECT *\
                     FROM equipment e, equipment_type t, equipment_set s, equipment_borrow eb\
                     WHERE (s.set_id = t.set_id AND t.type_id = e.type_id) AND\
-                          (e.equip_id = eb.equip_id) AND\
-                          (s.set_id = ?)\
+                            (e.equip_id = eb.equip_id) AND\
+                            (s.set_id = ?)\
                     ORDER BY e.equip_id", set_id,
                     function(err2, result2) {
                         if (err2) { console.error(); }
-
                         /* ----- Select borrow for calendar ----- */
                         connection.query(
                             "SELECT * FROM `borrow_temp`",
@@ -292,7 +351,6 @@ ex.borrow1 = app.get('/equip_borrow/:set_id', function(req, res) {
                                             var noequip = [];
 
                                             for (r=0; r<(r1.length) ;r++) {
-                                                console.log([r1[r].bor_date,r1[r].bor_return_date])
                                                 noequip.push([r1[r].bor_date,r1[r].bor_return_date]);
                                             }
 

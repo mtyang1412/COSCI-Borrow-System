@@ -88,7 +88,22 @@
                 <th style="width: 8%;">
                     <input type="checkbox" name="box" autocomplete="off" class="check1" id="<%=allequips[0].set_id%>" value="<%=allequips[0].set_id%>">
                 </th style="width: 8%;">
-                <th style="width: 92%;"><%= allequips[0].set_name%></th style="width: 92%;">
+                <th style="width: 55%;"><%= allequips[0].set_name%></th>
+                <% if (borArr.length == 0) {%>
+                <th style="width: 45%;"></th>
+                <% } %>
+                <% if (borArr.length > 0) {%>
+                <th style="width: 45%;">
+                    <div class="qty mt-5">
+                        จำนวนที่ยืม
+                        <span class="minus bg-dark">-</span>
+                        <input type="number" style="width: 5%; border: 0;" class="count" name="qty" value="0">
+                        <span class="plus bg-dark">+</span>
+                        / <%=allequips[0].set_stock%> 
+                        <input id="class1" style="display: none;" value="<%=allequips[0].set_stock%>">
+                    </div>
+                </th>
+                <% } %>
               </table>
             <% } %>
           <%}%>
@@ -120,7 +135,8 @@
                           <input type="checkbox" name="box" autocomplete="off" class="check3" id="<%=value.equip_id%>" value="<%=value.equip_id%>">
                         <% } %>
                     </td>
-                    <td style="width: 69%;"><%= value.equip_name %></td>
+                    <td style="width: 69%;"><%= value.equip_name %>
+                    </td>
                     <td style="width: 15%;"><%= value.equip_amount %></td>
                   </tr>
               </tbody>
@@ -171,8 +187,9 @@
               'week-7' : 'อา',
               'month-name': ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลมคม','พฤศจิกายน','ธันวาคม'],
               };
-          
-              var noEquip = [];
+
+              var noEquip = <%-JSON.stringify(datasCal)%>;
+              var dayIsHoliday = <%-JSON.stringify(holidays)%>;
           
               $('.minute').hide();
               
@@ -190,9 +207,18 @@
                   endDate: moment().subtract(-3, 'month'),
           
                   beforeShowDay: function(date) {
+
                   date.setHours(12, 00, 00);
                   var string = date.toISOString().substr(0,10);
                   var weekEnd = (date.getDay() === 0 || date.getDay() === 6) ? 'hideWeekend' : '';
+
+                     for (i=0; i<dayIsHoliday.length; i++) {
+                      let holidayArr = []
+                      holidayArr.push(dayIsHoliday[i])
+                      holidayArr.push(dayIsHoliday[i])
+                      noEquip.splice(noEquip.length, 0, holidayArr)
+                    }
+
                     for (var i = 0; i < noEquip.length; i++) {
                         if (Array.isArray(noEquip[i])) {
                           var from = new Date(noEquip[i][0]);
@@ -201,8 +227,8 @@
                         if (current >= from && current <= to)
                           return false;
                         }
-                      }
-                      return [true, weekEnd];
+                    }
+                    return [true,weekEnd];
                   },
             
                   getValue: function() {
@@ -266,11 +292,30 @@
 
 <script>
 
+  var class1 = document.getElementById("class1");
+
+  $(document).ready(function(){
+    $('.count').prop('disabled', true);
+    $(document).on('click','.plus',function(){
+      $('.count').val(parseInt($('.count').val()) + 1 );
+          if ($('.count').val() != class1.value) {
+            var a = parseInt(class1.value)
+            $('.count').val(a);
+          }
+    });
+      $(document).on('click','.minus',function(){
+        $('.count').val(parseInt($('.count').val()) - 1 );
+          if ($('.count').val() < 0) {
+            $('.count').val(0);
+          }
+    });
+ 	});
+
   $('.timepicker').timepicker({
-      timeFormat: 'hh:mm:ss',
+      timeFormat: 'HH:mm:ss',
       interval: 15,
       minTime: '9',
-      maxTime: '4:00pm',
+      maxTime: '16',
       startTime: '09:00',
       dynamic: false,
       dropdown: true,
@@ -278,7 +323,6 @@
   });
 
   /* ===== Checkbox ===== */
-  var allValue = document.getElementById("allCheck");
   var a = "";
   var b = "";
 
@@ -326,32 +370,6 @@
     });
   });
 
-  /* ===== ปฏิทินเลือกวันที่ ===== */
-  var noEquip = <%-JSON.stringify(datasCal)%>;
-  let dayIsHoliday = <%-JSON.stringify(holidays)%>;
-  
-  for (i=0; i<dayIsHoliday.length; i++) {
-    let holidayArr = []
-    holidayArr.push(dayIsHoliday[i])
-    holidayArr.push(dayIsHoliday[i])
-    noEquip.splice(noEquip.length, 0, holidayArr)
-  }
-
-  function notselect(date) {
-      date.setHours(12, 00, 00);
-      var string = date.toISOString().substr(0,10);
-      var weekEnd = (date.getDay() === 0 || date.getDay() === 6) ? 'hideWeekend' : '';
-        for (var i = 0; i < noEquip.length; i++) {
-          if (Array.isArray(noEquip[i])) {
-            var from = new Date(noEquip[i][0]);
-            var to = new Date(noEquip[i][1]);
-            var current = new Date(string);
-          if (current >= from && current <= to)
-            return false;
-          }
-        }
-        return [true, weekEnd];
-  }
 </script>
 
 

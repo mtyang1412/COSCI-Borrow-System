@@ -51,3 +51,44 @@ input[type=checkbox] {
     color: #fff;
     cursor: pointer;
   }
+  
+  .qty .count {
+    color: #777777;
+    display: inline-block;
+    font-size: 14px;
+    ;min-width: 35px;
+    text-align: center;
+}
+  .qty .plus {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+    color: white;
+    width: 20px;
+    height: 20px;
+    font: 19px/1 Arial,sans-serif;
+    text-align: center;
+    border-radius: 50%;
+    background-color: #007CB7;
+}
+
+  .qty .minus {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+    color: white;
+    width: 20px;
+    height: 20px;
+    font: 18px/1 Arial,sans-serif;
+    text-align: center;
+    border-radius: 50%;
+    background-color: #007CB7;
+}
+
+nput::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+input:disabled{
+    background-color: transparent;
+}
