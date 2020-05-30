@@ -89,21 +89,7 @@
                     <input type="checkbox" name="box" autocomplete="off" class="check1" id="<%=allequips[0].set_id%>" value="<%=allequips[0].set_id%>">
                 </th style="width: 8%;">
                 <th style="width: 55%;"><%= allequips[0].set_name%></th>
-                <% if (borArr.length == 0) {%>
                 <th style="width: 45%;"></th>
-                <% } %>
-                <% if (borArr.length > 0) {%>
-                <th style="width: 45%;">
-                    <div class="qty mt-5">
-                        จำนวนที่ยืม
-                        <span class="minus bg-dark">-</span>
-                        <input type="number" style="width: 5%; border: 0;" class="count" name="qty" value="0">
-                        <span class="plus bg-dark">+</span>
-                        / <%=allequips[0].set_stock%> 
-                        <input id="class1" style="display: none;" value="<%=allequips[0].set_stock%>">
-                    </div>
-                </th>
-                <% } %>
               </table>
             <% } %>
           <%}%>
@@ -161,8 +147,8 @@
               <input name="ret_d" id="date-range201" size="20" value="" style="display: none;">
               </span>
               <div id="date-range12-container" style="width:100%;"></div>
-              <b>เวลายืม : </b> <input style="width: 50%; text-align: center;" class="timepicker" name="bor_t" placeholder="ระบุเวลา" id="bt1"><br><br>
-              <b>เวลาคืน : </b> <input style="width: 50%; text-align: center;" class="timepicker" name="ret_t" placeholder="ระบุเวลา" id="rt1"><br><br>
+              <b>เวลายืม : </b> <input style="width: 50%; text-align: center;" class="timepicker" name="bor_t" value="ระบุเวลา" id="bt1"><br><br>
+              <b>เวลาคืน : </b> <input disabled="true" style="width: 50%; text-align: center;" class="timepicker" name="ret_t" value="ระบุเวลา" id="rt1"><br><br>
           </div>
           <% } %>
 
@@ -225,7 +211,7 @@
                           var to = new Date(noEquip[i][1]);
                           var current = new Date(string);
                         if (current >= from && current <= to)
-                          return false;
+                          return [false];
                         }
                     }
                     return [true,weekEnd];
@@ -247,7 +233,7 @@
           </div>
 
           <% if (borArr.length > 0) {%>
-            <input type="submit" id="submit-btn" class="a-button" value="ดำเนินการต่อ">
+            <input type="submit" id="submit-btn" class="btn btn-primary a-button" value="ดำเนินการต่อ" disabled="true">
           <% } %>
 
       </form>
@@ -292,25 +278,6 @@
 
 <script>
 
-  var class1 = document.getElementById("class1");
-
-  $(document).ready(function(){
-    $('.count').prop('disabled', true);
-    $(document).on('click','.plus',function(){
-      $('.count').val(parseInt($('.count').val()) + 1 );
-          if ($('.count').val() != class1.value) {
-            var a = parseInt(class1.value)
-            $('.count').val(a);
-          }
-    });
-      $(document).on('click','.minus',function(){
-        $('.count').val(parseInt($('.count').val()) - 1 );
-          if ($('.count').val() < 0) {
-            $('.count').val(0);
-          }
-    });
- 	});
-
   $('.timepicker').timepicker({
       timeFormat: 'HH:mm:ss',
       interval: 15,
@@ -321,6 +288,22 @@
       dropdown: true,
       scrollbar: false
   });
+
+  $('.timepicker').keypress(function(e) {
+    e.preventDefault();
+  });
+
+  $(document).ready(function(){
+    $('#bt1').click(function(){
+      $("#rt1").attr("disabled", false);
+    });
+  })
+
+  $(document).ready(function(){
+    $('#rt1').click(function(){
+      $("#submit-btn").attr("disabled", false);
+    });
+  })
 
   /* ===== Checkbox ===== */
   var a = "";

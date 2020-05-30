@@ -36,59 +36,62 @@ input[type=checkbox] {
     zoom: 1.1;
 }
 
-.a-button {
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    margin-bottom: 5px;
-    background-color: #007CB7;
-    color: #fff;
-    border-radius: 10px;
-    transition: background-color 0.2s;
-    font-size: 17px;
-  }
-  .a-button:hover {
-    background-color: #286090;
-    color: #fff;
-    cursor: pointer;
-  }
-  
-  .qty .count {
-    color: #777777;
-    display: inline-block;
-    font-size: 14px;
-    ;min-width: 35px;
-    text-align: center;
-}
-  .qty .plus {
-    cursor: pointer;
-    display: inline-block;
-    vertical-align: top;
-    color: white;
-    width: 20px;
-    height: 20px;
-    font: 19px/1 Arial,sans-serif;
-    text-align: center;
-    border-radius: 50%;
-    background-color: #007CB7;
+.btn.btn-primary {
+    background-color: #007CB7 !important;
+} 
+
+.quantity {
+    display: inline-block; 
 }
 
-  .qty .minus {
-    cursor: pointer;
-    display: inline-block;
-    vertical-align: top;
-    color: white;
-    width: 20px;
-    height: 20px;
-    font: 18px/1 Arial,sans-serif;
+.quantity .input-text.qty {
+    width: 25px;
+    height: 23px;
+    padding: 0 5px;
     text-align: center;
-    border-radius: 50%;
-    background-color: #007CB7;
-}
-
-nput::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-}
-input:disabled{
     background-color: transparent;
+    border: 1px solid #efefef;
+}
+
+.quantity.buttons_added {
+    text-align: left;
+    position: relative;
+    white-space: nowrap;
+    vertical-align: top; 
+}
+
+.quantity.buttons_added input {
+    display: inline-block;
+    margin: 0;
+    vertical-align: top;
+    box-shadow: none;
+}
+
+.quantity.buttons_added .minus,
+.quantity.buttons_added .plus {
+    height: 23px;
+    width: 23px;
+    color: #fff;
+    background-color: #007CB7;
+    border-radius: 50%;
+    cursor:pointer;
+}
+
+.quantity.buttons_added .minus {
+    border-right: 0; 
+}
+
+.quantity.buttons_added .plus {
+    border-left: 0; 
+}
+
+.quantity input::-webkit-outer-spin-button,
+.quantity input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    margin: 0; 
+}
+
+input:focus {
+    outline: none; 
 }

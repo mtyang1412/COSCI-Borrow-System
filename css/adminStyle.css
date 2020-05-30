@@ -149,7 +149,9 @@
   
   .fc-popover .fc-header {
     /* TODO: be more consistent with fc-head/fc-body */
-    padding: 2px 4px; }
+    padding: 10px 10px; 
+    background-color: white;
+  }
   
   .fc-popover .fc-header .fc-title {
     margin: 0 2px; }
@@ -601,6 +603,7 @@
     width: 220px; }
   
   .fc-more-popover .fc-event-container {
+    background-color: white;
     padding: 10px; }
   
   /* Now Indicator

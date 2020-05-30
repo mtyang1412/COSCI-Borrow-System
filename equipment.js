@@ -437,6 +437,9 @@ ex.borrow2 = app.post('/student_borrow/2', function(req, res) {
 
     var checkArr = [];
     var cutID = "";
+
+    var stockArr = [];
+
     while (allChecks.length != 0) {
         cutID = allChecks.split(',')[0];
         checkArr.push(cutID);
@@ -456,6 +459,49 @@ ex.borrow2 = app.post('/student_borrow/2', function(req, res) {
             if (err1) { console.error(); }
         }
     );
+
+    if (checkArr.length > 0 ) {
+        for (i=0; i<(checkArr.length) ;i++) {
+            connection.query(
+                "SELECT bor_equip_id,bor_amount,equip_stock,type_stock,set_stock,set_can_borrow,type_can_borrow,set_can_borrow, \
+                MAX(bor_date) AS min_date, MIN(bor_return_date) AS max_date FROM borrow b, borrow_data bd, equipment e, equipment_type t, equipment_set s, equipment_color, color_code \
+                WHERE (b.bor_id = bd.bor_id) AND (color_id = id) AND (id_equip = e.equip_id OR id_equip = t.type_id OR id_equip = s.set_id) AND (e.type_id = t.type_id AND t.set_id = s.set_id) \
+                AND (bor_equip_id = e.equip_id OR bor_equip_id = t.type_id OR bor_equip_id = s.set_id) AND ('" + borDate + "' BETWEEN bor_date AND bor_return_date) \
+                AND ('" + retDate + "' BETWEEN bor_date AND bor_return_date) AND (bor_equip_id = '" + checkArr[i] + "') GROUP BY bor_data_id",
+                function(err1,r1) {
+                    if (err1) { console.error(); }
+                    if (r1.length > 0) {
+                        var stock = 0
+                        var leftstock = 0
+                        var amount = r1[0].bor_amount
+                        var id = r1[0].bor_equip_id
+
+                        for (a=0; a<(r1.length) ;a++) {
+                            if (r1[a].set_can_borrow == 'o') {
+                                stock = r1[a].set_stock
+                            }
+                            else if (r1[a].type_can_borrow == 'o') {
+                                stock = r1[a].type_stock
+                            }
+                            else {
+                                stock = r1[a].equip_stock
+                            }
+                        }
+
+                        leftstock = stock
+
+                        for (a=0; a<(r1.length) ;a++) {
+                            leftstock = leftstock - amount
+                        }
+                        stockArr.push({
+                            id:           id,
+                            leftstock:    leftstock,
+                        })
+                    }
+                }
+            );
+        }
+    }
 
     // If user loged in
     let isLogin = (req.session.loggedin) && (req.session.username == username);
@@ -497,7 +543,6 @@ ex.borrow2 = app.post('/student_borrow/2', function(req, res) {
 
                         console.log('====================')
                         console.log('all sets', setsArr.length)
-                        console.log(setsArr)
                         res.render('user_student_borrow2.ejs', {
                             datas:      result1[0],
                             todays:     date_now,
@@ -510,7 +555,8 @@ ex.borrow2 = app.post('/student_borrow/2', function(req, res) {
                             borrowT:    borTime,
                             returnD:    retDate,
                             returnT:    retTime,
-                            subjects:   result2
+                            subjects:   result2,
+                            leftstock:  stockArr
                         });
                     }
                 );
@@ -557,6 +603,9 @@ ex.add_stu_borrow = app.post('/add/borrow', function(req, res) {
     console.log('========== Insert Borrow ==========')
 
     // Add equip id to array
+    let amount      = req.body.allAmounts;
+    console.log(amount)
+
     let strEquips       = req.body.all_equip;
     var cutID = "";
     var arrEquips = [];

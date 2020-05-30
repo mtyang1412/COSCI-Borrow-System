@@ -70,7 +70,6 @@
          <div class="col-sm-6 col-md-6 col-lg-6">
             <div class="portfolio-item">
               <img src="/portfolio/<%=allSet[0][0].set_pic%>" class="img-responsive" alt="Project Title">
-              
             </div>
             <h5 style="color: #333;">วันและเวลาในการยืม</h5>  
             <hr style="margin-top: -5px;">
@@ -81,7 +80,7 @@
                 <b>วันที่คืนของ : </b> <%= returnD %><br>
                 </div>
             </div>
-            <div class="col-xs-6 col-md-6 col-lg-6" style="margin-bottom: 20px;">
+            <div class="col-xs-6 col-md-6 col-lg-6" style="margin-bottom: 50px;">
                 <div style="margin-top: -25px; line-height: 30px;">
                 <b>เวลา : </b> <%= borTime %> <br>
                 <b>เวลา : </b> <%= borrowT %><br>
@@ -90,7 +89,7 @@
             </div>
           </div>
           <div class="col-sm-6 col-md-6 col-lg-6">
-            <h5 style="color: #333;">รายการอุปกรณ์</h5>  
+            <h5 style="color: #333;">รายการอุปกรณ์</h5>
             <hr style="margin-top: -5px;">
             <div class="col-xs-12 col-md-12 col-lg-12">
               <div style="margin-top: -25px; line-height: 30px;">
@@ -99,22 +98,80 @@
                   <b>
                     <input type="checkbox" value="<%=allSet[0][0].set_id%>" checked readonly>
                     &nbsp;<%= allSet[0][0].set_name%>
+                    <div class="quantity buttons_added" style="float: right;">
+                        <input type="button" value="-" class="minus">
+                        <input type="number" step="1" min="1" max="<%=allSet[0][0].set_stock%>" name="quantity" value="1" title="Qty" id="amount" class="input-text qty text" size="4" pattern="" inputmode="" disabled>
+                        <input type="button" value="+" class="plus">
+                        / คงเหลือ <%=allSet[0][0].set_stock%>
+                    </div>
+                    <% if (leftstock.length > 0 ) {%>
+                      <div class="quantity buttons_added" style="float: right;">
+                          <input type="button" value="-" class="minus">
+                          <input type="number" step="1" min="1" max="<%=leftstock[0].leftstock%>" name="quantity" value="1" title="Qty" id="amount" class="input-text qty text" size="4" pattern="" inputmode="" disabled>
+                          <input type="button" value="+" class="plus">
+                          / คงเหลือ <%=leftstock[0].leftstock%>
+                      </div>
+                    <% }%>
                   </b><br>
                 <% }%>
-                
-                <% allSet.forEach((value, index) => { %>
+
+                  <% allSet.forEach((value, index) => { %>
                   <% var borrow1 = value[0].type_can_borrow; %>
                   <% var borrow2 = value[0].equip_can_borrow; %>
+                  <% var a = 0 %>
+                  <% var b = 0 %>
                   <% if (borrow1 == 'o') {%>
-                    <b>
-                      <input type="checkbox" value="<%=value[0].type_id%>" checked readonly>
-                      &nbsp;<%= value[0].type_name %>
+                        <b>
+                        <input type="checkbox" value="<%=value[0].type_id%>" checked readonly>
+                        &nbsp;<%= value[0].type_name %>
+                      <% leftstock.forEach((leftstock, index) => { %>
+                        <% if (value[0].type_id == leftstock.id) {%>
+                          <% a = 1 %>
+                          <div class="quantity buttons_added" style="float: right;">
+                              <input type="button" value="-" class="minus">
+                              <input type="number" step="1" min="1" max="<%=leftstock.leftstock%>" name="quantity" value="1" title="Qty" 
+                              id="amount"  class="input-text qty text" size="4" pattern="" inputmode="" disabled>
+                              <input type="button" value="+" class="plus">
+                              / คงเหลือ <%=leftstock.leftstock%>
+                          </div>
+                        <% }%>
+                      <% })%>
+                        <% if ( a != 1 ) {%>
+                        <div class="quantity buttons_added" style="float: right;">
+                            <input type="button" value="-" class="minus">
+                            <input type="number" step="1" min="1" max="<%=value[0].type_stock%>" name="quantity" value="1" title="Qty" 
+                            id="amount" class="input-text qty text" size="4" pattern="" inputmode="" disabled>
+                            <input type="button" value="+" class="plus">
+                            / คงเหลือ <%=value[0].type_stock%>
+                        </div>
+                        <% }%>
                     </b><br>
                   <% }%>
                   <% if (borrow2 == 'o') { %>
                     <b>
                       <input type="checkbox" value="<%=value[0].equip_id%>" checked readonly>
                       &nbsp;<%= value[0].equip_name %>
+                      <% leftstock.forEach((leftstock, index) => { %>
+                        <% if (value[0].equip_id == leftstock.id) {%>
+                          <% b = 1 %>
+                          <div class="quantity buttons_added" style="float: right;">
+                              <input type="button" value="-" class="minus">
+                              <input type="number" step="1" min="1" max="<%=leftstock.leftstock%>" name="quantity" value="1" title="Qty" 
+                              id="amount" class="input-text qty text" size="4" pattern="" inputmode="" disabled>
+                              <input type="button" value="+" class="plus">
+                              / คงเหลือ <%=leftstock.leftstock%>
+                          </div>
+                        <% }%>
+                      <% })%>
+                        <% if ( b != 1 ) {%>
+                          <div class="quantity buttons_added" style="float: right;">
+                              <input type="button" value="-" class="minus">
+                              <input type="number" step="1" min="1" max="<%=value[0].equip_stock%>" name="quantity" value="1" title="Qty" 
+                              id="amount" class="input-text qty text" size="4" pattern="" inputmode="" disabled>
+                              <input type="button" value="+" class="plus">
+                              / คงเหลือ <%=value[0].equip_stock%>
+                          </div>
+                        <% }%>
                     </b><br>
                   <% }%>
                 <% })%>
@@ -365,10 +422,17 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/sweetalert2/6.1.1/sweetalert2.min.js"></script>
 
 <script>
-    
+
+    var amount = $('#amount').val();
+
+    $(document).ready(function(){
+      $('.plus').click(function(){
+        alert(amount);
+      });
+    })
+
     $('#submit1').prop('disabled', true);
     $('.confirm').click(function(){ 
-
         swal({
           title: 'การยืมเสร็จสมบูรณ์',
           text: 'คุณได้ทำรายการยืมอุปกร์เรียบร้อยแล้ว!',
@@ -376,7 +440,6 @@
           confirmButtonText: '<a href="/student/<%=usn%>" style="color: #fff; padding: 20px;">กลับไปหน้าแรก</a>',
         });
     });
-
 
     // =========== Add Phone, Subjuct, Object ==========
     var phone1 = $('#tel1').val();
@@ -463,6 +526,35 @@
       }
     });
     
+    function wcqib_refresh_quantity_increments() {
+        jQuery("div.quantity:not(.buttons_added), td.quantity:not(.buttons_added)").each(function(a, b) {
+            var c = jQuery(b);
+            c.addClass("buttons_added"), c.children().first().before('<input type="button" value="-" class="minus" />'), 
+            c.children().last().after('<input type="button" value="+" class="plus" />')
+        })
+    }
+
+    String.prototype.getDecimals || (String.prototype.getDecimals = function() {
+        var a = this, b = ("" + a).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+        return b ? Math.max(0, (b[1] ? b[1].length : 0) - (b[2] ? +b[2] : 0)) : 0
+        }), jQuery(document).ready(function() {
+            wcqib_refresh_quantity_increments()
+        }), jQuery(document).on("updated_wc_div", function() {
+            wcqib_refresh_quantity_increments()
+        }), jQuery(document).on("click", ".plus, .minus", function() {
+          var a = jQuery(this).closest(".quantity").find(".qty"),
+              b = parseFloat(a.val()),
+              c = parseFloat(a.attr("max")),
+              d = parseFloat(a.attr("min")),
+              e = a.attr("step");
+          b && "" !== b && "NaN" !== b || (b = 0), 
+          "" !== c && "NaN" !== c || (c = ""), 
+          "" !== d && "NaN" !== d || (d = 0), 
+          "any" !== e && "" !== e && void 0 !== e && "NaN" !== parseFloat(e) || (e = 1), 
+          jQuery(this).is(".plus") ? c && b >= c ? a.val(c) : a.val((b + parseFloat(e)).toFixed(e.getDecimals())) : 
+          d && b <= d ? a.val(d) : b > 0 && a.val((b - parseFloat(e)).toFixed(e.getDecimals())), 
+          a.trigger("change")
+        });
     
 </script>
 
