@@ -312,7 +312,7 @@ ex.student_profile = app.get('/user_student/profile', function(req, res) {
                                         let ids = result3[r].bor_id
                                         const x = r
                                         connection.query(
-                                            "SELECT b.bor_id, bd.bor_data_id, bd.bor_equip_id, bdd.*,\
+                                            "SELECT bor_amount, b.bor_id, bd.bor_data_id, bd.bor_equip_id, bdd.*,\
                                                     equip_name, t.type_id, type_name, type_can_borrow, set_can_borrow\
                                             FROM borrow b, borrow_data bd, borrow_data_detail bdd,\
                                                 equipment e, equipment_type t, equipment_set s\
@@ -341,8 +341,7 @@ ex.student_profile = app.get('/user_student/profile', function(req, res) {
                                                 arrBorrows.push(arrs)
                                                 // arrBorows is 3D Array
                                                 
-                                                if (x == (result3.length - 1)) {
-                                                    //console.log(arrBorrows)                                              
+                                                if (x == (result3.length - 1)) {                                       
                                                     res.render('user_student_profile.ejs', {
                                                         datas:      result[0],
                                                         todays:     date_now,
@@ -357,6 +356,7 @@ ex.student_profile = app.get('/user_student/profile', function(req, res) {
                                     }
                                 }
                                 else {
+                                    console.log("เข้าอันนี้ 2")   
                                     res.render('user_student_profile.ejs', {
                                         datas:      result[0],
                                         todays:     date_now,
