@@ -449,16 +449,19 @@
                     <% if (allBorrows[m1][0][0].set_can_borrow == 'o') { %>
                       <b><input type="checkbox" checked readonly>
                         &nbsp; <%= borrowNow[m1].set_name %>
+                        (<input style="width: 10%; text-align: center; border-color: transparent;" value="<%= borrowNow[m1].bor_amount %>" readonly>)
                       </b><br>
                     <% } else { %>
                       <% allBorrows[m1].forEach((v, i) => { %>
                         <% if (v[0].type_can_borrow == 'o') { %>
                           <b><input type="checkbox" checked readonly>
                             &nbsp; <%= v[0].type_name %>
+                            (<input style="width: 10%; text-align: center; border-color: transparent;" value="<%= borrowNow[i].bor_amount %>" readonly>)
                           </b><br>
                         <% } else { %>
                           <b><input type="checkbox" checked readonly>
                             &nbsp; <%= v[0].equip_name %>
+                            (<input style="width: 10%; text-align: center; border-color: transparent;" value="<%= borrowNow[i].bor_amount %>" readonly>)
                           </b><br>
                         <% } %>
                       <% }) %>
@@ -646,16 +649,19 @@
                       <b>
                         <input type="checkbox" checked readonly>
                         &nbsp; <%= borrowNow[m2].set_name %>
+                        (<input style="width: 10%; text-align: center; border-color: transparent;" value="<%= borrowNow[m2].bor_amount %>" readonly>)
                       </b><br>
                     <% } else { %>
                       <% allBorrows[m2].forEach((v, i) => { %>
                         <% if (v[0].type_can_borrow == 'o') { %>
                         <b><input type="checkbox" checked readonly>
                           &nbsp; <%= v[0].type_name %>
+                          (<input style="width: 10%; text-align: center; border-color: transparent;" value="<%= borrowNow[i].bor_amount %>" readonly>)
                         </b><br>
                         <% } else { %>
                         <b><input type="checkbox" checked readonly>
                           &nbsp; <%= v[0].equip_name %>
+                          (<input style="width: 10%; text-align: center; border-color: transparent;" value="<%= borrowNow[i].bor_amount %>" readonly>)
                         </b><br>
                         <% } %>
                       <% }) %>
@@ -843,16 +849,19 @@
                     <% if (allBorrows[m3][0][0].set_can_borrow == 'o') { %>
                       <b><input type="checkbox" checked readonly>
                         &nbsp; <%= borrowNow[m3].set_name %>
+                        (<input style="width: 10%; text-align: center; border-color: transparent;" value="<%= borrowNow[m3].bor_amount %>" readonly>)
                       </b><br>
                     <% } else { %>
                       <% allBorrows[m3].forEach((v, i) => { %>
                         <% if (v[0].type_can_borrow == 'o') { %>
                           <b><input type="checkbox" checked readonly>
                             &nbsp; <%= v[0].type_name %>
+                            (<input style="width: 10%; text-align: center; border-color: transparent;" value="<%= borrowNow[i].bor_amount %>" readonly>)
                           </b><br>
                         <% } else { %>
                           <b><input type="checkbox" checked readonly>
                             &nbsp; <%= v[0].equip_name %>
+                            (<input style="width: 10%; text-align: center; border-color: transparent;" value="<%= borrowNow[i].bor_amount %>" readonly>)
                           </b><br>
                         <% } %>
                       <% }) %>
@@ -1024,16 +1033,19 @@
                     <% if (allBorrows[m4][0][0].set_can_borrow == 'o') { %>
                       <b><input type="checkbox" checked readonly>
                         &nbsp; <%= borrowNow[m4].set_name %>
+                        (<input style="width: 10%; text-align: center; border-color: transparent;" value="<%= borrowNow[m4].bor_amount %>" readonly>)
                       </b><br>
                     <% } else { %>
                       <% allBorrows[m4].forEach((v, i) => { %>
                         <% if (v[0].type_can_borrow == 'o') { %>
                           <b><input type="checkbox" checked readonly>
                             &nbsp; <%= v[0].type_name %>
+                            (<input style="width: 10%; text-align: center; border-color: transparent;" value="<%= borrowNow[i].bor_amount %>" readonly>)
                           </b><br>
                         <% } else { %>
                           <b><input type="checkbox" checked readonly>
                             &nbsp; <%= v[0].equip_name %>
+                            (<input style="width: 10%; text-align: center; border-color: transparent;" value="<%= borrowNow[i].bor_amount %>" readonly>)
                           </b><br>
                         <% } %>
                       <% }) %>

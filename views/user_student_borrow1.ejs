@@ -233,7 +233,7 @@
           </div>
 
           <% if (borArr.length > 0) {%>
-            <input type="submit" id="submit-btn" class="btn btn-primary a-button" value="ดำเนินการต่อ" disabled="true">
+            <input type="submit" id="submit-btn" class="btn btn-primary" value="ดำเนินการต่อ" disabled="true">
           <% } %>
 
       </form>
@@ -297,9 +297,6 @@
     $('#bt1').click(function(){
       $("#rt1").attr("disabled", false);
     });
-  })
-
-  $(document).ready(function(){
     $('#rt1').click(function(){
       $("#submit-btn").attr("disabled", false);
     });

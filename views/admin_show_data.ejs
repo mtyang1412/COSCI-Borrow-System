@@ -86,10 +86,11 @@
           </h5>  
           <hr style="margin-top: -5px; margin-bottom: 10px; border-top: 1px solid gray;">
           
-          <div style="line-height: 30px;">
+          <div style="line-height: 30px; padding-right: 20%;">
             <% if (emData[0].set_can_borrow  == 'o') { %>
               <input type="checkbox" checked onclick="return false;">
-              &nbsp; <%= emData[0].set_name %><br>
+              &nbsp; <%= emData[0].set_name %>
+              ( จำนวน : <input style="height: 3%; width: 30px; text-align: center;" value="<%=emData[0].bor_amount%>">&nbsp;เซต )<br>
             <% } else { %>
               <% var typeID = "" %>
               <% emData.forEach((v, i) => { %>
@@ -97,11 +98,13 @@
                   <% if (typeID != v.type_id) { %>
                     <% typeID = v.type_id %>
                     <input type="checkbox" checked onclick="return false;">
-                    &nbsp; <%= v.type_name %><br>
+                    &nbsp; <%= v.type_name %>
+                    ( จำนวน : <input style="height: 3%; width: 30px; text-align: center;" value="<%=emData[i].bor_amount%>">&nbsp;เซต )<br>
                   <% } %>
                 <% } else { %>
                   <input type="checkbox" checked onclick="return false;">
-                  &nbsp; <%= v.equip_name %><br>
+                  &nbsp; <%= v.equip_name %>
+                  ( จำนวน : <input style="height: 3%; width: 30px; text-align: center;" value="<%=emData[i].bor_amount%>">&nbsp;เซต )<br>
                 <% } %>
               <% }) %>
             <% } %>
@@ -397,7 +400,8 @@
           <div style="line-height: 30px;">
             <% if (emData[0].set_can_borrow  == 'o') { %>
               <input type="checkbox" checked onclick="return false;">
-              &nbsp; <%= emData[0].set_name %><br>
+              &nbsp; <%= emData[0].set_name %>
+              <div style="height: 3%; width:35%; text-align: center; float: right;">( จำนวน : <%=emData[0].bor_amount%>&nbsp;เซต )</div><br>
             <% } else { %>
               <% var typeID = "" %>
               <% emData.forEach((v, i) => { %>
@@ -405,11 +409,13 @@
                   <% if (typeID != v.type_id) { %>
                     <% typeID = v.type_id %>
                     <input type="checkbox" checked onclick="return false;">
-                    &nbsp; <%= v.type_name %><br>
+                    &nbsp; <%= v.type_name %>
+                    <div style="height: 3%; width:35%; text-align: center; float: right;">( จำนวน : <%=emData[i].bor_amount%>&nbsp;เซต )</div><br>
                   <% } %>
                 <% } else { %>
                   <input type="checkbox" checked onclick="return false;">
-                  &nbsp; <%= v.equip_name %><br>
+                  &nbsp; <%= v.equip_name %>
+                  <div style="height: 3%; width:35%; text-align: center; float: right;">( จำนวน : <%=emData[i].bor_amount%>&nbsp;เซต )</div><br>
                 <% } %>
               <% }) %>
             <% } %>
@@ -703,6 +709,7 @@
             <% if (emData[0].set_can_borrow  == 'o') { %>
               <input type="checkbox" checked onclick="return false;">
               &nbsp; <%= emData[0].set_name %><br>
+              <div style="height: 3%; width:35%; text-align: center; float: right;">( จำนวน : <%=emData[0].bor_amount%>&nbsp;เซต )</div><br>
             <% } else { %>
               <% var typeID = "" %>
               <% emData.forEach((v, i) => { %>
@@ -711,10 +718,12 @@
                     <% typeID = v.type_id %>
                     <input type="checkbox" checked onclick="return false;">
                     &nbsp; <%= v.type_name %><br>
+                    <div style="height: 3%; width:35%; text-align: center; float: right;">( จำนวน : <%=emData[i].bor_amount%>&nbsp;เซต )</div><br>
                   <% } %>
                 <% } else { %>
                   <input type="checkbox" checked onclick="return false;">
                   &nbsp; <%= v.equip_name %><br>
+                  <div style="height: 3%; width:35%; text-align: center; float: right;">( จำนวน : <%=emData[i].bor_amount%>&nbsp;เซต )</div><br>
                 <% } %>
               <% }) %>
             <% } %>
@@ -1005,7 +1014,8 @@
           <div style="line-height: 30px;">
             <% if (emData[0].set_can_borrow  == 'o') { %>
               <input type="checkbox" checked onclick="return false;">
-              &nbsp; <%= emData[0].set_name %><br>
+              &nbsp; <%= emData[0].set_name %>
+              <div style="height: 3%; width:35%; text-align: center; float: right;">( จำนวน : <%=emData[0].bor_amount%>&nbsp;เซต )</div><br>
             <% } else { %>
               <% var typeID = "" %>
               <% emData.forEach((v, i) => { %>
@@ -1013,11 +1023,13 @@
                   <% if (typeID != v.type_id) { %>
                     <% typeID = v.type_id %>
                     <input type="checkbox" checked onclick="return false;">
-                    &nbsp; <%= v.type_name %><br>
+                    &nbsp; <%= v.type_name %>
+                    <div style="height: 3%; width:35%; text-align: center; float: right;">( จำนวน : <%=emData[i].bor_amount%>&nbsp;เซต )</div><br>
                   <% } %>
                 <% } else { %>
                   <input type="checkbox" checked onclick="return false;">
-                  &nbsp; <%= v.equip_name %><br>
+                  &nbsp; <%= v.equip_name %>
+                  <div style="height: 3%; width:35%; text-align: center; float: right;">( จำนวน : <%=emData[i].bor_amount%>&nbsp;เซต )</div><br>
                 <% } %>
               <% }) %>
             <% } %>

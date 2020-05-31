@@ -38,6 +38,8 @@ input[type=checkbox] {
 
 .btn.btn-primary {
     background-color: #007CB7 !important;
+    font-weight: normal !important;
+    font-size: 14px;
 } 
 
 .quantity {
@@ -45,7 +47,7 @@ input[type=checkbox] {
 }
 
 .quantity .input-text.qty {
-    width: 25px;
+    width: 30px;
     height: 23px;
     padding: 0 5px;
     text-align: center;

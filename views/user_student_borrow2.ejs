@@ -98,16 +98,18 @@
                   <b>
                     <input type="checkbox" value="<%=allSet[0][0].set_id%>" checked readonly>
                     &nbsp;<%= allSet[0][0].set_name%>
+                    <% if (leftstock.length == 0 ) {%>
                     <div class="quantity buttons_added" style="float: right;">
                         <input type="button" value="-" class="minus">
-                        <input type="number" step="1" min="1" max="<%=allSet[0][0].set_stock%>" name="quantity" value="1" title="Qty" id="amount" class="input-text qty text" size="4" pattern="" inputmode="" disabled>
+                        <input type="number" step="1" min="1" max="<%=allSet[0][0].set_stock%>" name="amount" value="1" id="amount" class="input-text qty text" size="4" pattern="" inputmode="" disabled>
                         <input type="button" value="+" class="plus">
                         / คงเหลือ <%=allSet[0][0].set_stock%>
                     </div>
+                    <% }%>
                     <% if (leftstock.length > 0 ) {%>
                       <div class="quantity buttons_added" style="float: right;">
                           <input type="button" value="-" class="minus">
-                          <input type="number" step="1" min="1" max="<%=leftstock[0].leftstock%>" name="quantity" value="1" title="Qty" id="amount" class="input-text qty text" size="4" pattern="" inputmode="" disabled>
+                          <input type="number" step="1" min="1" max="<%=leftstock[0].leftstock%>" name="amount" value="1" id="amount" class="input-text qty text" size="4" pattern="" inputmode="" disabled>
                           <input type="button" value="+" class="plus">
                           / คงเหลือ <%=leftstock[0].leftstock%>
                       </div>
@@ -129,9 +131,9 @@
                           <% a = 1 %>
                           <div class="quantity buttons_added" style="float: right;">
                               <input type="button" value="-" class="minus">
-                              <input type="number" step="1" min="1" max="<%=leftstock.leftstock%>" name="quantity" value="1" title="Qty" 
+                              <input type="number" step="1" min="1" max="<%=leftstock.leftstock%>" name="amount" value="1"
                               id="amount"  class="input-text qty text" size="4" pattern="" inputmode="" disabled>
-                              <input type="button" value="+" class="plus">
+                              <input type="button" value="+" class="plus"  value="1">
                               / คงเหลือ <%=leftstock.leftstock%>
                           </div>
                         <% }%>
@@ -139,9 +141,9 @@
                         <% if ( a != 1 ) {%>
                         <div class="quantity buttons_added" style="float: right;">
                             <input type="button" value="-" class="minus">
-                            <input type="number" step="1" min="1" max="<%=value[0].type_stock%>" name="quantity" value="1" title="Qty" 
+                            <input type="number" step="1" min="1" max="<%=value[0].type_stock%>" name="amount" value="1"
                             id="amount" class="input-text qty text" size="4" pattern="" inputmode="" disabled>
-                            <input type="button" value="+" class="plus">
+                            <input type="button" value="+" class="plus"  value="1">
                             / คงเหลือ <%=value[0].type_stock%>
                         </div>
                         <% }%>
@@ -156,7 +158,7 @@
                           <% b = 1 %>
                           <div class="quantity buttons_added" style="float: right;">
                               <input type="button" value="-" class="minus">
-                              <input type="number" step="1" min="1" max="<%=leftstock.leftstock%>" name="quantity" value="1" title="Qty" 
+                              <input type="number" step="1" min="1" max="<%=leftstock.leftstock%>" name="amount" value="1"
                               id="amount" class="input-text qty text" size="4" pattern="" inputmode="" disabled>
                               <input type="button" value="+" class="plus">
                               / คงเหลือ <%=leftstock.leftstock%>
@@ -166,7 +168,7 @@
                         <% if ( b != 1 ) {%>
                           <div class="quantity buttons_added" style="float: right;">
                               <input type="button" value="-" class="minus">
-                              <input type="number" step="1" min="1" max="<%=value[0].equip_stock%>" name="quantity" value="1" title="Qty" 
+                              <input type="number" step="1" min="1" max="<%=value[0].equip_stock%>" name="amount" value="1"
                               id="amount" class="input-text qty text" size="4" pattern="" inputmode="" disabled>
                               <input type="button" value="+" class="plus">
                               / คงเหลือ <%=value[0].equip_stock%>
@@ -209,7 +211,7 @@
               <textarea id="obj1" cols="24" rows="3" placeholder="ระบุวัตถุประสงค์ที่ต้องยืมอุปกรณ์"></textarea>
               <br><br>
               <a href="/equip_borrow/<%=usn%>&<%=allSet[0][0].set_id%>" class="btn btn-primary">ย้อนกลับ</a>&nbsp;&nbsp;
-              <button id="submit1" type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter">
+              <button id="submit1" type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter" onclick="getvalues();">
                   ยืนยันการยืม
               </button>
               </div>
@@ -284,6 +286,7 @@
                       <b>
                         <input type="checkbox" checked readonly>
                         &nbsp;<%= allSet[0][0].set_name%>
+                        (<input id="amountVal0" style="width: 10%; text-align: center; border-color: transparent;" value="" readonly>)
                       </b><br>
                     <% }%>
 
@@ -294,17 +297,21 @@
                         <b>
                           <input type="checkbox" checked readonly>
                           &nbsp;<%= value[0].type_name %>
+                          (<input id="amountVal<%=index%>" style="width: 10%; text-align: center; border-color: transparent;" value="" readonly>)
                         </b><br>
                       <% }%>
                       <% if (borrow2 == 'o') { %>
                         <b>
                           <input type="checkbox" checked readonly>
                           &nbsp;<%= value[0].equip_name %>
+                          (<input id="amountVal<%=index%>" style="width: 10%; text-align: center; border-color: transparent;" value="" readonly>)
                         </b><br>
                       <% }%>
                     <% })%>
                   </div>
                 </div>
+
+                <input name="allAmounts" id="allAmount" style="display: none;" value="" readonly>
 
                 <div class="col-xs-12 col-md-12 col-lg-12">
                   <table class="table">
@@ -423,13 +430,26 @@
 
 <script>
 
-    var amount = $('#amount').val();
+    var allValue = document.getElementById("allAmount");
+    var amountArr = [];
 
-    $(document).ready(function(){
-      $('.plus').click(function(){
-        alert(amount);
-      });
-    })
+    function getvalues(){
+      var inps = document.getElementsByName('amount');
+
+      allValue.value = "";
+      amountArr = [];
+        for (var i = 0; i <inps.length; i++) {
+          var inp = inps[i];
+          amountArr.push(inp.value);
+          allValue.value = amountArr;
+        }
+
+        for (var a = 0; a <amountArr.length; a++) {
+          var amount = document.getElementById("amountVal"+a+"");
+          amount.value = amountArr[a];
+        }
+
+    }
 
     $('#submit1').prop('disabled', true);
     $('.confirm').click(function(){ 

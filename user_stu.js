@@ -342,8 +342,7 @@ ex.student_profile = app.get('/user_student/profile', function(req, res) {
                                                 // arrBorows is 3D Array
                                                 
                                                 if (x == (result3.length - 1)) {
-                                                    //console.log(arrBorrows)
-                                                    
+                                                    //console.log(arrBorrows)                                              
                                                     res.render('user_student_profile.ejs', {
                                                         datas:      result[0],
                                                         todays:     date_now,

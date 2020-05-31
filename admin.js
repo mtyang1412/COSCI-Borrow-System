@@ -563,6 +563,7 @@ ex.admin_borrow_detail = app.get('/admin/borrow-detail/:borID', function(req, re
                                 if (err3) { console.error(); }
 
                                 console.log('Student Borrow')
+
                                 res.render('admin_show_data.ejs', {
                                     datas:      result[0],
                                     todays:     date_now,

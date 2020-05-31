@@ -165,7 +165,7 @@ ex.borrow0 = app.post('/equip_borrow/:set_id', function(req, res) {
     );
 
     connection.query(
-        "SELECT bor_date,bor_return_date,bor_equip_id,set_stock,type_stock,equip_stock,set_can_borrow,type_can_borrow,equip_can_borrow \
+        "SELECT bor_amount,bor_date,bor_return_date,bor_equip_id,set_stock,type_stock,equip_stock,set_can_borrow,type_can_borrow,equip_can_borrow \
         FROM borrow b, borrow_data bd, equipment e, equipment_type t, equipment_set s\
         WHERE (bd.bor_id = b.bor_id) AND (e.type_id = t.type_id AND t.set_id = s.set_id)\
         AND (bd.bor_equip_id = e.equip_id OR bd.bor_equip_id = t.type_id OR bd.bor_equip_id = s.set_id)\
@@ -173,14 +173,16 @@ ex.borrow0 = app.post('/equip_borrow/:set_id', function(req, res) {
         AND (bor_equip_id = '" + checkID + "') GROUP BY bor_data_id",
         function(err1, result1) {
             if (err1) { console.error(); }
-
             if (result1.length > 0) {
                 let aaa = 0
                 var borrowArr = []
+                let sum = 0
                 for (a=0; a<(result1.length) ;a++) {
                     let boreid = result1[a].bor_equip_id
                     let bordate = result1[a].bor_date
                     let stock = 0
+                    let amount = result1[a].bor_amount
+                    let int = parseInt(amount);
 
                     if (result1[a].set_can_borrow == 'o') {
                         stock = result1[a].set_stock
@@ -191,6 +193,35 @@ ex.borrow0 = app.post('/equip_borrow/:set_id', function(req, res) {
                     else {
                         stock = result1[a].equip_stock
                     }
+
+                    sum = sum + int
+
+                    if  ( sum == stock) {
+                        connection.query(
+                            "INSERT INTO `borrow_temp` (`bor_date`, `bor_return_date`, `bor_equip_id`) \
+                            VALUES ('" + result1[a].bor_date + "', '" + result1[a].bor_return_date + "', '" + checkID + "-" + i + "');",
+                            function(err2, result2) {
+                                if (err2) { console.error(); }
+                                if (result2 == undefined) {
+                                    if (checkOutID != undefined) {
+                                        connection.query(
+                                            "DELETE FROM `borrow_temp` WHERE `borrow_temp`.`bor_equip_id` LIKE '%" + checkID + "%';",
+                                            function(err2) {
+                                                if (err2) { console.error(); }
+                                                else {
+                                                    console.log('----- Borrow Data Temp Delete!! -----')
+                                                }
+                                            }
+                                        );
+                                    }
+                                }
+                                else {
+                                    console.log('----- Borrow Data Insert!! -----')
+                                }
+                            }
+                        );
+                    }
+
                     connection.query(
                         "SELECT *,\
                                 MAX(bor_date) AS min_date,\
@@ -296,7 +327,7 @@ ex.borrow0 = app.post('/equip_borrow/:set_id', function(req, res) {
                 res.redirect('/equip_borrow/' + set_id);
             }
         }
-    )
+    );
 });
 
 ex.borrow1 = app.get('/equip_borrow/:set_id', function(req, res) {
@@ -429,7 +460,7 @@ ex.borrow1 = app.get('/equip_borrow/:set_id', function(req, res) {
 ex.borrow2 = app.post('/student_borrow/2', function(req, res) {
     let username = memberLogin;
     let allChecks = req.body.allchecks;
-    console.log('EquipID: ', allChecks)
+    console.log('EquipID: ', allChecks);
     let borDate = req.body.bor_d;
     let borTime = req.body.bor_t;
     let retDate = req.body.ret_d;
@@ -460,43 +491,110 @@ ex.borrow2 = app.post('/student_borrow/2', function(req, res) {
         }
     );
 
+    console.log(checkArr.length)
+
     if (checkArr.length > 0 ) {
         for (i=0; i<(checkArr.length) ;i++) {
             connection.query(
-                "SELECT bor_equip_id,bor_amount,equip_stock,type_stock,set_stock,set_can_borrow,type_can_borrow,set_can_borrow, \
-                MAX(bor_date) AS min_date, MIN(bor_return_date) AS max_date FROM borrow b, borrow_data bd, equipment e, equipment_type t, equipment_set s, equipment_color, color_code \
-                WHERE (b.bor_id = bd.bor_id) AND (color_id = id) AND (id_equip = e.equip_id OR id_equip = t.type_id OR id_equip = s.set_id) AND (e.type_id = t.type_id AND t.set_id = s.set_id) \
-                AND (bor_equip_id = e.equip_id OR bor_equip_id = t.type_id OR bor_equip_id = s.set_id) AND ('" + borDate + "' BETWEEN bor_date AND bor_return_date) \
-                AND ('" + retDate + "' BETWEEN bor_date AND bor_return_date) AND (bor_equip_id = '" + checkArr[i] + "') GROUP BY bor_data_id",
-                function(err1,r1) {
+                "SELECT bor_amount,bor_date,bor_return_date,bor_equip_id,set_stock,type_stock,equip_stock,set_can_borrow,type_can_borrow,equip_can_borrow \
+                FROM borrow b, borrow_data bd, equipment e, equipment_type t, equipment_set s\
+                WHERE (bd.bor_id = b.bor_id) AND (e.type_id = t.type_id AND t.set_id = s.set_id)\
+                AND (bd.bor_equip_id = e.equip_id OR bd.bor_equip_id = t.type_id OR bd.bor_equip_id = s.set_id)\
+                AND (bor_status = 'p' OR bor_status = 'a' OR bor_status = 'r') AND (bor_date >= CURRENT_DATE())\
+                AND (bor_equip_id = '" + checkArr[i] + "') GROUP BY bor_data_id",
+                function(err1, result1) {
                     if (err1) { console.error(); }
-                    if (r1.length > 0) {
-                        var stock = 0
-                        var leftstock = 0
-                        var amount = r1[0].bor_amount
-                        var id = r1[0].bor_equip_id
+                    if (result1.length > 0) {
+                        for (a=0; a<(result1.length) ;a++) {
+                            let boreid = result1[a].bor_equip_id
+                            let bordate = result1[a].bor_date
+                            var stock = 0
+                            var leftstock = 0
+                            var amount = result1[0].bor_amount
+                            var id = result1[0].bor_equip_id
 
-                        for (a=0; a<(r1.length) ;a++) {
-                            if (r1[a].set_can_borrow == 'o') {
-                                stock = r1[a].set_stock
+                            if (result1[a].set_can_borrow == 'o') {
+                                stock = result1[a].set_stock
                             }
-                            else if (r1[a].type_can_borrow == 'o') {
-                                stock = r1[a].type_stock
+                            else if (result1[a].type_can_borrow == 'o') {
+                                stock = result1[a].type_stock
                             }
                             else {
-                                stock = r1[a].equip_stock
+                                stock = result1[a].equip_stock
                             }
-                        }
 
-                        leftstock = stock
+                            leftstock = stock
 
-                        for (a=0; a<(r1.length) ;a++) {
-                            leftstock = leftstock - amount
+                            connection.query(
+                                "SELECT bor_equip_id,bor_amount,equip_stock,type_stock,set_stock,set_can_borrow,type_can_borrow,set_can_borrow,\
+                                        MAX(bor_date) AS min_date,\
+                                        MIN(bor_return_date) AS max_date\
+                                FROM borrow b, borrow_data bd,\
+                                    equipment e, equipment_type t, equipment_set s,\
+                                    equipment_color, color_code\
+                                WHERE (b.bor_id = bd.bor_id) AND\
+                                    (color_id = id) AND\
+                                    (id_equip = e.equip_id OR id_equip = t.type_id OR id_equip = s.set_id) AND\
+                                    (e.type_id = t.type_id AND t.set_id = s.set_id) AND\
+                                    (bor_equip_id = e.equip_id OR bor_equip_id = t.type_id OR bor_equip_id = s.set_id) AND\
+                                    (? BETWEEN bor_date AND bor_return_date) AND\
+                                    (bor_equip_id = ?)\
+                                GROUP BY bor_data_id", [bordate, boreid],
+                                function(e2, r2) {
+                                    if (e2) { console.error(); }
+                                    if (r2.length > 0) {
+                                        console.log(r2)
+
+                                        let min = borDate
+                                        min = new Date(min);
+                                        let max = retDate
+                                        max = new Date(max);
+
+                                        let oldMin = borDate
+                                        oldMin = new Date(oldMin);
+                                        let oldMax = retDate
+                                        oldMax = new Date(oldMax);
+
+
+                                        borstart = r2[0].min_date
+                                        borstart = new Date(borstart);
+                                        borend = r2[0].max_date
+                                        borend = new Date(borend);
+
+                                        console.log(borstart,">",min) 
+
+
+                                        console.log(borend,"<",max) 
+    
+                                        if (borstart > min) {
+                                            min = borstart
+                                        }
+                                        if (borend < max) {
+                                            max = borend
+                                        }
+
+                                        console.log(min,max)
+
+                                        if ( min < max ) {
+                                            for (a=0; a<(r2.length) ;a++) {
+                                                leftstock = leftstock - amount
+                                            }
+                                            if (leftstock > 0 ) {
+                                                stockArr.push({
+                                                    id:           id,
+                                                    leftstock:    leftstock,
+                                                })
+                                            }
+                                        } 
+
+                                        console.log("test",leftstock)
+                                    }
+                                }
+                            );
                         }
-                        stockArr.push({
-                            id:           id,
-                            leftstock:    leftstock,
-                        })
+                    }
+                    else {
+                        console.log("else")
                     }
                 }
             );
@@ -543,6 +641,7 @@ ex.borrow2 = app.post('/student_borrow/2', function(req, res) {
 
                         console.log('====================')
                         console.log('all sets', setsArr.length)
+                        console.log('เหลือ',stockArr)
                         res.render('user_student_borrow2.ejs', {
                             datas:      result1[0],
                             todays:     date_now,
@@ -603,16 +702,25 @@ ex.add_stu_borrow = app.post('/add/borrow', function(req, res) {
     console.log('========== Insert Borrow ==========')
 
     // Add equip id to array
-    let amount      = req.body.allAmounts;
-    console.log(amount)
-
     let strEquips       = req.body.all_equip;
+    let strAmount       = req.body.allAmounts;
+
     var cutID = "";
     var arrEquips = [];
+    var arrAmount = [];
+
     while (strEquips.length != 0) {
         cutID = strEquips.split(',')[0];
         arrEquips.push(cutID);
         strEquips = strEquips.substring(cutID.length + 1);
+    }
+
+    console.log(strAmount.length)
+
+    while (strAmount.length != 0) {
+        cutID = strAmount.split(',')[0];
+        arrAmount.push(cutID);
+        strAmount = strAmount.substring(cutID.length + 1);
     }
 
     let username        = req.body.mem_id;
@@ -652,6 +760,10 @@ ex.add_stu_borrow = app.post('/add/borrow', function(req, res) {
     }
 
     console.log('BorrowID -> ', borrowID);
+
+    console.log("equip = ",arrEquips)
+    console.log("test = ",arrAmount)
+
     connection.query(
         "INSERT INTO borrow SET ?", borrows,
         function (err1) {
@@ -665,11 +777,10 @@ ex.add_stu_borrow = app.post('/add/borrow', function(req, res) {
 
                 connection.query(
                     "INSERT INTO borrow_data \
-                    SET bor_data_id = ?, bor_equip_id = ?, bor_id = ?",
-                    [borrowDataID, arrEquips[i], borrowID],
+                    SET bor_data_id = ?, bor_equip_id = ?, bor_amount = ?, bor_id = ?",
+                    [borrowDataID, arrEquips[i], arrAmount[i], borrowID],
                     function(err2) {
                         if (err2) { console.error(); }
-
                         console.log('----- Borrow Data Insert!! -----')
                     }
                 );
@@ -688,7 +799,7 @@ ex.add_stu_borrow = app.post('/add/borrow', function(req, res) {
                             connection.query(
                                 "INSERT INTO borrow_data_detail\
                                 SET equip_id = ?, bor_equip_amount = ?, bor_data_id = ?",
-                                [r3[j].equip_id, r3[j].equip_amount, r3[j].bor_data_id],
+                                [r3[j].equip_id, r3[j].equip_amount ,r3[j].bor_data_id],
                                 function(err6) {
                                     if (err6) { console.log(err6); }
 
